@@ -5,22 +5,24 @@
 (function (root) {
   'use strict';
   class FootballSpriteCharacter {
-    constructor(project) {
+    constructor(project, { assetBaseUrl = "" } = {}) {
       if (!project || project.format !== 'FootballSpriteStudio') {
         throw new Error('Expected a Football Sprite Studio JSON project');
       }
       this.project = project;
       this.images = new Map();
+      this.assetBaseUrl = assetBaseUrl;
+      this.rgbCache = new Map();
     }
-    static async fromURL(url) {
+    static async fromURL(url, options = {}) {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Project download failed: ' + response.status);
-      const character = new FootballSpriteCharacter(await response.json());
+      const character = new FootballSpriteCharacter(await response.json(), {assetBaseUrl:options.assetBaseUrl || new URL(".", new URL(url, location.href)).href});
       await character.load();
       return character;
     }
-    static async fromFile(file) {
-      const character = new FootballSpriteCharacter(JSON.parse(await file.text()));
+    static async fromFile(file, options = {}) {
+      const character = new FootballSpriteCharacter(JSON.parse(await file.text()), options);
       await character.load();
       return character;
     }
@@ -30,9 +32,30 @@
         const image = new Image();
         image.onload = () => { this.images.set(id, image); resolve(); };
         image.onerror = () => reject(new Error('Could not decode: ' + asset.name));
-        image.src = asset.src;
+        const path = asset.src || asset.fileRef || asset.name;
+        if (!path) return reject(new Error('Missing image source for asset ' + id));
+        image.src = asset.src ? asset.src : (this.assetBaseUrl ? new URL(path, this.assetBaseUrl).href : path);
       })));
       return this;
+    }
+    // Channel multipliers apply in source-image RGB space before Canvas CSS-style filters.
+    // Cached tiles ensure repeated animation renders don't process pixel data each frame.
+    getRGBImage(layer, image) {
+      const c=layer.color||{};
+      const red=Math.max(0,Math.min(300,Number(c.red??100)));
+      const green=Math.max(0,Math.min(300,Number(c.green??100)));
+      const blue=Math.max(0,Math.min(300,Number(c.blue??100)));
+      const tintAmount=Math.max(0,Math.min(100,Number(c.tintAmount??0)))/100,hex=/^#[0-9a-f]{6}$/i.test(c.tintHex||'')?c.tintHex:'#ffffff',tint=[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];
+      if(red===100&&green===100&&blue===100&&tintAmount===0)return null;
+      const crop=layer.crop;
+      const key=[layer.assetId,crop.x,crop.y,crop.w,crop.h,red,green,blue,tintAmount,hex].join(':');
+      if(this.rgbCache.has(key))return this.rgbCache.get(key);
+      const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(crop.w));canvas.height=Math.max(1,Math.ceil(crop.h));
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});
+      ctx.drawImage(image,crop.x,crop.y,crop.w,crop.h,0,0,canvas.width,canvas.height);
+      const pixels=ctx.getImageData(0,0,canvas.width,canvas.height),data=pixels.data;
+      for(let i=0;i<data.length;i+=4){const lum=.2126*data[i]+.7152*data[i+1]+.0722*data[i+2];data[i]=Math.min(255,Math.round(data[i]*red/100*(1-tintAmount)+(lum*tint[0]/255)*tintAmount));data[i+1]=Math.min(255,Math.round(data[i+1]*green/100*(1-tintAmount)+(lum*tint[1]/255)*tintAmount));data[i+2]=Math.min(255,Math.round(data[i+2]*blue/100*(1-tintAmount)+(lum*tint[2]/255)*tintAmount));}
+      ctx.putImageData(pixels,0,0);this.rgbCache.set(key,canvas);return canvas;
     }
     static get VIEWS() {return ['front','threeQuarterFrontLeft','left','threeQuarterBackLeft','back','threeQuarterBackRight','right','threeQuarterFrontRight'];}
     viewForAngle(degrees) {return FootballSpriteCharacter.VIEWS[((Math.round(degrees / 45) % 8) + 8) % 8];}
@@ -93,7 +116,10 @@
         context.translate(t.x, t.y);
         context.rotate(t.rotationDeg * Math.PI / 180);
         context.scale(t.scaleX * (t.flipX ? -1 : 1), t.scaleY * (t.flipY ? -1 : 1));
-        context.drawImage(image, crop.x, crop.y, crop.w, crop.h,
+        const rgbImage=this.getRGBImage(layer,image);
+        if(rgbImage)context.drawImage(rgbImage,0,0,rgbImage.width,rgbImage.height,
+          -crop.w * (t.anchorX ?? .5), -crop.h * (t.anchorY ?? .5), crop.w, crop.h);
+        else context.drawImage(image, crop.x, crop.y, crop.w, crop.h,
           -crop.w * (t.anchorX ?? .5), -crop.h * (t.anchorY ?? .5), crop.w, crop.h);
         context.restore();
       }

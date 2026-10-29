@@ -194,3 +194,14 @@ Rendering uses **transparent RGBA output** for PNG and a transparent indexed pal
 
 Scopes: `currentFrame`, `currentAnimation` (all eight views), `currentView` (all animations), `all` (all views and animations).
 Methods: `sourceScale` (same PNG-relative scale), `renderedHeight`, `renderedWidth`. Original PNG resolution remains unchanged.
+
+
+## Additional image tool commands (v5.4)
+
+`splitImageAuto`, `splitImageManual` and `removeBackground` operate on PNG files and return file paths plus a manifest. See **IMAGE_TOOLS_API.md** for complete examples, parameters and caveats. They can be issued in the same commands array as regular asset-project operations. Example:
+
+```json
+{"commands":[{"op":"splitImageAuto","source":"./sheet.png","outputDir":"./extracted","minPixels":1000,"alphaThreshold":25,"padding":3,"assignments":[{"view":"front","category":"head"}],"importToProject":true},{"op":"review"}]}
+```
+
+When `importToProject:true`, files are also registered as assets and layers and saved through the existing bundled/external JSON pipeline. The PowerShell wrapper executes the same Node CLI; no PowerShell-specific image-processing library is required.

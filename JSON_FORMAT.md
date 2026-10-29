@@ -1,5 +1,7 @@
 # SuperMagic Asset Studio JSON format
 
+Editor version documented here: **v5.2**
+
 ## Root object
 
 ```json
@@ -87,9 +89,7 @@ In `external` mode, `src` may be absent.
     "sepia": 0,
     "red": 100,
     "green": 100,
-    "blue": 100,
-    "tintHex": "#cf9a74",
-    "tintAmount": 25
+    "blue": 100
   }
 }
 ```
@@ -124,17 +124,34 @@ Animations can reuse frames from another animation:
 }
 ```
 
-## Color rules in editor and runtime
 
-- `red`, `green`, `blue`: channel intensity multipliers from 0 to 300 (100 = unchanged).
-- `tintHex`: 24-bit RGB color in `#RRGGBB` form, defaults to `#ffffff`.
-- `tintAmount`: how strongly the color tint replaces original RGB from 0 to 100 (0 = unchanged, 100 = recolor using source luminance).
-- Brightness, contrast, saturation, hue and sepia are then applied as Canvas filters.
+## `partDefinitions`
 
-## External assets
+When the project uses `mode: "custom"`, the project may contain a reusable modular-parts definition:
 
-When `assetStorage` is `external`, `assets` entries preserve `fileRef` instead of `src`. Paths are resolved by the runtime relative to the project JSON file URL or the supplied `assetBaseUrl`. The editor can resolve image files by matching their filename to `fileRef`. Avoid duplicate filenames for different images unless you explicitly give unique relative names.
+```json
+{
+  "format": "SuperMagicParts",
+  "schemaVersion": 1,
+  "base": "standard",
+  "parts": [
+    {"id":"body","name":"Body","group":"Base","default":true,"order":0},
+    {"id":"head","name":"Head","group":"Head","default":true,"order":1},
+    {"id":"shirt","name":"Shirt","group":"Clothes","default":false,"order":2}
+  ]
+}
+```
 
-## AI command panel
+Notes:
+- `base` indicates which structure was used as the starting point.
+- `parts` is ordered.
+- `id` must start with a letter and may contain only letters, digits, and `_`.
+- `name` is the display label shown in the UI.
+- `group` is a free-form grouping label.
+- `default` is optional and indicates that the part is typically enabled by default.
+- `order` is optional but preserved when exporting.
 
-See `API.md`, `supermagic-api-spec.json`, and `ai-commands-example.json`.
+
+## Extracted sprite manifest (v5.4)
+
+The image tools also export a separate manifest with `format:"FootballSpriteAssetBundle"`, `version:1`, and an `items` array. Each item provides `file`, `view`, `category`, `animation`, `frame`, `mirror` and optionally `cropSource:{x,y,w,h}` in the original sheet. The crop rectangle records provenance; the cropped PNG itself is now its own source image. The manifest may be imported together with its PNG files through the regular bulk import queue. See `IMAGE_TOOLS_API.md`.

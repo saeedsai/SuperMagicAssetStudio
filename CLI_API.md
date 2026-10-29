@@ -178,3 +178,19 @@ Rendering uses **transparent RGBA output** for PNG and a transparent indexed pal
 - This is a headless **data API and raster renderer**. Interactive UI-only features such as dragging handles or playing a preview are represented by equivalent numeric transforms, frame selection, and animation data, rather than literally driving a mouse.
 - Browser canvas blending, filter interpolation, and font rendering can differ slightly from the CLI's PNG/GIF renderer.
 - PowerShell itself was not available in the build environment; the underlying Node entry point and image exports were tested end to end.
+
+
+### `autoResizeMatching` (v5.3)
+
+```json
+{
+  "op":"autoResizeMatching",
+  "sourceMatch":{"category":"head"},
+  "scope":"all",
+  "matchBy":"category",
+  "method":"sourceScale"
+}
+```
+
+Scopes: `currentFrame`, `currentAnimation` (all eight views), `currentView` (all animations), `all` (all views and animations).
+Methods: `sourceScale` (same PNG-relative scale), `renderedHeight`, `renderedWidth`. Original PNG resolution remains unchanged.

@@ -1,8 +1,12 @@
-# SuperMagic Asset Studio v5
+# SuperMagic Asset Studio v5.3.2
+
+**Created by Saeed**  
+**saeedmsalehi1990@gmail.com**  
+Licensed under the **MIT License** (see `LICENSE`).
 
 SuperMagic Asset Studio is an offline HTML + JavaScript editor for building 8-direction football-game sprite assets from layered PNG parts.
 
-## Main improvements in v5
+## Main improvements
 
 - Two JSON storage modes:
   - **Bundled**: images are embedded as data URLs inside the JSON.
@@ -12,6 +16,10 @@ SuperMagic Asset Studio is an offline HTML + JavaScript editor for building 8-di
   - The editor opens with only the most important sections expanded.
   - Added a real top menu bar: **File / Import / View / Animation / Tools / Help**.
 - Mode-aware part menus:
+- Custom modular structure editor in the UI:
+  - Start custom mode from **Full body**, **Body + head**, **Standard modular**, or the **current custom** structure.
+  - Add, rename, regroup, reorder, or delete custom parts directly in the UI.
+  - Export the custom parts definition as a reusable `SuperMagicParts` JSON file.
   - **Full body** only shows `fullBody` and accessories.
   - **Body + head** shows only body/head-related parts.
   - **Standard modular** shows the built-in modular categories.
@@ -147,3 +155,46 @@ Select **Tools → AI command panel**, paste a JSON command batch, then click **
 ## RGB color tools (v5)
 
 Choose any layer to adjust independent red, green and blue multipliers, or use a full 24-bit **RGB tint color picker** with tint-strength control. Both editor and runtime use the saved color values.
+
+
+## Custom modular structures
+
+In **Custom modular** mode, the structure no longer has to be defined only in JSON.
+
+Use the **Project** panel to:
+- choose a base structure,
+- apply or merge that base into the current custom setup,
+- add or update a part in the form,
+- edit part IDs, names, groups, and default flags in the table,
+- reorder parts with the arrow buttons,
+- export the result as a reusable parts-definition JSON.
+
+This allows both simple setups like `body + head + shirt + shorts` and large setups that extend the standard modular structure with extra parts.
+
+
+## PowerShell / CLI API for AI agents
+
+Run the editor project **without a browser** using Node.js 20+ via the PowerShell wrapper:
+
+```powershell
+pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -CommandFile ./cli-example-commands.json
+pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -Operation review
+```
+
+Commands can create/edit custom parts, change colors and geometry, build animations, reorder layers, run validation, undo/redo, and export PNG/GIF/sprite-sheet/360° turntable assets. PowerShell and direct Node callers receive structured JSON results. **No npm dependencies** are needed. See `CLI_API.md` and `cli-command-schema.json`.
+
+## Credits and license
+
+Created by **Saeed** — **saeedmsalehi1990@gmail.com**.
+
+Released under the **MIT License**; see `LICENSE`.
+
+
+## v5.3: eight-view assembly improvements
+
+- 360° view controls are directly beneath the canvas; camera selection still lives in the left panel.
+- Hold **Ctrl** (or Command on macOS) and click layers in the layer list or canvas to select multiple sprites. Drag a selected part to move the whole selection, or drag the group's corners to resize together. The inspector also provides precise group deltas and scale multipliers.
+- The inspector describes scale and rotation relative to the original image: scaleX=1/scaleY=1 means one canvas pixel per original PNG pixel; rotationDeg=0 means the original PNG orientation. Cropping does not redefine scale.
+- Use **Auto-resize matching parts** in the inspector to copy scale factors or matching displayed width/height across eight views and/or animations. Reused animation clips inherit source frame edits automatically.
+- `autoResizeMatching` is also exposed to browser API, structured commands, and headless CLI.
+- `alex_modular_zip_demo_bundled.json` is a demonstrator assembled from the user-supplied 47-sprite ZIP, with 8 directional previews. Source sprites are extracted/upscaled cutouts and may not be complete production-ready modular artwork. Some missing angles use mirrored sources; Run frames are standing placeholders.

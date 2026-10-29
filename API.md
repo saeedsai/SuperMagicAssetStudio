@@ -14,7 +14,7 @@ This is intended for browser automation tools, AI agents, test scripts, and cust
 SuperMagicAssetStudioAPI.version
 ```
 
-Current value: `5.2.0`
+Current value: `5.4.0`
 
 ## Methods
 
@@ -259,3 +259,24 @@ SuperMagicAssetStudioAPI.autoResizeMatching({
 ### Multi-selection
 
 `selectLayers(ids)` changes the active selection and `getSelectedLayerIds()` retrieves it. Use Ctrl-click in the layer list or canvas to multi-select. Resize/move operations are available through the editor UI.
+
+
+## Image processing API (v5.4)
+
+The browser editor now includes three image operations; these work offline and do not require an AI model.
+
+```js
+const api = window.SuperMagicAssetStudioAPI;
+api.openImageTools('auto');              // 'manual' | 'auto' | 'background'
+await api.loadImageToolsFile(file);       // a browser File object
+const boxes = api.autoSplitImage(canvas, {alphaThreshold:25, minArea:1000, padding:3});
+const files = await api.cropImageRegions(canvas, boxes);
+const result = api.removeImageBackground(canvas, {color:'#00ff00', tolerance:38, connected:true});
+const currentBoxes = api.getDetectedRegions();
+```
+
+`autoSplitImage` returns original-image pixel rectangles `{x,y,w,h}`. `cropImageRegions` returns PNG `File[]`; `removeImageBackground` returns `{canvas,removed}` and preserves the original canvas.
+
+The structured AI command panel supports **`splitImageAuto`**, **`splitImageManual`**, and **`removeBackground`**. For these browser commands, supply an existing project `assetId` whose asset has embedded image data; generated PNGs enter the import queue. Optional `assignments:[{view,category,animation,frame,mirror}]` prefill the first items.
+
+For headless file-based processing from PowerShell or Node, see `IMAGE_TOOLS_API.md` and `CLI_API.md`.

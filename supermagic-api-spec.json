@@ -1,6 +1,6 @@
 {
   "name": "SuperMagicAssetStudioAPI",
-  "version": "5.0.0",
+  "version": "5.4.0",
   "type": "browser-global",
   "global": "window.SuperMagicAssetStudioAPI",
   "methods": [
@@ -122,6 +122,65 @@
     {
       "name": "saveJSON",
       "returns": "void"
+    },
+    {
+      "name": "getPartDefinitions",
+      "returns": "SuperMagicPartsObject"
+    },
+    {
+      "name": "setPartDefinitions",
+      "args": [
+        {
+          "name": "spec",
+          "type": "SuperMagicPartsObject"
+        }
+      ],
+      "returns": "SuperMagicPartsObject"
+    },
+    {
+      "name": "exportPartDefinitions",
+      "args": [
+        {
+          "name": "mode",
+          "enum": [
+            "fullBody",
+            "bodyHead",
+            "standard",
+            "custom"
+          ]
+        }
+      ],
+      "returns": "SuperMagicPartsObject"
+    },
+    {
+      "name": "openImageTools",
+      "args": "mode: manual|auto|background",
+      "returns": "void"
+    },
+    {
+      "name": "loadImageToolsFile",
+      "args": "file: File",
+      "returns": "Promise<void>"
+    },
+    {
+      "name": "autoSplitImage",
+      "args": "canvas: HTMLCanvasElement,options: object",
+      "returns": "Region[]"
+    },
+    {
+      "name": "cropImageRegions",
+      "args": "canvas: HTMLCanvasElement,regions: Region[]",
+      "returns": "Promise<File[]>"
+    },
+    {
+      "name": "removeImageBackground",
+      "args": "canvas: HTMLCanvasElement,options: object",
+      "returns": "{canvas,removed}"
+    },
+    {
+      "name": "getDetectedRegions",
+      "args": "none",
+      "returns": "Region[]"
     }
   ],
   "commandOps": {
@@ -167,5 +226,13 @@
     "threeQuarterBackRight",
     "right",
     "threeQuarterFrontRight"
-  ]
+  ],
+  "cli": {
+    "powershell_entrypoint": "SuperMagicAssetStudio.ps1",
+    "node_entrypoint": "agent-cli.mjs",
+    "operations_schema": "cli-command-schema.json",
+    "reference": "CLI_API.md",
+    "requires": "Node.js >=20, PowerShell 7+ or Windows PowerShell 5.1",
+    "local_only": true
+  }
 }

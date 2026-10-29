@@ -240,3 +240,22 @@ Example:
 ## Headless PowerShell API
 
 For command-line or agentic AI access without a browser, see **`CLI_API.md`** and the PowerShell script **`SuperMagicAssetStudio.ps1`**. It exposes project editing, animation and layer operations, CLI undo/redo, PNG/GIF exports, and JSON validation.
+
+
+### `autoResizeMatching(options)` (v5.3)
+Copies scale to matching layers across selected views and animation frames, preserving their positions and rotations. Requires an example layer selected in the editor.
+
+```js
+SuperMagicAssetStudioAPI.selectLayers(['torso_0_torso']);
+SuperMagicAssetStudioAPI.autoResizeMatching({
+  scope: 'all', // currentFrame | currentAnimation | currentView | all
+  matchBy: 'category', // category | name | assetId
+  method: 'sourceScale' // sourceScale | renderedHeight | renderedWidth
+});
+```
+
+`sourceScale` copies original-image scaleX/scaleY factors, not crop-relative percentages.
+
+### Multi-selection
+
+`selectLayers(ids)` changes the active selection and `getSelectedLayerIds()` retrieves it. Use Ctrl-click in the layer list or canvas to multi-select. Resize/move operations are available through the editor UI.

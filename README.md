@@ -93,3 +93,42 @@ The runtime accepts user-selected views, animation frame IDs/indices, transform 
 - `runtime-demo.html`: demo of runtime integration
 - `example-bundle.json`: sample mapping with embedded PNGs; import it alone to test the app
 - `alex-eight-view-starter.json`: sample project using the previously generated Alex art (in downloadable ZIP only; large embedded images)
+
+## Version 3: modular assembly and editing
+
+### Four assembly modes
+Choose **Project → Asset structure**:
+
+1. **Full body + head together**: one image per frame and view (`fullBody`).
+2. **Body + separate head**: independently fitted `body` and `head` layers.
+3. **Standard modular**: use the `standard-parts.json` categories for torso, limbs, hair, face, kit, boots, and accessories.
+4. **Custom modular**: add individual categories in the editor or upload `custom-parts-example.json` in the **Import parts JSON** control. A parts file has `format: "SuperMagicParts"` and a `parts` array of objects containing `id`, `name` and optional `group`/`default` fields. Definition IDs are alphanumeric plus underscores and must be unique.
+
+Modes are editing presets and **do not delete existing layers**. You may mix modes when a scene needs extra accessories. The mode and definitions are serialized in project JSON.
+
+### Layer ordering and crop handles
+Drag layers in the Layers list to reorder them, or use **Move up**, **Move down**, **To front**, **To back**. Array order in `scenes[view][animationId][frameId]` is the exact back-to-front z-order. **Crop handles** enables direct cropping on the main canvas: drag the eight handles (four corners and four edges); crop stores source pixel coordinates `{x,y,w,h}`. Toggle crop mode off to keep drag-to-resize and rotation handles. The original image is never destructively changed.
+
+### References, rulers, and undo
+Right-click a camera or animation frame and select **Use as 30% transparent reference**. The editor also offers selectors for any reference view / animation / frame and custom opacity. `editor.reference` stores this setting but reference overlays **are not exported**. **Grid**, **Rulers** and **Snap** are editing helpers stored under `editor`; they do not change exported PNGs. Use Ctrl/Cmd+Z and Ctrl/Cmd+Y (or Ctrl/Cmd+Shift+Z) for undo and redo. Undo stores up to 60 recent changes. Native text-input undo remains available while editing a text field.
+
+### Local geometry auto-fit
+Select a part, ensure the scene includes a target (body, head, or torso), then click **Auto-fit to part** in the Inspector. The algorithm uses alpha-cropped image bounds, relative anatomical anchor estimates and visible target sizes. It is **not an AI body landmark detector** and will not reliably fit arbitrary poses; fine-tune the result manually. All resulting transforms are exported to JSON.
+
+### Reusable animation timeline clips
+Under **Reuse animation timeline**, select a different source animation, trim its frame range, choose a repeat count and select **Link clip to timeline**. This appends lightweight linked frames of the shape:
+
+```json
+{
+  "id":"frame_x","name":"↪ Stand: Stand 1",
+  "reuse":{"animation":"stand","frame":"stand_1"}
+}
+```
+
+The editor and `runtime.js` recursively draw inherited source layers first, then any local override layers. Edits to the source animation automatically update linked frames. To edit inherited source layers independently in the linked frame, click **Make frame editable** to copy the inherited layers and remove its reference. Cycles in links are safely skipped. The source clip's FPS is not imported; the destination animation FPS is used for playback.
+
+### Manifest import format
+Select multiple PNG files plus `example-bundle-v3.json` in one import operation, then review each proposed assignment. Manifest `items` can specify `file`, `category`, `view`, `animation`, `frame`, `mirror`, `transform`, `crop`, `color`, `visible` and `order`. The source file paths must match the selected PNG filenames. Full project JSON is a separate self-contained file saved through **Save JSON**, with image assets embedded as data URLs.
+
+### Runtime notes
+`runtime.js` supports linked frames, color adjustments, crop, mirroring, per-frame layer order and all eight views. The project schema version is 3, but older eight-view and six-view projects are migrated when loaded in the editor. Transparent overlays and rulers are editor-only. Save project after moving a part to ensure the game sees the updated values.

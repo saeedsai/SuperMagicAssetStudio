@@ -1,0 +1,10 @@
+{
+  "format": "SuperMagicParts",
+  "schemaVersion": 1,
+  "parts": [
+    {"id":"gloveLeft","name":"Left glove","group":"Accessories"},
+    {"id":"gloveRight","name":"Right glove","group":"Accessories"},
+    {"id":"captainArmband","name":"Captain armband","group":"Accessories"},
+    {"id":"numberPatch","name":"Shirt number patch","group":"Clothes"}
+  ]
+}

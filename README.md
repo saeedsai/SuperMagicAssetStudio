@@ -1,10 +1,24 @@
-# SuperMagic Asset Studio v5.3.2
+# SuperMagic Asset Studio v5.4.0
 
 **Created by Saeed**  
 **saeedmsalehi1990@gmail.com**  
 Licensed under the **MIT License** (see `LICENSE`).
 
 SuperMagic Asset Studio is an offline HTML + JavaScript editor for building 8-direction football-game sprite assets from layered PNG parts.
+
+## New in v5.4 — sprite sheet extraction
+
+The **Import** top menu now includes three visual tools:
+
+1. **Manual crop & split** — upload a source image and drag custom rectangles to cut out individual sprites.
+2. **Auto-split multiple sprites** — find separate figures on a transparent sheet using connected alpha components; optionally use a regular row/column grid.
+3. **Remove image background** — use an RGB color and tolerance to remove edge-connected background pixels from an image.
+
+Each split can be exported as a transparent PNG in a ZIP with a `sprite-manifest.json`, or queued for the existing **View / Part / Animation / Frame** assignment workflow. Background removal is color-key based, not an AI matting model.
+
+These tools are also available from the browser automation API and from the PowerShell / Node CLI. See **IMAGE_TOOLS_API.md**. A separate **ASSET_CREATION_GUIDE.md** recommends the best art pipeline and naming/rigging conventions for all four asset structure modes.
+
+**Verified against the two supplied 1536×1024 images:** six head sprites and six headless running-body sprites were detected and extracted (12 transparent PNGs total). Since the images have only six figures each, they are *not* a complete authentic eight-view set. See `v54_split_results_preview.jpg` for the extracted artwork.
 
 ## Main improvements
 
@@ -87,6 +101,10 @@ Best when you want:
 
 When loading an external JSON project, the editor may show unresolved assets. Use **Resolve external images** and select the referenced PNG files.
 
+## Asset creation recommendations
+
+For a football game with many players, **Body + Separate Head** is the recommended default, because you can reuse body animations and outfit variations across many different heads. Use **Full Body** for prototypes, **Standard Modular** for real articulated animation, and **Custom Modular** to combine only the pieces your game needs. Detailed per-part generation instructions, view consistency, naming and animation rules are in **ASSET_CREATION_GUIDE.md**.
+
 ## Included files
 
 - `index.html` — main editor.
@@ -95,7 +113,10 @@ When loading an external JSON project, the editor may show unresolved assets. Us
 - `standard-parts.json` — built-in modular schema example.
 - `custom-parts-example.json` — minimal custom schema example.
 - `example-bundle-v3.json` — example bundle/manifest import file.
-- `API.md` — automation API reference.
+- `API.md` — browser automation API reference.
+- `IMAGE_TOOLS_API.md` — browser + CLI sprite splitting and background removal operations.
+- `ASSET_CREATION_GUIDE.md` — production instructions for all four asset modes.
+- `agent-image-tools.mjs` — dependency-free Node PNG splitter and background remover.
 - `JSON_FORMAT.md` — JSON project format and schemas.
 
 ## Running the editor

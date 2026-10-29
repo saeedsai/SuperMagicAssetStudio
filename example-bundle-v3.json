@@ -1,0 +1,29 @@
+{
+  "format": "SuperMagicAssetBundle",
+  "schemaVersion": 3,
+  "items": [
+    {
+      "file": "body.png",
+      "view": "front",
+      "animation": "stand",
+      "frame": "stand_1",
+      "category": "body",
+      "visible": true,
+      "order": 0,
+      "transform": {"x":384,"y":470,"scaleX":1.0,"scaleY":1.0,"rotationDeg":0,"opacity":1,"flipX":false,"flipY":false,"anchorX":0.5,"anchorY":0.5},
+      "crop": {"x":0,"y":0,"w":128,"h":256},
+      "color": {"brightness":100,"contrast":100,"saturate":100,"hue":0,"sepia":0}
+    },
+    {
+      "file": "head.png",
+      "view": "front",
+      "animation": "stand",
+      "frame": "stand_1",
+      "category": "head",
+      "visible": true,
+      "order": 1,
+      "transform": {"x":384,"y":175,"scaleX":1.2,"scaleY":1.2,"rotationDeg":0,"opacity":1,"flipX":false,"flipY":false,"anchorX":0.5,"anchorY":0.5},
+      "color": {"brightness":100,"contrast":100,"saturate":100,"hue":0,"sepia":0}
+    }
+  ]
+}

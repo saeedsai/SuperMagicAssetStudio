@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SuperMagic Agent Commands",
+  "description": "Structured command protocol for PowerShell/Node CLI. Detailed op parameters in CLI_API.md",
+  "type": "object",
+  "required": [
+    "commands"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "op"
+        ],
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "createProject",
+              "setProjectName",
+              "setCanvas",
+              "setMode",
+              "setImageStorage",
+              "setView",
+              "rotateView",
+              "setAnimation",
+              "setFrame",
+              "setEditor",
+              "setGrid",
+              "setReference",
+              "clearReference",
+              "setDefault",
+              "setPartsDefinition",
+              "addCustomPart",
+              "updatePart",
+              "removePart",
+              "reorderPart",
+              "exportPartsDefinition",
+              "addAsset",
+              "replaceAsset",
+              "removeAsset",
+              "addLayer",
+              "setLayer",
+              "setColor",
+              "setCrop",
+              "setTransform",
+              "setVisibility",
+              "mirrorLayer",
+              "lockLayer",
+              "autoFit",
+              "moveLayer",
+              "deleteLayer",
+              "cloneLayer",
+              "reuseView",
+              "createAnimation",
+              "renameAnimation",
+              "setFPS",
+              "deleteAnimation",
+              "addFrame",
+              "duplicateFrame",
+              "deleteFrame",
+              "linkFrame",
+              "unlinkFrame",
+              "appendClip",
+              "importManifest",
+              "undo",
+              "redo",
+              "summary",
+              "review",
+              "listAssets",
+              "listParts",
+              "listLayers",
+              "getProject"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

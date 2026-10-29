@@ -5,7 +5,7 @@ import zlib from 'node:zlib';
 import {resolveLayers,VIEWS} from './agent-engine.mjs';
 const SIGNATURE=Buffer.from('89504e470d0a1a0a','hex');
 const clamp=(v,a=0,b=255)=>Math.max(a,Math.min(b,v));
-function readPNG(buf){
+export function readPNG(buf){
  if(!buf.subarray(0,8).equals(SIGNATURE))throw new Error('CLI renderer supports PNG assets only. Convert JPEG/WebP to PNG first.');
  let w=0,h=0,depth=0,type=0,interlace=0,palette=null,trns=null;const chunks=[];
  for(let i=8;i<buf.length;){const size=buf.readUInt32BE(i),name=buf.toString('ascii',i+4,i+8),bytes=buf.subarray(i+8,i+8+size);i+=12+size;

@@ -48,6 +48,18 @@
       const a = this.animation(animation);
       return Math.floor(Math.max(0, elapsedMs) * a.fps / 1000) % a.frames.length;
     }
+    // Linkable animation frames reuse source frame content at render time.
+    // The local scene is added on top, preserving its explicit z-order.
+    resolveLayers(view, animationId, frameId, seen = new Set()) {
+      const key = `${animationId}:${frameId}`;
+      if (seen.has(key)) return [];
+      seen.add(key);
+      const animation = this.project.animations.find(a => a.id === animationId);
+      const frame = animation?.frames.find(f => f.id === frameId);
+      const inherited = frame?.reuse?.animation && frame?.reuse?.frame
+        ? this.resolveLayers(view, frame.reuse.animation, frame.reuse.frame, seen) : [];
+      return inherited.concat(this.project.scenes?.[view]?.[animationId]?.[frameId] || []);
+    }
     // x and y position the world-space origin. With origin='feet' (default),
     // (x,y) is the sprite's bottom-center, easy for platformers and football games.
     // With origin='topLeft', (x,y) is the top-left of the original editor canvas.
@@ -60,7 +72,7 @@
         : a.frames[((Math.trunc(frame) % a.frames.length) + a.frames.length) % a.frames.length];
       if (!f) return;
       const width = this.project.canvas.width, height = this.project.canvas.height;
-      const layers = this.project.scenes?.[view]?.[a.id]?.[f.id] || [];
+      const layers = this.resolveLayers(view, a.id, f.id);
       context.save();
       context.globalAlpha *= alpha;
       context.translate(x, y);

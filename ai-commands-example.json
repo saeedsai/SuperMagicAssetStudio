@@ -1,0 +1,14 @@
+{
+  "commands": [
+    {"op":"createProject","name":"Alex - Modular","mode":"bodyHead","assetStorage":"external"},
+    {"op":"setCanvas","width":768,"height":768},
+    {"op":"addAsset","id":"body_front","name":"body_front.png","fileRef":"body_front.png","width":1024,"height":1536},
+    {"op":"addAsset","id":"head_front","name":"head_front.png","fileRef":"head_front.png","width":512,"height":512},
+    {"op":"addLayer","id":"body_layer","name":"Body","category":"body","assetId":"body_front","view":"front","animation":"stand","frame":"stand_1","transform":{"x":384,"y":410,"scaleX":0.4,"scaleY":0.4}},
+    {"op":"addLayer","id":"head_layer","name":"Head","category":"head","assetId":"head_front","view":"front","animation":"stand","frame":"stand_1","transform":{"x":384,"y":190,"scaleX":0.32,"scaleY":0.32},"color":{"tintHex":"#cf9a74","tintAmount":15}},
+    {"op":"createAnimation","id":"celebrate","name":"Celebrate","fps":8,"frames":["Celebrate 1","Celebrate 2"]},
+    {"op":"setView","view":"front"},
+    {"op":"summary"},
+    {"op":"review"}
+  ]
+}

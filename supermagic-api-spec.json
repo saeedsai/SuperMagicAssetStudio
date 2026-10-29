@@ -1,0 +1,171 @@
+{
+  "name": "SuperMagicAssetStudioAPI",
+  "version": "5.0.0",
+  "type": "browser-global",
+  "global": "window.SuperMagicAssetStudioAPI",
+  "methods": [
+    {
+      "name": "getProject",
+      "returns": "ProjectObject"
+    },
+    {
+      "name": "exportProjectObject",
+      "args": [
+        {
+          "name": "options",
+          "type": {
+            "assetStorage": [
+              "bundled",
+              "external"
+            ]
+          }
+        }
+      ],
+      "returns": "ProjectObject"
+    },
+    {
+      "name": "getSummary",
+      "returns": "SummaryObject"
+    },
+    {
+      "name": "review",
+      "returns": "ReviewObject"
+    },
+    {
+      "name": "setMode",
+      "args": [
+        {
+          "name": "mode",
+          "enum": [
+            "fullBody",
+            "bodyHead",
+            "standard",
+            "custom"
+          ]
+        }
+      ],
+      "returns": "ProjectObject"
+    },
+    {
+      "name": "setImageStorage",
+      "args": [
+        {
+          "name": "mode",
+          "enum": [
+            "bundled",
+            "external"
+          ]
+        }
+      ],
+      "returns": "string"
+    },
+    {
+      "name": "importProjectObject",
+      "args": [
+        {
+          "name": "project",
+          "type": "ProjectObject"
+        }
+      ],
+      "returns": "ProjectObject"
+    },
+    {
+      "name": "resolveExternalImages",
+      "args": [
+        {
+          "name": "files",
+          "type": "FileList|File[]"
+        }
+      ],
+      "returns": "Promise<void>"
+    },
+    {
+      "name": "setView",
+      "args": [
+        {
+          "name": "view",
+          "type": "ViewId"
+        }
+      ],
+      "returns": "string"
+    },
+    {
+      "name": "setAnimation",
+      "args": [
+        {
+          "name": "animationId",
+          "type": "string"
+        }
+      ],
+      "returns": "string"
+    },
+    {
+      "name": "setFrame",
+      "args": [
+        {
+          "name": "frameId",
+          "type": "string"
+        }
+      ],
+      "returns": "string"
+    },
+    {
+      "name": "runCommands",
+      "args": [
+        {
+          "name": "payload",
+          "type": "CommandPayload"
+        }
+      ],
+      "returns": "Promise<string>"
+    },
+    {
+      "name": "saveJSON",
+      "returns": "void"
+    }
+  ],
+  "commandOps": {
+    "create": [
+      "createProject",
+      "setCanvas",
+      "addAsset",
+      "addLayer",
+      "createAnimation",
+      "addFrame",
+      "addCustomPart"
+    ],
+    "modify": [
+      "setProjectName",
+      "setMode",
+      "setImageStorage",
+      "setView",
+      "setAnimation",
+      "setFrame",
+      "selectLayer",
+      "setLayer",
+      "moveLayer",
+      "deleteLayer",
+      "setReference"
+    ],
+    "review": [
+      "summary",
+      "review"
+    ]
+  },
+  "layerScopes": [
+    "currentFrame",
+    "currentAnimationCurrentView",
+    "allCurrentView",
+    "all"
+  ],
+  "views": [
+    "front",
+    "threeQuarterFrontLeft",
+    "left",
+    "threeQuarterBackLeft",
+    "back",
+    "threeQuarterBackRight",
+    "right",
+    "threeQuarterFrontRight"
+  ]
+}

@@ -22,6 +22,21 @@ test('Complete catalog has one entry for every live HTML form and action ID',()=
  assert(catalog.controls.some(x=>x.id==='paintSize'&&x.cli==='setting'));
  assert(catalog.controls.some(x=>x.id==='menuManualSplit'&&x.operation==='splitImageManual'));
 });
+test('All dynamic Inspector, custom-part and import properties have documented schema routes',()=>{
+ const source=fs.readFileSync(path.join(repo,'src/editor/app.js'),'utf8');
+ const declared=new Set((catalog.dynamicProperties||[]).map(x=>x.scope+':'+x.field));
+ for(const field of ['name','category','x','y','scaleX','scaleY','rotationDeg','opacity','colorBrightness','colorTintHex','cropX','cropY','cropW','cropH']){
+  assert(declared.has('layer:'+field),'Missing layer setting '+field);
+ }
+ for(const field of ['dx','dy','scaleX','scaleY','rotationDeg'])assert(declared.has('group:'+field));
+ for(const field of ['id','name','group','default'])assert(declared.has('customPart:'+field));
+ for(const field of ['view','category','animation','frame','mirror'])assert(declared.has('importQueue:'+field));
+ for(const field of ['rect','poly','bezier','wand'])assert(declared.has('spriteRegion:'+field));
+ for(const m of source.matchAll(/data-group-prop="([^"]+)"/g))assert(declared.has('group:'+m[1]));
+ for(const m of source.matchAll(/data-part-field="([^"]+)"/g))assert(declared.has('customPart:'+m[1]));
+ for(const m of source.matchAll(/data-q="([^"]+)"/g))assert(declared.has('importQueue:'+m[1]));
+});
+
 test('CLI project properties and paint settings are writable, inspectable and verified',()=>{
  const p=make();
  run(p,{op:'setControlValue',id:'paintSize',value:12});

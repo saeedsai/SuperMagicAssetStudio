@@ -437,7 +437,8 @@
       ],
       "browser": true,
       "cli": "setting",
-      "projectPath": "mode"
+      "projectPath": "mode",
+      "defaultValue": "fullBody"
     },
     {
       "id": "imageStorage",
@@ -450,7 +451,8 @@
       ],
       "browser": true,
       "cli": "setting",
-      "projectPath": "assetStorage"
+      "projectPath": "assetStorage",
+      "defaultValue": "bundled"
     },
     {
       "id": "downloadPartsSchema",
@@ -488,7 +490,8 @@
         "fullBody"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "current"
     },
     {
       "id": "applyCustomBase",
@@ -545,7 +548,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": false
     },
     {
       "id": "addCustomPart",
@@ -585,7 +589,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": true
     },
     {
       "id": "reuseReplace",
@@ -593,7 +598,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": true
     },
     {
       "id": "reuseView",
@@ -734,7 +740,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": false
     },
     {
       "id": "replaceCategory",
@@ -742,7 +749,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": false
     },
     {
       "id": "importMirror",
@@ -750,7 +758,8 @@
       "kind": "checkbox",
       "section": "project-and-assets",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": false
     },
     {
       "id": "applyQueue",
@@ -793,7 +802,8 @@
       ],
       "browser": true,
       "cli": "setting",
-      "projectPath": "editor.uiOptions.paintTool"
+      "projectPath": "editor.uiOptions.paintTool",
+      "defaultValue": "select"
     },
     {
       "id": "paintColor",
@@ -827,7 +837,8 @@
         "soft"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "round"
     },
     {
       "id": "paintTexture",
@@ -842,7 +853,8 @@
         "imported"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "solid"
     },
     {
       "id": "paintOpacity",
@@ -889,7 +901,8 @@
         "gradient"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "color"
     },
     {
       "id": "paintGradientEnd",
@@ -910,7 +923,8 @@
         "original"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "paint"
     },
     {
       "id": "paintSides",
@@ -940,7 +954,8 @@
         "fill"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "stroke"
     },
     {
       "id": "paintText",
@@ -966,7 +981,8 @@
         "system-ui"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "Arial"
     },
     {
       "id": "paintFontSize",
@@ -1252,7 +1268,8 @@
       "section": "canvas",
       "browser": true,
       "cli": "setting",
-      "projectPath": "editor.snap"
+      "projectPath": "editor.snap",
+      "defaultValue": false
     },
     {
       "id": "canvasWidth",
@@ -1339,7 +1356,8 @@
         "all"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "currentFrame"
     },
     {
       "id": "autoResizeMatch",
@@ -1352,7 +1370,8 @@
         "assetId"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "category"
     },
     {
       "id": "autoResizeMethod",
@@ -1365,7 +1384,8 @@
         "renderedWidth"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "sourceScale"
     },
     {
       "id": "cancelAutoResize",
@@ -1570,7 +1590,8 @@
         "grid"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "alpha"
     },
     {
       "id": "spriteMinArea",
@@ -1629,7 +1650,8 @@
         "wand"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "rect"
     },
     {
       "id": "spriteCurveSmooth",
@@ -1650,7 +1672,8 @@
         "color"
       ],
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": "alpha"
     },
     {
       "id": "spriteWandTolerance",
@@ -1734,7 +1757,8 @@
       "kind": "checkbox",
       "section": "paint-and-image",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": true
     },
     {
       "id": "spriteBackgroundSample",
@@ -1836,7 +1860,8 @@
       "kind": "checkbox",
       "section": "paint-and-image",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "defaultValue": true
     },
     {
       "id": "bgStandaloneRestore",

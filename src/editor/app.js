@@ -544,6 +544,30 @@ ${JSON.stringify(obj,null,2)}`:msg);
       case 'deleteLayer': {if(!cmd.match||!Object.keys(cmd.match).length)throw new Error('deleteLayer requires a non-empty match selector');const found=findLayers(cmd.match,cmd.scope||'currentFrame'); touch(); let n=0; for(const f of [...found].reverse()){f.layers.splice(f.index,1); n++;} if(selectedLayer && !scene().some(l=>l.id===selectedLayer))selectedLayer=null; say(`✔ Deleted ${n} layer(s)`); break;}
       case 'autoResizeMatching': {const n=applyAutoResize(cmd);say(`✔ Auto-resized ${n} matching layers`);break;}
       case 'setReference': touch(); project.editor.reference={enabled:cmd.enabled!==false,view:cmd.view||currentView,animation:cmd.animation||currentAnimation,frame:cmd.frame||currentFrame,alpha:clamp(num(cmd.alpha,.3),.05,.9)}; say('✔ Reference overlay updated',project.editor.reference); break;
+      case 'listCapabilities': say('UI capabilities',window.SuperMagicAssetStudioAPI.listCapabilities()); break;
+      case 'getControlValue': say('UI control',window.SuperMagicAssetStudioAPI.getUIControl(cmd.id)); break;
+      case 'setControlValue':{
+        if(!window.SuperMagicAssetStudioAPI.setUIControl)throw Error('UI controls are not initialized');
+        touch();const value=window.SuperMagicAssetStudioAPI.setUIControl(cmd.id,cmd.value);
+        say('Updated UI control '+cmd.id,{value});break;
+      }
+      case 'invokeControl':{
+        if(!window.SuperMagicAssetStudioAPI.invokeUIAction)throw Error('UI controls are not initialized');
+        const result=window.SuperMagicAssetStudioAPI.invokeUIAction(cmd.id);
+        say('Invoked UI action',result);break;
+      }
+      case 'paint':{
+        const paintAPI=window.SuperMagicPaintAPI;
+        if(!paintAPI?.performPaintOperation)throw Error('Paint API unavailable');
+        const mapping={size:'paintSize',brushShape:'paintBrushShape',color:'paintColor',texture:'paintTexture',
+          fillMode:'paintFillMode',gradientEnd:'paintGradientEnd',eraseMode:'paintEraseMode',sides:'paintSides',
+          curveBend:'paintCurveBend',shapeFill:'paintShapeFill',text:'paintText',font:'paintFont',fontSize:'paintFontSize'};
+        const options={...(cmd.properties||{})};
+        for(const [key,id] of Object.entries(mapping))if(cmd[key]!==undefined)options[id]=cmd[key];
+        if(cmd.opacity!==undefined)options.paintOpacity=Math.round(Number(cmd.opacity)*100);
+        const info=await paintAPI.performPaintOperation({...cmd,properties:options});
+        say('Paint operation',info);break;
+      }
       case 'summary': say('Summary',window.SuperMagicAssetStudioAPI.getSummary()); break;
       case 'splitImageAuto':case 'splitImageManual':case 'removeBackground':{
         const a=project.assets[cmd.assetId];if(!a?.src)throw new Error('Image command requires an existing image assetId with embedded src');

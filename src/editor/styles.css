@@ -72,7 +72,7 @@
  .sidebar,.inspector{max-height:245px;border:0;border-bottom:1px solid var(--line)}
  .studio-workspace-tabs{flex-wrap:nowrap;overflow-x:auto}
  .studio-workspace-tab{flex:0 0 auto}
- .studio-properties-popover{position:fixed;top:105px;right:8px;max-height:68vh}
+ .studio-properties-popover{position:absolute;right:8px;max-height:68vh}
  .editor-toolbar .small-note{max-width:260px}
 }
 @media(prefers-reduced-motion:reduce){.studio-workspace-tab,.studio-properties-trigger{transition:none}}

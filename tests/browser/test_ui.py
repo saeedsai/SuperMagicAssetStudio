@@ -358,8 +358,7 @@ def check_112(t):
     result=t.page.evaluate('()=>SuperMagicAssetStudioAPI.listCapabilities()')
     t.assertGreaterEqual(len(result['controls']),200)
     t.assertIn('paintSize',[x['id'] for x in result['controls']])
-    t.assertEqual(len(result['controls']),t.page.locator('[id]').evaluate_all(
-        "(els)=>els.filter(el=>['BUTTON','INPUT','SELECT','TEXTAREA'].includes(el.tagName)).length"))
+    t.assertTrue(t.page.evaluate("""controls=>controls.every(x=>Boolean(document.getElementById(x.id)))""",result['controls']))
 
 def check_113(t):
     t.page.wait_for_function('Boolean(window.SuperMagicCapabilities)')

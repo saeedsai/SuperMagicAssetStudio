@@ -107,3 +107,78 @@ Upload the manifest JSON **together with** its PNG files to prefill the import q
 - Background removal only targets a nearly uniform color; it does not remove arbitrary detailed backgrounds.
 - Browser output is PNG even when the input was JPEG/WebP. Headless CLI input/output is PNG only.
 - Split regions are proposed **only**; directions and animation frames cannot be inferred reliably from artwork without semantic analysis, so assign them manually.
+
+
+## Freeform split regions
+
+Manual splitting now supports `type: "poly"` regions with absolute `points`, allowing irregular silhouettes to be extracted without forcing a square or rectangular crop. Auto-detected rectangles can also be refined by adding manual freeform regions in the dialog before queueing or downloading the extracted PNGs.
+
+Example region:
+
+```json
+{
+  "type": "poly",
+  "points": [
+    {"x": 112, "y": 35},
+    {"x": 186, "y": 31},
+    {"x": 210, "y": 122},
+    {"x": 101, "y": 145}
+  ]
+}
+```
+
+
+## v5.5 — Curves, editable anchor points, magic wand, standalone background removal
+
+### Browser editor selection modes
+
+Open **Import → Manual crop & split** or **Import → Auto-split multiple sprites**, then use **Boundary**:
+
+- `rect` — drag a box
+- `poly` — click three or more points, then Finish boundary
+- `bezier` — click three or more points; produces a closed, smooth Catmull-Rom-to-cubic-Bézier boundary (`tension` ranges from `0` to `1`)
+- `wand` — click on a visible pixel to flood-select a connected opaque sprite, or a region of similar color
+
+The **Edit points** toggle exposes draggable anchors on the selected polygon or Bézier boundary. Double-click near a path edge to insert a point; **Delete point** removes the selected anchor (while retaining a minimum of three).
+
+These shapes crop to their tight bounds and set pixels outside the boundary transparent; neighboring images in intersecting rectangular bounding boxes are protected. Curved regions use their sampled Bézier outline for bounds and clipping.
+
+### New region formats
+
+```json
+{ "type":"bezier", "tension":0.75, "points":[
+  {"x":20,"y":10},{"x":110,"y":10},{"x":120,"y":100},{"x":18,"y":130}
+]}
+```
+
+```json
+{ "type":"wand", "seed":{"x":183,"y":60}, "mode":"alpha", "tolerance":40 }
+```
+
+For `mode="alpha"`, the wand picks a 4-connected component with alpha above the threshold. For `mode="color"`, it flood-fills the selected similar-colored pixels within the chosen tolerance. Transparent backgrounds cannot be the starting point in opaque mode.
+
+### Browser automation API
+
+```js
+const api = window.SuperMagicAssetStudioAPI;
+const region = api.magicWandRegion(canvas, { x:183, y:60 }, { mode:'alpha', alphaThreshold:25 });
+const outlines = api.getCurveOutline({ type:'bezier', tension:0.75, points:[...] });
+const files = await api.cropImageRegions(canvas, [region, {type:'bezier', points:[...]}]);
+api.openStandaloneBackground();
+```
+
+### Headless CLI / PowerShell
+
+```json
+{ "commands": [
+  { "op":"splitImageManual", "source":"sheet.png", "outputDir":"./output",
+    "regions":[ { "type":"bezier", "tension":0.8,
+      "points":[{"x":10,"y":10},{"x":200,"y":15},{"x":180,"y":250},{"x":15,"y":220}] } ] },
+  { "op":"splitImageWand", "source":"sheet.png", "seed":{"x":340,"y":160},
+    "mode":"alpha", "outputDir":"./wand-output" },
+  { "op":"removeBackground", "source":"opaque.png", "color":"#ffffff",
+    "tolerance":38, "connected":true, "outputDir":"./transparent" }
+]}
+```
+
+The `removeBackground` command runs independently and outputs one transparent PNG; no splitting step is required. PNG rendering and extraction are local and use Node.js 20+ with no npm dependencies.

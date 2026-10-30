@@ -185,6 +185,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('pointerdown',e=>{
  if(popover.hidden||popover.contains(e.target)||propsButton.contains(e.target))return;
  if(e.target.closest('.menubar'))return; // menu selections will refresh the popup
+ if(e.target.closest('.editor-content'))return; // keep live settings available while drawing and finishing a freeform path
  closePaintProperties();
 });
 for(const item of document.querySelectorAll('[data-paint-menu]')){

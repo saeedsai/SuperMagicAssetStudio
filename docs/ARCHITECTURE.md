@@ -15,6 +15,8 @@ SuperMagicAssetStudio/
       styles.css              browser UI styles
       sprite-geometry.js      isolated pure region geometry
       app.js                  browser editor controller and command bridge
+      ui/ui-shell.js           DOM-preserving contextual workspace / popover controller
+      ui/workspace-config.mjs  pure mapping of workspaces, canonical commands, tool settings
     cli/
       agent-cli.mjs           JSON command parser, persistence and exports
       agent-engine.mjs        model, transforms, modes, animations and commands
@@ -58,3 +60,6 @@ The former 198 KB one-file HTML application was split into markup, 16 KB stylesh
 - Keep CLI commands deterministic and emit JSON errors with nonzero exit code on failure.
 - Add one acceptance case for each requirement and substantive behavior tests for each changed feature.
 - Keep `index.html` at repo root for Render static hosting on `main`.
+## UI ownership (v5.8)
+
+The UI shell activates left/right tabpanels, moves *existing* controls to their contextual home, hides redundant menu relay nodes, and shows the existing paint settings only in the Tool options popover. It never owns project state, raster operations or serialized JSON. `workspace-config.mjs` defines each panel's unique placement, tool-to-property mapping and legacy action aliases. `src/editor/paint-tools.js` continues to own draw/selection behavior; `src/editor/app.js` continues to own editing/project state. The shell is loaded after both via a deferred JS module. The public `SuperMagicStudioUI` facade is layout-only.

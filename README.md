@@ -43,3 +43,7 @@ pwsh -File ./SuperMagicAssetStudio.ps1 -Project ./player.json -Operation review
 ## License
 
 MIT — see [LICENSE](LICENSE). This package retains creator credits and respects source artwork rights.
+
+### Main-canvas Paint menu (v5.7)
+
+Use **Paint** to switch between rectangle / freeform / magic wand selection and drawing tools. The collapsible **Paint & selection** sidebar lets you set brush size, round/square/diamond/soft tip, color and opacity, preset or imported texture, solid/texture/gradient fill, polygon sides, curve bend, text font and font size. Alt-click to sample the clone stamp source. To remove pixels, set **Erase target** to either added paint/text/shapes or the currently selected original image. Strokes are stored as editable raster layers in the scene and included in bundled JSON and PNG exports. Painting operations enter Undo history. **Move layers** returns to normal layer selection/transform mode.

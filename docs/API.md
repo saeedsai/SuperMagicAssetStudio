@@ -311,3 +311,29 @@ Polygon regions are clipped to the shape and exported with transparent pixels ou
 - `openStandaloneBackground()` — opens standalone background cleanup, without importing/splitting
 
 See `IMAGE_TOOLS_API.md` for schema, limitations and CLI equivalent.
+
+## Main-canvas painting API (v5.7)
+
+All tools operate client-side. Painting is saved as an ordinary raster PNG asset and a separate movable layer in the current view / animation / frame. Existing JSON and game runtime semantics remain unchanged.
+
+```js
+const editor = window.SuperMagicAssetStudioAPI;
+const paint = window.SuperMagicPaintAPI;
+paint.setTool('brush'); // select, select-rect, select-freeform, select-wand, brush,
+                        // eraser, clone, fill, picker, text, shape-rect,
+                        // shape-poly, shape-oval, shape-circle, shape-line, shape-curve
+paint.getTool();
+paint.getSelectionCount();
+paint.finishFreeform();
+paint.clearSelection();
+
+// Lower-level integration functions:
+editor.getPaintContext(); // {view, animation, frame, width, height}
+editor.createRasterPaintLayer(canvas.toDataURL('image/png'), 'Paint stroke');
+await editor.eraseRasterWithMask(maskCanvas.toDataURL('image/png'), 'paint');
+// use 'original' to erase the selected, unlocked source layer instead
+```
+
+Rectangle / freeform / magic-wand selection creates a pixel mask that restricts subsequent stroke and fill operations. The magic wand compares RGBA values with a configurable tolerance and uses four-way connectivity. The clone stamp source is chosen with Alt-click, and texture import is local (PNG/JPEG/WebP at most 6 MB). Erasing originals creates a fresh asset ID rather than mutating an image shared by other views.
+
+Generated paint PNGs are embedded in **bundled** project JSON. With **external** project JSON, PNG assets must be saved alongside the JSON and restored through the existing external-image resolution workflow. Other tools only modify the current view and frame unless that frame is linked or the resulting layers are copied into other frames.

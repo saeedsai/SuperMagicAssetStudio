@@ -182,3 +182,6 @@ api.openStandaloneBackground();
 ```
 
 The `removeBackground` command runs independently and outputs one transparent PNG; no splitting step is required. PNG rendering and extraction are local and use Node.js 20+ with no npm dependencies.
+## Main-canvas drawing and programmatic paint (v5.9)
+
+Browser SuperMagicPaintAPI exposes getPaintSettings, setPaintSettings, performPaintOperation, getSelectionMask, setSelectionMask and importPaintTexture. These control the same selection, brush, fill, clone, eraser, text and shape features as the visible Paint menu. The Node/PowerShell CLI supports the paint operation for geometry, masks, brushes, original-safe erasing, PNG textures, basic bitmap text and six shapes. See [CLI API](CLI_API.md) for the complete property table and deliberate differences between browser font/antialiasing and headless output. The shared [UI control catalog](../src/shared/ui-capabilities.json) inventories the sprite split and background-cleanup option fields too.

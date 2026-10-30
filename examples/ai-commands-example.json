@@ -1,0 +1,17 @@
+{
+  "commands": [
+    {"op":"createProject","name":"Alex - Modular","mode":"custom","assetStorage":"external"},
+    {"op":"setCanvas","width":768,"height":768},
+    {"op":"setPartsDefinition","base":"bodyHead","parts":[
+      {"id":"body","name":"Body","group":"Base","default":true},
+      {"id":"head","name":"Head","group":"Head","default":true},
+      {"id":"shirt","name":"Shirt","group":"Clothes"},
+      {"id":"shorts","name":"Shorts","group":"Clothes"},
+      {"id":"customCape","name":"Cape","group":"Accessory"}
+    ]},
+    {"op":"addCustomPart","id":"customBadge","name":"Chest badge","group":"Accessory"},
+    {"op":"summary"},
+    {"op":"exportPartsDefinition","mode":"custom"},
+    {"op":"review"}
+  ]
+}

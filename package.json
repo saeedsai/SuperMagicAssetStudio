@@ -1,0 +1,15 @@
+{
+  "name": "supermagic-asset-studio",
+  "version": "5.7.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:contracts": "node scripts/check-layout.mjs && node --check src/editor/app.js && node --check src/editor/paint-tools.js && node --check src/editor/paint-core.mjs && node --check src/editor/sprite-geometry.js && node --check src/cli/agent-cli.mjs && node --check src/cli/agent-engine.mjs && node --check src/cli/agent-image-tools.mjs && node --test tests/unit/traceability.test.mjs",
+    "test:browser": "python -m unittest discover -s tests/browser -p 'test_*.py' -v",
+    "serve": "python -m http.server 8080"
+  }
+}

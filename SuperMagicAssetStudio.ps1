@@ -24,7 +24,7 @@ param(
     [switch]$Help
 )
 $ErrorActionPreference = 'Stop'
-$engine = Join-Path $PSScriptRoot 'agent-cli.mjs'
+$engine = Join-Path $PSScriptRoot 'src/cli/agent-cli.mjs'
 if (!(Test-Path -LiteralPath $engine)) { throw "CLI engine not found: $engine" }
 $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
 if (-not $nodeCommand) { throw 'Node.js 20+ is required. Install Node.js, then run this PowerShell script again.' }

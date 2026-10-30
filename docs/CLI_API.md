@@ -25,7 +25,7 @@ pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Help
 pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -ListOperations
 pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -Operation summary
 pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -Operation review
-pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -CommandFile ./cli-example-commands.json
+pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./my-player.json -CommandFile ./examples/cli-example-commands.json
 ```
 
 Use an inline command in PowerShell:
@@ -38,9 +38,9 @@ pwsh -NoProfile -File ./SuperMagicAssetStudio.ps1 -Project ./alex.json -CommandJ
 Direct Node.js use is also supported:
 
 ```shell
-node agent-cli.mjs --project ./my-player.json --command-file ./cli-example-commands.json
-node agent-cli.mjs --project ./my-player.json --op review
-node agent-cli.mjs --list-ops
+node src/cli/agent-cli.mjs --project ./my-player.json --command-file ./examples/cli-example-commands.json
+node src/cli/agent-cli.mjs --project ./my-player.json --op review
+node src/cli/agent-cli.mjs --list-ops
 ```
 
 Output is UTF-8 JSON with `ok`, `project`, `saved`, `results`, and `validation`; failures write JSON to standard error with exit code `1`. Agent code can parse the JSON. The `--dry-run` flag evaluates transformations without saving the project or exports. `--output` allows writing to another project path. Every edit runs against an in-memory project and is committed by an atomic file replacement after successful command execution.

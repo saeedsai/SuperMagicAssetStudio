@@ -12,13 +12,13 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 ## Case matrix and evidence
 
-`tests/requirements.json` assigns **one independent TC identifier to each of 120 requirements**. The Node traceability test reports those 120 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
+`tests/requirements.json` assigns **one independent TC identifier to each of 121 requirements**. The Node traceability test reports those 121 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|
 | Node domain/image | ~29 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
 | Node CLI integration | 2 | JSON round-trip, render, manifest, undo/redo, dry run | Mandatory |
-| Requirement traceability | 122 | 119 named acceptance contracts plus uniqueness checks | Mandatory |
+| Requirement traceability | 123 | 119 named acceptance contracts plus uniqueness checks | Mandatory |
 | Browser Chromium | 52 | UI startup, menu and control behaviors, scripted commands | Mandatory |
 | Human visual QA | Checklist | Artistic quality, overlap, anti-aliasing, anatomical handedness, animations | Release review, reported separately |
 
@@ -56,3 +56,5 @@ Browser checks exercise tabs, keyboard navigation, active tool properties, dupli
 The static control catalog is compared to every unique button/input/select/textarea ID in index.html. The browser checks control discovery, typed get/set, menu invocation, scripted rectangle/brush/gradient and DOM behavior. Node/CLI tests validate paint layers, original-asset erasing, clone stamp, color picker, selections, gradient, imported PNG textures, shapes, bitmap text, typed settings and JSON/export round-trip. Each UI entry states its headless mapping or browserOnly limitation; contract coverage does not assert pixel-identical output. A complete production-art visual test and native Windows PowerShell remain outstanding.
 
 Structured browser runCommands uses the same command names for listCapabilities, getControlValue, setControlValue, invokeControl and paint as the CLI, with the documented difference that browser result formatting is human-readable text and CLI results are JSON.
+
+Dynamic property contract coverage checks the mutable Inspector/custom part/import queue fields and their corresponding headless command paths. This is schema evidence; visual and behavior tests remain separately reported.

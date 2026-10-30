@@ -1,0 +1,26 @@
+{
+  "commands": [
+    {
+      "op": "splitImageAuto",
+      "source": "./examples/head-view-sheet.png",
+      "outputDir": "./exports/heads",
+      "minPixels": 1000,
+      "alphaThreshold": 25,
+      "padding": 3,
+      "assignments": [
+        {"view":"front","animation":"stand","frame":"stand_1","category":"head"},
+        {"view":"threeQuarterFrontRight","animation":"stand","frame":"stand_1","category":"head"},
+        {"view":"right","animation":"stand","frame":"stand_1","category":"head"}
+      ]
+    },
+    {
+      "op": "splitImageAuto",
+      "source": "./examples/body-action-sheet.png",
+      "outputDir": "./exports/bodies",
+      "minPixels": 1000,
+      "alphaThreshold": 25,
+      "padding": 3
+    },
+    {"op": "review"}
+  ]
+}

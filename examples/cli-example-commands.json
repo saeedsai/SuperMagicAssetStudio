@@ -1,0 +1,26 @@
+{
+  "commands": [
+    {
+      "op": "createProject",
+      "name": "Alex Agent Example",
+      "mode": "bodyHead",
+      "assetStorage": "external"
+    },
+    {
+      "op": "setGrid",
+      "enabled": true,
+      "rulers": true,
+      "size": 32
+    },
+    {
+      "op": "setView",
+      "view": "front"
+    },
+    {
+      "op": "review"
+    },
+    {
+      "op": "summary"
+    }
+  ]
+}

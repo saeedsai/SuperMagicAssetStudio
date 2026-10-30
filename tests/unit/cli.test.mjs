@@ -1,0 +1,17 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import os from 'node:os';import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {fileURLToPath} from 'node:url';
+import {encodePNG,readPNG} from '../../src/cli/agent-raster.mjs';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+const cli=path.join(root,'src/cli/agent-cli.mjs');
+function run(...args){const s=spawnSync(process.execPath,[cli,...args],{encoding:'utf8',timeout:20000});return {exit:s.status,stdout:s.stdout,stderr:s.stderr,json:s.status===0?JSON.parse(s.stdout):null};}
+test('CLI operations list is machine-readable',()=>{const r=run('--list-ops');assert.equal(r.exit,0);assert(r.json.operations.includes('splitImageWand'));assert(r.json.operations.includes('autoResizeMatching'));});
+test('CLI creates/roundtrips, edits, renders PNG/GIF and supports dry run/undo/redo',()=>{
+const base=fs.mkdtempSync(path.join(os.tmpdir(),'sm-agent-reg-'));try{const file=path.join(base,'player.json'),pic=path.join(base,'head.png');const dat=Buffer.alloc(20*30*4);for(let i=0;i<dat.length;i+=4){dat[i]=70;dat[i+1]=100;dat[i+2]=200;dat[i+3]=255;}fs.writeFileSync(pic,encodePNG({width:20,height:30,data:dat}));let commands={commands:[{op:'createProject',name:'Regression',mode:'bodyHead',assetStorage:'external'},{op:'addAsset',id:'head',file:pic},{op:'addLayer',id:'headlayer',assetId:'head',category:'head',view:'front',animation:'stand',frame:'stand_1'},{op:'setTransform',match:{id:'headlayer'},transform:{x:320,y:150,scaleX:2,scaleY:2,rotationDeg:11}},{op:'setColor',match:{id:'headlayer'},color:{red:130,green:70,blue:90}},{op:'linkFrame',animation:'run',frame:'run_1',reuse:{animation:'stand',frame:'stand_1'}}]};
+let r=run('--project',file,'--commands',JSON.stringify(commands));assert.equal(r.exit,0,r.stderr);assert.equal(JSON.parse(fs.readFileSync(file)).scenes.front.stand.stand_1[0].transform.rotationDeg,11);assert(fs.existsSync(path.join(base,'assets','head.png')));
+let png=path.join(base,'front.png'),gif=path.join(base,'run.gif');r=run('--project',file,'--commands',JSON.stringify({commands:[{op:'renderPNG',path:png},{op:'renderGIF',animation:'run',path:gif}] }));assert.equal(r.exit,0,r.stderr);assert.equal(readPNG(fs.readFileSync(png)).width,768);assert(fs.readFileSync(gif).subarray(0,3).equals(Buffer.from('GIF')));
+r=run('--project',file,'--commands',JSON.stringify({commands:[{op:'setProjectName',name:'Changed'}]}),'--dry-run');assert.equal(r.exit,0);assert.equal(JSON.parse(fs.readFileSync(file)).projectName,'Regression');
+r=run('--project',file,'--commands',JSON.stringify({commands:[{op:'setProjectName',name:'Second'}]}));assert.equal(r.exit,0);
+r=run('--project',file,'--op','undo');assert.equal(r.exit,0);assert.equal(JSON.parse(fs.readFileSync(file)).projectName,'Regression');
+r=run('--project',file,'--op','redo');assert.equal(r.exit,0);assert.equal(JSON.parse(fs.readFileSync(file)).projectName,'Second');
+r=run('--project',file,'--commands',JSON.stringify({commands:[{op:'setImageStorage',mode:'bundled'}]}));assert.equal(r.exit,0,r.stderr);assert(JSON.parse(fs.readFileSync(file)).assets.head.src.startsWith('data:image/png;base64,'));
+}finally{fs.rmSync(base,{recursive:true,force:true});}
+});

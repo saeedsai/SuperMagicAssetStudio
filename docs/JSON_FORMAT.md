@@ -111,7 +111,7 @@ Animations can reuse frames from another animation:
 
 ## Standard part definitions
 
-`standard-parts.json` follows the `SuperMagicParts` format:
+`examples/standard-parts.json` follows the `SuperMagicParts` format:
 
 ```json
 {

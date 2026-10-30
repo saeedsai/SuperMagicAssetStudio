@@ -644,7 +644,9 @@
       "defaultValue": "8",
       "browser": true,
       "cli": "setting",
-      "projectPath": "animation.fps"
+      "projectPath": "animation.fps",
+      "min": 1,
+      "max": 30
     },
     {
       "id": "addFrame",
@@ -688,7 +690,8 @@
       "section": "animation",
       "defaultValue": "1",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1
     },
     {
       "id": "clipEnd",
@@ -697,7 +700,8 @@
       "section": "animation",
       "defaultValue": "1",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1
     },
     {
       "id": "clipRepeats",
@@ -706,7 +710,9 @@
       "section": "animation",
       "defaultValue": "1",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1,
+      "max": 20
     },
     {
       "id": "appendClip",
@@ -823,7 +829,9 @@
       "defaultValue": "18",
       "browser": true,
       "cli": "setting",
-      "projectPath": "editor.uiOptions.paintSize"
+      "projectPath": "editor.uiOptions.paintSize",
+      "min": 1,
+      "max": 256
     },
     {
       "id": "paintBrushShape",
@@ -863,7 +871,9 @@
       "section": "paint-and-image",
       "defaultValue": "100",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1,
+      "max": 100
     },
     {
       "id": "paintTolerance",
@@ -872,7 +882,9 @@
       "section": "paint-and-image",
       "defaultValue": "35",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 255
     },
     {
       "id": "paintImportTexture",
@@ -933,7 +945,9 @@
       "section": "paint-and-image",
       "defaultValue": "6",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 3,
+      "max": 64
     },
     {
       "id": "paintCurveBend",
@@ -942,7 +956,9 @@
       "section": "paint-and-image",
       "defaultValue": "35",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": -300,
+      "max": 300
     },
     {
       "id": "paintShapeFill",
@@ -991,7 +1007,9 @@
       "section": "paint-and-image",
       "defaultValue": "48",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 8,
+      "max": 320
     },
     {
       "id": "paintFinishFreeform",
@@ -1231,7 +1249,9 @@
       "defaultValue": "30",
       "browser": true,
       "cli": "setting",
-      "projectPath": "editor.reference.alpha"
+      "projectPath": "editor.reference.alpha",
+      "min": 5,
+      "max": 90
     },
     {
       "id": "setReference",
@@ -1259,7 +1279,10 @@
       "defaultValue": "32",
       "browser": true,
       "cli": "setting",
-      "projectPath": "editor.gridSize"
+      "projectPath": "editor.gridSize",
+      "min": 8,
+      "max": 256,
+      "step": 4
     },
     {
       "id": "snapGrid",
@@ -1279,7 +1302,9 @@
       "defaultValue": "768",
       "browser": true,
       "cli": "setting",
-      "projectPath": "canvas.width"
+      "projectPath": "canvas.width",
+      "min": 128,
+      "max": 2048
     },
     {
       "id": "canvasHeight",
@@ -1289,7 +1314,9 @@
       "defaultValue": "768",
       "browser": true,
       "cli": "setting",
-      "projectPath": "canvas.height"
+      "projectPath": "canvas.height",
+      "min": 128,
+      "max": 2048
     },
     {
       "id": "useCameraAsReference",
@@ -1600,7 +1627,9 @@
       "section": "paint-and-image",
       "defaultValue": "1000",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 50,
+      "step": 50
     },
     {
       "id": "spriteAlphaThreshold",
@@ -1609,7 +1638,9 @@
       "section": "paint-and-image",
       "defaultValue": "25",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1,
+      "max": 254
     },
     {
       "id": "spriteGridRows",
@@ -1618,7 +1649,9 @@
       "section": "paint-and-image",
       "defaultValue": "2",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1,
+      "max": 32
     },
     {
       "id": "spriteGridColumns",
@@ -1627,7 +1660,9 @@
       "section": "paint-and-image",
       "defaultValue": "3",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 1,
+      "max": 32
     },
     {
       "id": "spritePadding",
@@ -1636,7 +1671,9 @@
       "section": "paint-and-image",
       "defaultValue": "3",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 120
     },
     {
       "id": "spriteSelectionShape",
@@ -1660,7 +1697,9 @@
       "section": "paint-and-image",
       "defaultValue": "75",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 100
     },
     {
       "id": "spriteWandMode",
@@ -1682,7 +1721,9 @@
       "section": "paint-and-image",
       "defaultValue": "40",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 180
     },
     {
       "id": "spriteAutoDetect",
@@ -1749,7 +1790,9 @@
       "section": "paint-and-image",
       "defaultValue": "38",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 130
     },
     {
       "id": "spriteBackgroundConnected",
@@ -1852,7 +1895,9 @@
       "section": "paint-and-image",
       "defaultValue": "38",
       "browser": true,
-      "cli": "setting"
+      "cli": "setting",
+      "min": 0,
+      "max": 180
     },
     {
       "id": "bgStandaloneConnected",

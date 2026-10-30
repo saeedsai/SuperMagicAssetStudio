@@ -12,7 +12,7 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 ## Case matrix and evidence
 
-`tests/requirements.json` assigns **one independent TC identifier to each of 84 requirements**. The Node traceability test reports those 84 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
+`tests/requirements.json` assigns **one independent TC identifier to each of 102 requirements**. The Node traceability test reports those 102 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|

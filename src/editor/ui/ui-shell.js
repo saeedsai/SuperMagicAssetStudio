@@ -167,8 +167,13 @@ function paintContextUpdate(){
  propsButton.classList.toggle('active',active!=='select');
  popDescription.textContent=descriptions[active]||'Adjust this tool before using the canvas.';
 }
+function placePaintProperties(){
+ const header=toolbar.closest('.editor-toolbar');
+ popover.style.top=(header.offsetHeight+8)+'px';
+}
+if(window.ResizeObserver)new ResizeObserver(placePaintProperties).observe(toolbar.closest('.editor-toolbar'));
 function openPaintProperties(){
- paintContextUpdate();popover.hidden=false;propsButton.setAttribute('aria-expanded','true');
+ paintContextUpdate();placePaintProperties();popover.hidden=false;propsButton.setAttribute('aria-expanded','true');
  return true;
 }
 function closePaintProperties(){

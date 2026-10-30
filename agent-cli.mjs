@@ -6,7 +6,7 @@ import {makeProject,migrate,execute,saveProject,reviewProject} from './agent-eng
 import {renderFrame,renderSpriteSheet,renderGIF,encodePNG} from './agent-raster.mjs';
 import {runImageOperation} from './agent-image-tools.mjs';
 const RENDER=['renderPNG','renderSpriteSheet','renderGIF','renderTurntable'];
-const IMAGE_TOOLS=['splitImageAuto','splitImageManual','removeBackground'];
+const IMAGE_TOOLS=['splitImageAuto','splitImageManual','splitImageWand','removeBackground'];
 const HELP=`SuperMagic Asset Studio - Agent CLI (Node 20+, no npm dependencies)
 Created by Saeed <saeedmsalehi1990@gmail.com>
 

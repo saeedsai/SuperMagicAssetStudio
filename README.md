@@ -1,4 +1,4 @@
-# SuperMagic Asset Studio v5.4.0
+# SuperMagic Asset Studio v5.5.0
 
 **Created by Saeed**  
 **saeedmsalehi1990@gmail.com**  
@@ -219,3 +219,19 @@ Released under the **MIT License**; see `LICENSE`.
 - Use **Auto-resize matching parts** in the inspector to copy scale factors or matching displayed width/height across eight views and/or animations. Reused animation clips inherit source frame edits automatically.
 - `autoResizeMatching` is also exposed to browser API, structured commands, and headless CLI.
 - `alex_modular_zip_demo_bundled.json` is a demonstrator assembled from the user-supplied 47-sprite ZIP, with 8 directional previews. Source sprites are extracted/upscaled cutouts and may not be complete production-ready modular artwork. Some missing angles use mirrored sources; Run frames are standing placeholders.
+
+## Advanced selection tools (v5.5)
+
+From **Import → Manual crop & split** or **Import → Auto-split multiple sprites** choose the desired selection mode:
+
+- **Rectangle:** drag a rectangular crop.
+- **Freeform polygon:** click anchor points around an irregular sprite, then Finish boundary or Enter.
+- **Smooth Bézier curve:** click anchor points; the closed curve smoothly interpolates between them. Adjust **Curve smoothness** (0–100%).
+- **Edit points:** select a polygon or Bézier region, click **Edit points**, then drag its visible anchors. Double-click near an edge to insert an anchor; select one and click **Delete point** to remove it.
+- **Magic wand:** click an opaque sprite to select its connected nontransparent silhouette, or choose Similar color and a tolerance for a connected color region. Extracted image pixels outside the selection are transparent.
+
+For an image containing separate figures that overlap in rectangular bounds, use curved/manual regions or the wand to isolate one figure **without including pixels from its neighbors**. Auto splitting still detects only separable connected components; overlapping artwork may require manual editing.
+
+**Standalone background removal:** use **Tools → Remove background — standalone** (also available under Import). Select PNG/JPEG/WebP, sample the background on the preview, adjust threshold/edge-only mode, preview and export the transparent PNG or send it to the asset queue. This action does not split the image and does not modify the original file.
+
+Headless automation supports `splitImageManual` with `type: "poly"` / `type: "bezier"`, `splitImageWand` with `seed`, and the independent `removeBackground` operation. See `IMAGE_TOOLS_API.md`.

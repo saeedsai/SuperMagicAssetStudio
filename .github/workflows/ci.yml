@@ -10,7 +10,7 @@ permissions:
 jobs:
   unit:
     name: Domain, CLI, schema and requirement traceability
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - run: npm test
   browser:
     name: Chromium UI regression
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
       - run: npm run test:browser
   regression-gate:
     name: Required regression gate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [unit, browser]
     if: always()
     steps:

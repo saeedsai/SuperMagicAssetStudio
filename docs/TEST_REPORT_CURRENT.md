@@ -1,35 +1,40 @@
 # SuperMagic Asset Studio — verification report
 
-**Refactor branch:** `dev` (pre-publish local run)
-**Date:** 2026-10-30
+**Branch:** `dev`  
+**Date:** 2026-10-30  
+**Last fully verified source commit:** `322d506b7b4cf014ffddb2e0461fb4211824ab1b`  
+**GitHub Actions:** [successful gate](https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41034420907)
 
-## Results available now
+## Verified automated results
 
-| Test tier | Outcome | Evidence |
+| Test tier | Result | Evidence |
 |---|---|---|
-| Node domain + CLI behavior | **PASS: 22 / 22** | `npm test` |
-| Requirement-level contracts | **PASS: 102 / 102** | `tests/unit/traceability.test.mjs` |
-| Uniqueness checks | **PASS: 2 / 2** | REQ and TC identifiers unique |
-| Module layout, references, syntax | **PASS** | `npm run test:contracts` |
-| Chromium browser regression | **PASS on commit 322d506b; latest dev run pending** | GitHub Actions CI; check latest head before merge |
-| Actual Windows PowerShell execution | **NOT EXECUTED** | PowerShell 7 not installed in local test container |
-| Production artwork visual QA | **NOT EXECUTED** | Requires canonical reviewed art fixture |
+| Node unit, CLI, traceability, runtime contracts | **PASS: 135 / 135** | `npm test` in GitHub Actions |
+| Requirement contract checks | **PASS: 104 / 104** | 102 feature IDs + two uniqueness tests (included in suite above) |
+| Browser Chromium | **PASS: 37 / 37** | Playwright in GitHub Actions |
+| Repository layout & JS syntax | **PASS** | `npm run test:contracts` |
+| Required GitHub regression gate | **PASS** | Both required jobs completed successfully |
+| Native Windows PowerShell | **NOT EXECUTED** | No actual Windows job yet |
+| Production artwork visual golden tests | **NOT EXECUTED** | No canonical image fixture yet |
+| Render production deployment | **PENDING MAIN MERGE** | Static service tracks `main` |
 
-**Important:** All 102 requirements have a unique contract test and traceability record. Contract evidence is a source check, **not 84 end-to-end behavioral verifications**. Behavioral domain/CLI tests and Chromium browser tests provide deeper coverage; future work should increase behavior test depth for each requirement.
+## Changes completed on dev
 
-## Changes
+- Added a **Paint** menu with rectangle, freeform and RGBA magic-wand selection on the main canvas.
+- Added adjustable brushes (round, square, diamond, soft), opacity, color and built-in/imported textures.
+- Added eraser with **paint-only** vs **selected original image** targets. Source erasing clones assets before mutation to protect other views.
+- Added Alt-click clone stamp, color picker, solid / texture / two-color gradient fill.
+- Added text with configurable font, color and size; shapes rectangle, regular polygon with chosen edge count, oval, circle, line and quadratic curve.
+- Each committed stroke or drawing becomes an independent PNG scene layer, included in normal project persistence and undo history.
+- Added nine pure-geometry unit tests, 18 named Chromium paint cases, 18 new requirements and traceability contracts (`REQ-085`–`REQ-102`).
+- Fixed earlier Chromium menu selector and custom-part test setup; unrelated earlier refactor tests now also pass.
 
-- Organized source into `src/editor`, `src/cli`, `src/runtime`; split HTML, CSS and reusable sprite geometry.
-- Added `AGENTS.md` and updated README with preserved credits and MIT license.
-- Added 102-item requirements register and a test case for each requirement, with CI traceability gate.
-- Added 22 headless behavioral tests and 37 Chromium browser cases.
-- Added `dev` → PR → `main` governance and GitHub Actions workflow.
-- Removed historical screenshots and generated asset bundles from tracked source tree (kept examples small).
+**Coverage note:** Requirement contract checks verify implementation references and uniqueness, not 102 independent end-to-end behaviors. The 37 Chromium tests and Node behavior tests provide functional evidence beyond the traceability contracts.
 
-## Risk and remaining work
+## Remaining limitations / follow-ups
 
-1. Wait for required GitHub Actions checks on the latest dev commit and fix any failing cases before merging to main.
-2. Fully modularize the still-large browser `app.js` controller in follow-up PRs (currently split by architecture but still contains legacy tightly-coupled DOM logic).
-3. Test Windows PowerShell on a Windows runner; CI currently validates its Node command engine, not native PowerShell.
-4. Add canonical visual golden screenshots and production 8-view artwork for pixel-diff testing.
-5. Review other historical user requests when new requirements arrive; update `docs/REQUIREMENTS.md` and add matching tests first.
+1. Visual inspection with production football artwork, color accuracy and pixel-diff golden-image testing are still manual.
+2. Native Windows PowerShell and mobile/touch usability still need dedicated runner/device tests.
+3. External-asset JSON intentionally strips image data; generated paint PNGs must be kept alongside that JSON and resolved via the existing external-image workflow. Bundled JSON includes paint pixels.
+4. The legacy `src/editor/app.js` controller remains large and should be gradually modularized.
+5. The Render static site auto-deploys from `main` only. Verify its deployment after the PR merges.

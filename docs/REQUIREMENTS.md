@@ -136,6 +136,8 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-118 | CLI | Headless brush, mask, erase, stamp, fill, text and shape operations | TC-118 | integration |
 | REQ-119 | DOC | Browser/CLI API contract and explicit browser-only limitations | TC-119 | contract |
 
+| REQ-120 | API | Browser structured commands expose UI properties and paint editing | TC-120 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

@@ -1198,5 +1198,15 @@
       "path": "src/editor/app.js",
       "contains": "case 'paint':"
     }
+  },
+  {
+    "id": "REQ-121",
+    "testId": "TC-121",
+    "requirement": "All dynamically rendered Inspector, group, custom-part, import and sprite properties documented in shared capability schema",
+    "verification": "contract",
+    "evidence": {
+      "path": "src/shared/ui-capabilities.json",
+      "contains": "dynamicProperties"
+    }
   }
 ]

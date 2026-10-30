@@ -41,4 +41,6 @@ The browser suite found and resolved two issues during this change: the properti
 4. Continued modularization of the legacy `src/editor/app.js` state controller without changing persisted JSON.
 5. Verify hosting separately after merge; automatic Render deployment does not establish a live release until its recorded deploy commit matches main.
 
+The prior production audit recorded Render's last live commit as `f94daf6097ecd401cfc86c059d5f2e0a04c7bde6` (v5.5), despite successful GitHub CI and Pages deployment. Retain this deployment warning until Render explicitly reports a newer `main` commit as live.
+
 **Coverage caveat:** Requirement traceability validates source-level evidence, not 111 independent end-to-end behavior tests. The 46 Chromium tests and additional Node integration tests supply deeper functional coverage.

@@ -635,6 +635,52 @@ window.SuperMagicAssetStudioAPI={
 };
 
 
+
+// Paint integration: persist edit strokes as isolated, undoable PNG layers. Existing sources remain immutable.
+function createRasterPaintLayer(dataURL,name='Paint stroke'){
+ if(!/^data:image\/png;base64,/.test(dataURL))throw new Error('Paint data must be a PNG data URL');
+ if(dataURL.length>30000000)throw new Error('Paint layer exceeds safe size');
+ recordHistory();
+ const id=uid('asset'),lId=uid('layer'),w=W(),h=H();
+ project.assets[id]={name:name+'.png',fileRef:name+'.png',mime:'image/png',width:w,height:h,src:dataURL};
+ const l={id:lId,name,category:'accessory',assetId:id,paintLayer:true,visible:true,locked:false,
+   transform:{x:w/2,y:h/2,scaleX:1,scaleY:1,rotationDeg:0,opacity:1,flipX:false,flipY:false,anchorX:.5,anchorY:.5},
+   crop:{x:0,y:0,w,h}};
+ scene().push(l);images.delete(id);loadImg(id);clearSelection();renderLayers();renderInspector();draw();historyButtons();return lId;
+}
+function decodePaintPNG(src){
+ return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Invalid paint image'));img.src=src;});
+}
+async function eraseRasterWithMask(maskURL,scope='paint'){
+ if(!/^data:image\/png;base64,/.test(maskURL))throw new Error('Eraser mask must be PNG');
+ if(!['paint','original'].includes(scope))throw new Error('Invalid erase scope');
+ const layers=scope==='original'?[sel()].filter(Boolean):scene().filter(l=>l.paintLayer);
+ const editable=layers.filter(l=>!l.locked && l.visible && project.assets[l.assetId]?.src);
+ if(!editable.length)throw new Error(scope==='original'?'Select an unlocked image layer to erase':'No visible unlocked brush, shape or text layers to erase');
+ const mask=await decodePaintPNG(maskURL);
+ if(mask.width!==W()||mask.height!==H())throw new Error('Eraser mask dimension mismatch');
+ const results=[];
+ for(const l of editable){
+  const source=project.assets[l.assetId],img=await decodePaintPNG(source.src),c=l.crop,t=l.transform;
+  if(img.width*img.height>4194304)throw new Error('Source image is too large to edit safely');
+  const out=document.createElement('canvas');out.width=img.width;out.height=img.height;const g=out.getContext('2d');
+  g.drawImage(img,0,0);g.save();g.beginPath();g.rect(c.x,c.y,c.w,c.h);g.clip();g.globalCompositeOperation='destination-out';
+  const sx=t.scaleX*(t.flipX?-1:1),sy=t.scaleY*(t.flipY?-1:1);
+  if(!sx||!sy)throw new Error('Cannot erase zero-scale layer');
+  g.translate(c.x+c.w*(t.anchorX??.5),c.y+c.h*(t.anchorY??.5));
+  g.scale(1/sx,1/sy);g.rotate(-t.rotationDeg*Math.PI/180);g.translate(-t.x,-t.y);g.drawImage(mask,0,0);g.restore();
+  results.push({layer:l,source,src:out.toDataURL('image/png')});
+ }
+ recordHistory();
+ for(const {layer,source,src} of results){const id=uid('asset');project.assets[id]={...source,src,name:source.name?.replace(/\.png$/i,'')+'-erased.png',fileRef:id+'.png'};layer.assetId=id;images.delete(id);loadImg(id);}
+ renderLayers();renderInspector();draw();historyButtons();return results.length;
+}
+Object.assign(window.SuperMagicAssetStudioAPI,{
+ createRasterPaintLayer,
+ eraseRasterWithMask,
+ getPaintContext:()=>({view:currentView,animation:currentAnimation,frame:currentFrame,width:W(),height:H()}),
+});
+
 // Sprite sheet tools: all processing is local, preserves alpha and offers queue assignment.
 const spriteSheetState={mode:'auto',file:null,image:null,original:null,working:null,regions:[],selection:-1,drawStart:null,preview:{x:0,y:0,scale:1},files:[],drawMode:'rect',activePoly:null,hoverPoint:null,editPoints:false,dragPoint:null,selectedPoint:-1};
 const spriteCanvas=$('#spriteToolsCanvas'),spriteCtx=spriteCanvas.getContext('2d',{willReadFrequently:true});

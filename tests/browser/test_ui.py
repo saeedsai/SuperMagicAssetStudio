@@ -351,4 +351,55 @@ for number,verify in UI_CASES.items():
     def run_workspace(self,fn=verify):fn(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_workspace)
 
+
+# API/CLI parity contract: controls, settings and raster operation access.
+def check_112(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicCapabilities)')
+    result=t.page.evaluate('()=>SuperMagicAssetStudioAPI.listCapabilities()')
+    t.assertGreaterEqual(len(result['controls']),200)
+    t.assertIn('paintSize',[x['id'] for x in result['controls']])
+    t.assertEqual(len(result['controls']),t.page.locator('[id]').evaluate_all(
+        "(els)=>els.filter(el=>['BUTTON','INPUT','SELECT','TEXTAREA'].includes(el.tagName)).length"))
+
+def check_113(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicCapabilities)')
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.setUISettings({paintSize:27,paintColor:'#dd3344',paintBrushShape:'diamond'})")
+    value=t.page.evaluate("()=>SuperMagicAssetStudioAPI.getUIControl('paintSize')")
+    t.assertEqual(value['value'],27)
+    t.assertEqual(t.page.locator('#paintColor').input_value(),'#dd3344')
+    t.assertTrue(t.page.evaluate("()=>SuperMagicAssetStudioAPI.getAllUISettings().paintBrushShape==='diamond'"))
+
+def check_114(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicCapabilities)')
+    result=t.page.evaluate("()=>SuperMagicAssetStudioAPI.invokeUIAction('menuAI')")
+    t.assertTrue(result['triggered'])
+    t.assertTrue(t.page.locator('#aiDialog').evaluate('(x)=>x.open'))
+
+def check_115(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicPaintAPI?.performPaintOperation)')
+    value=t.page.evaluate("""async()=>{
+      const selected=await SuperMagicPaintAPI.performPaintOperation({tool:'selection',selection:{type:'rect',x:30,y:35,w:80,h:75}});
+      const painted=await SuperMagicPaintAPI.performPaintOperation({
+        tool:'brush',points:[{x:40,y:50},{x:80,y:55}],properties:{paintColor:'#ff4455',paintSize:14}});
+      return {selected,painted};
+    }""")
+    t.assertEqual(value['selected']['selectedPixels'],80*75)
+    t.assertIn('layerId',value['painted'])
+    t.assertEqual(len(t._project()['assets']),1)
+
+def check_116(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicPaintAPI?.performPaintOperation)')
+    value=t.page.evaluate("""async()=>{
+      const poly=await SuperMagicPaintAPI.performPaintOperation({tool:'selection',selection:{type:'poly',points:[{x:12,y:12},{x:70,y:12},{x:70,y:70}]}});
+      const fill=await SuperMagicPaintAPI.performPaintOperation({tool:'fill',properties:{paintFillMode:'gradient',paintGradientEnd:'#112233'}});
+      return {poly,fill};
+    }""")
+    t.assertGreater(value['poly']['selectedPixels'],0)
+    t.assertIn('layerId',value['fill'])
+
+API_CASES={112:check_112,113:check_113,114:check_114,115:check_115,116:check_116}
+for number,verify in API_CASES.items():
+    def run_api(self,fn=verify):fn(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_api)
+
 if __name__=='__main__':unittest.main()

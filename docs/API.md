@@ -14,7 +14,7 @@ This is intended for browser automation tools, AI agents, test scripts, and cust
 SuperMagicAssetStudioAPI.version
 ```
 
-Current value: `5.4.0`
+Current value: `5.9.0`
 
 ## Methods
 

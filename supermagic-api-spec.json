@@ -181,6 +181,21 @@
       "name": "getDetectedRegions",
       "args": "none",
       "returns": "Region[]"
+    },
+    {
+      "name": "magicWandRegion",
+      "args": "canvas, seed: {x:number,y:number}, options?: {mode, tolerance, alphaThreshold}",
+      "returns": "Region"
+    },
+    {
+      "name": "getCurveOutline",
+      "args": "region: BezierRegion,steps?: number",
+      "returns": "Point[]"
+    },
+    {
+      "name": "openStandaloneBackground",
+      "args": "none",
+      "returns": "void"
     }
   ],
   "commandOps": {

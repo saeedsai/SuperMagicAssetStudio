@@ -1188,5 +1188,15 @@
       "path": "docs/CLI_API.md",
       "contains": "browserOnly"
     }
+  },
+  {
+    "id": "REQ-120",
+    "testId": "TC-120",
+    "requirement": "Browser structured command runner accepts CLI-style UI setting and paint commands",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "case 'paint':"
+    }
   }
 ]

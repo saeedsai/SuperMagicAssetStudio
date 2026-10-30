@@ -3,7 +3,7 @@
 ## How to run
 
 ```sh
-npm test                       # unit, integration and 84 traceability cases
+npm test                       # unit, integration and 102 traceability cases
 npm run test:contracts         # JS syntax, import paths and folder layout
 npm run test:browser           # Python 3 + playwright + Chromium installed
 ```
@@ -16,10 +16,10 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|
-| Node domain/image | ~20 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
+| Node domain/image | ~29 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
 | Node CLI integration | 2 | JSON round-trip, render, manifest, undo/redo, dry run | Mandatory |
-| Requirement traceability | 86 | 84 named acceptance contracts plus uniqueness checks | Mandatory |
-| Browser Chromium | 19 | UI startup, menu and control behaviors, scripted commands | Mandatory |
+| Requirement traceability | 104 | 102 named acceptance contracts plus uniqueness checks | Mandatory |
+| Browser Chromium | 37 | UI startup, menu and control behaviors, scripted commands | Mandatory |
 | Human visual QA | Checklist | Artistic quality, overlap, anti-aliasing, anatomical handedness, animations | Release review, reported separately |
 
 ## Manual QA checklist
@@ -42,3 +42,7 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 ## Reporting
 
 Use `docs/TEST_REPORT_CURRENT.md` for the latest verified run. Distinguish locally executed tests from GitHub Actions status; a configured check is not a passing check until GitHub reports success. CI runs on `dev`, `main` and PRs into `main`. Main is released only after dev checks pass and a PR review/merge. Automatic Render deployment uses `main`.
+
+## Paint and selection acceptance (TC-085 through TC-102)
+
+Main-canvas rectangle, freeform polygon and flood selection all produce reusable selection masks. Brush tips, preset/imported textures, erase mode, clone, fill, two-color gradient, eyedropper, text, and six shape tools are covered by a named Chromium check for every requirement. Nine additional Node tests cover geometry, masked alpha and wand bounds. Save/undo and the Paint menu are exercised in Chromium. Actual visual texture fidelity, font rendering on non-Linux platforms, and mobile touch gestures require manual validation.

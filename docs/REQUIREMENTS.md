@@ -97,10 +97,29 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-083 | ENG | No generated assets or historical screenshots in source root | TC-083 | contract |
 | REQ-084 | ENG | Render deployment occurs from main only | TC-084 | contract |
 
+| REQ-085 | PAINT | Rectangle selection on main canvas | TC-085 | browser |
+| REQ-086 | PAINT | Freeform polygon selection on main canvas | TC-086 | browser |
+| REQ-087 | PAINT | Magic wand selection with color tolerance and connectivity | TC-087 | browser |
+| REQ-088 | PAINT | Brush adjustable size, tip shape, color and opacity | TC-088 | browser |
+| REQ-089 | PAINT | Built-in brush textures (dots, stripes, checker) | TC-089 | browser |
+| REQ-090 | PAINT | Erase added brush strokes, shapes, and text only | TC-090 | browser |
+| REQ-091 | PAINT | Optionally erase selected source image with safe cloned asset | TC-091 | browser |
+| REQ-092 | PAINT | Clone stamp Alt-click sample and brush size | TC-092 | browser |
+| REQ-093 | PAINT | Fill selected region with solid color | TC-093 | browser |
+| REQ-094 | PAINT | Import PNG/JPEG/WebP texture | TC-094 | browser |
+| REQ-095 | PAINT | Fill selected region with 2-color gradient | TC-095 | browser |
+| REQ-096 | PAINT | Eyedropper sample actual rendered canvas color | TC-096 | browser |
+| REQ-097 | PAINT | Text tool with family, font size, and color | TC-097 | browser |
+| REQ-098 | PAINT | Rectangle and configurable-sided polygon | TC-098 | browser |
+| REQ-099 | PAINT | Oval and circle drawing | TC-099 | browser |
+| REQ-100 | PAINT | Line and quadratic curve drawing | TC-100 | browser |
+| REQ-101 | PAINT | Paint layers persist in project JSON and undo history | TC-101 | browser |
+| REQ-102 | PAINT | Paint menu in navigation | TC-102 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.
 
-**Future backlog, not implemented / not silently treated as passing:** semantic AI-powered part fitting; robust removal of complex photo backgrounds; per-sprite editable alpha masks with paint brushes; frame tweening and rigged skeleton; GPU/performance optimization for thousands of parts; end-to-end Windows PowerShell CI on actual Windows; visual golden-image comparisons using a canonical production art pack. Record issues with acceptance criteria when prioritized.
+**Future backlog, not implemented / not silently treated as passing:** semantic AI-powered part fitting; robust removal of complex photo backgrounds; non-destructive per-sprite extraction mask editing; frame tweening and rigged skeleton; GPU/performance optimization for thousands of parts; end-to-end Windows PowerShell CI on actual Windows; visual golden-image comparisons using a canonical production art pack. Record issues with acceptance criteria when prioritized.
 
 **Release gate:** all automated test cases must pass, all broken references must be fixed, `dev` must be reviewed and merged via PR, and deployment must be checked after main updates.

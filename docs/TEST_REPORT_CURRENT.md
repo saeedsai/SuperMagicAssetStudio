@@ -1,46 +1,36 @@
-# SuperMagic Asset Studio — v5.8 modular UI verification
+# SuperMagic Asset Studio — API/CLI capability audit (v5.9)
 
 **Date:** 2026-10-30  
-**Branch:** `dev`  
-**Verified source commit:** `64638e21eb322908d3ea3863d0e8e0e218d03f6f`  
-**CI run:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41053163589
+**Verified source commit:** 4da7c5df15c2615b256638da258bc99eb7e73bb7  
+**Verification run:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41065627048
 
-## Automated regression results
+## Verified automated results
 
 | Suite | Result | Evidence |
 |---|---|---|
-| Node domain/integration/contract | **PASS — 151 of 151** | `npm test` |
-| Requirements traceability | **PASS — 113 of 113** | 111 requirements + 2 uniqueness assertions, included in Node suite |
-| JavaScript syntax, import paths, layout | **PASS** | `npm run test:contracts` |
-| Chromium UI browser | **PASS — 46 of 46** | `npm run test:browser` |
-| Required regression gate | **PASS** | both jobs succeeded |
-| Native Windows PowerShell | **NOT RUN** | no Windows runner |
-| Production-art visual golden comparisons | **NOT RUN** | fixture unavailable |
-| Live production deploy | **PENDING** | requires merge and platform verification |
+| Node unit/domain/CLI/contract tests | **PASS — 172/172** | npm test |
+| Requirement traceability | **PASS — 123/123** | 121 requirements plus two uniqueness assertions (included in Node run) |
+| Syntax, layout, module import checks | **PASS** | npm run test:contracts |
+| Chromium UI browser | **PASS — 52/52** | npm run test:browser |
+| Required CI regression gate | **PASS** | Both required GitHub Actions jobs succeeded |
+| Windows native PowerShell | NOT RUN | Node command bridge tested, no real Windows runner |
+| Human visual / production sprites | NOT RUN | Requires a canonical art pack and device coverage |
+| Production Render deploy | NOT VERIFIED | Separate deployment check required |
 
-## New UI architecture and coverage
+## Inventory and implemention
 
-- Added `src/editor/ui/workspace-config.mjs` to declare canonical workspaces, paint settings and hidden legacy command relays.
-- Added `src/editor/ui/ui-shell.js` to relocate existing DOM nodes without cloning or renaming control IDs, build left/right tab groups, and expose `window.SuperMagicStudioUI` for navigation.
-- Editor navigation now has Project, Assets, Animation, Layers, Camera workspaces; Inspector, Canvas and Shortcuts on the right.
-- Paint menu remains the sole visible paint tool picker. Each active tool displays only its relevant controls in a popover, including brush size, shape, textures, fill gradient, source eraser, polygon sides, curve bend and text font.
-- Existing sprite-sheet detection settings are grouped by alpha/grid and wand/curve modes. Advanced import and linked animation options are collapsible.
-- Redundant menu relays and top shortcuts are hidden instead of removed, keeping all existing click handlers and keyboard bindings.
-- Added nine Chromium scenarios (TC-103…TC-111) and seven pure UI configuration tests, preserving 102 prior feature contracts.
-- Preserved the `FootballSpriteStudio` JSON model, eight views, all asset modes, paint layer/selection tools, editor APIs, runtime and CLI.
+- [src/shared/ui-capabilities.json](../src/shared/ui-capabilities.json) catalogs **209 static HTML controls** and **53 dynamic property descriptors** with IDs, input types, select options, numeric limits and browser/CLI availability. No static controls are removed.
+- Browser SuperMagicAssetStudioAPI provides listCapabilities, listUIControls, getUIControl, setUIControl, setUISettings, getAllUISettings, getSavedUISettings, applyUIOptions and invokeUIAction.
+- Existing structured browser runCommands now supports listCapabilities, getControlValue, setControlValue, invokeControl and paint. The new SuperMagicPaintAPI methods support programmatic selection, brush, eraser, fill, clone, shapes, texture import and text.
+- CLI provides --list-controls, listCapabilities, getControlValue, setControlValue, invokeControl and paint (Node or PowerShell). Headless paint creates normal raster layers, exports PNG, handles selection masks and cloned image erasure, and supports primitive bitmap text.
+- Editor-only option values are preserved in project.editor.uiOptions and restore on load. Model-backed settings update existing project fields.
+- Browser-only dialogs, file pickers, canvas zoom/playback, and font-accurate text are labeled clearly rather than represented as equivalent CLI commands. Headless PNG renderer uses a 4MP paint limit and differs from browser Canvas antialiasing.
+- [Browser API documentation](API.md), [CLI API](CLI_API.md), [image-tool API](IMAGE_TOOLS_API.md), [command schema](../examples/cli-command-schema.json), [requirements](REQUIREMENTS.md) and [test plan](TEST_PLAN.md) were updated.
 
-## Verification history
+## Test coverage and gaps
 
-The browser suite found and resolved two issues during this change: the properties popover closed during freeform drawing (blocking Finish freeform), and it overlapped Undo when the toolbar wrapped. The final verified commit keeps settings available while editing the canvas and positions the popover below the toolbar's measured height.
+The 123 traceability checks validate evidence and uniqueness; **they are not 121 independent end-to-end UI tests**. The 52 browser cases and the Node domain/CLI/raster integration tests provide additional behavioral evidence. The automated checks cover a substantial subset of settings, selections, masks, drawing, clone, original eraser safety and PNG export. Native Windows PowerShell, production-art visual fidelity, system-font parity and touch/stylus UX still require manual or dedicated platform validation.
 
-## Outstanding quality work
+## Release policy
 
-1. Manual visual review using real eight-direction football artwork, especially small-screen usability and assistive technology.
-2. Real-device touch/pen testing, font rendering across platforms, high-DPI hit targets and visual snapshot tests.
-3. Native Windows PowerShell regression on an actual Windows runner.
-4. Continued modularization of the legacy `src/editor/app.js` state controller without changing persisted JSON.
-5. Verify hosting separately after merge; automatic Render deployment does not establish a live release until its recorded deploy commit matches main.
-
-The prior production audit recorded Render's last live commit as `f94daf6097ecd401cfc86c059d5f2e0a04c7bde6` (v5.5), despite successful GitHub CI and Pages deployment. Retain this deployment warning until Render explicitly reports a newer `main` commit as live.
-
-**Coverage caveat:** Requirement traceability validates source-level evidence, not 111 independent end-to-end behavior tests. The 46 Chromium tests and additional Node integration tests supply deeper functional coverage.
+Changes were developed on dev. Promote via PR only after full latest-head CI. After merging, verify main CI, GitHub Pages and Render separately. Render previously reported an outdated live commit; do not mark the Render deployment up to date without a matching live SHA.

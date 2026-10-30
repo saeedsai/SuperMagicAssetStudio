@@ -108,7 +108,7 @@ def paint_canvas_point(t,x,y):
 
 def paint_choose(t,mode):
     t.page.wait_for_function('Boolean(window.SuperMagicPaintAPI)')
-    t.page.locator('#paintTool').select_option(mode)
+    t.page.evaluate('(mode)=>{SuperMagicPaintAPI.setTool(mode);SuperMagicStudioUI.openPaintProperties()}',mode)
 
 def paint_drag(t,x0=160,y0=160,x1=220,y1=220):
     p0=paint_canvas_point(t,x0,y0);p1=paint_canvas_point(t,x1,y1)
@@ -140,21 +140,24 @@ def check_087(t):
     t.assertGreater(t.page.evaluate('SuperMagicPaintAPI.getSelectionCount()'),0)
 
 def check_088(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintSize').fill('35')
     t.page.locator('#paintBrushShape').select_option('square')
     t.page.locator('#paintColor').fill('#ff4400')
-    paint_choose(t,'brush');paint_drag(t)
+    paint_drag(t)
     count,layers=paint_assets(t);t.assertEqual(count,1);t.assertEqual(len(layers),1)
 
 def check_089(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintTexture').select_option('stripes')
-    paint_choose(t,'brush');paint_drag(t);t.assertEqual(paint_assets(t)[0],1)
+    paint_drag(t);t.assertEqual(paint_assets(t)[0],1)
 
 def check_090(t):
     paint_choose(t,'brush');paint_drag(t)
     before=paint_assets(t)[1][0]['assetId']
+    paint_choose(t,'eraser')
     t.page.locator('#paintEraseMode').select_option('paint')
-    paint_choose(t,'eraser');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length===2')
     after=paint_assets(t)[1][0]['assetId'];t.assertNotEqual(before,after)
 
@@ -162,8 +165,9 @@ def check_091(t):
     paint_choose(t,'brush');paint_drag(t)
     before=paint_assets(t)[1][0]['assetId']
     t.page.evaluate('(id)=>SuperMagicAssetStudioAPI.selectLayers([id])',paint_assets(t)[1][0]['id'])
+    paint_choose(t,'eraser')
     t.page.locator('#paintEraseMode').select_option('original')
-    paint_choose(t,'eraser');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length===2')
     after=paint_assets(t)[1][0]['assetId'];t.assertNotEqual(before,after)
     t.assertIn(before,t._project()['assets'])
@@ -183,6 +187,7 @@ def check_093(t):
     paint_click(t,140,150);t.assertEqual(paint_assets(t)[0],1)
 
 def check_094(t):
+    paint_choose(t,'brush')
     import base64
     png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==')
     t.page.locator('#paintTextureFile').set_input_files({'name':'pattern.png','mimeType':'image/png','buffer':png})
@@ -190,26 +195,30 @@ def check_094(t):
 
 def check_095(t):
     paint_choose(t,'select-rect');paint_drag(t,100,100,200,200)
+    paint_choose(t,'fill')
     t.page.locator('#paintFillMode').select_option('gradient')
-    paint_choose(t,'fill');paint_click(t);t.assertEqual(paint_assets(t)[0],1)
+    paint_click(t);t.assertEqual(paint_assets(t)[0],1)
 
 def check_096(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintColor').fill('#aa6611')
-    paint_choose(t,'brush');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('document.getElementById("artCanvas").getContext("2d").getImageData(180,180,1,1).data[3]>0')
     paint_choose(t,'picker');paint_click(t,180,180)
     t.assertEqual(t.page.locator('#paintColor').input_value(),'#aa6611')
 
 def check_097(t):
+    paint_choose(t,'text')
     t.page.locator('#paintText').fill('GOAL!')
     t.page.locator('#paintFont').select_option('Georgia')
     t.page.locator('#paintFontSize').fill('52')
-    paint_choose(t,'text');paint_click(t)
+    paint_click(t)
     t.assertIn('Text: GOAL!',paint_assets(t)[1][0]['name'])
 
 def check_098(t):
+    paint_choose(t,'shape-poly')
     t.page.locator('#paintSides').fill('8')
-    paint_choose(t,'shape-poly');paint_drag(t)
+    paint_drag(t)
     t.assertEqual(paint_assets(t)[0],1)
     paint_choose(t,'shape-rect');paint_drag(t,260,260,320,330)
     t.assertEqual(paint_assets(t)[0],2)

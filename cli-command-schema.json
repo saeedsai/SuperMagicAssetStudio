@@ -79,6 +79,7 @@
               "setVisibility",
               "splitImageAuto",
               "splitImageManual",
+              "splitImageWand",
               "summary",
               "undo",
               "unlinkFrame",

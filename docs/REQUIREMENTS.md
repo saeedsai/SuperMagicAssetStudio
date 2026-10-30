@@ -116,6 +116,16 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-101 | PAINT | Paint layers persist in project JSON and undo history | TC-101 | browser |
 | REQ-102 | PAINT | Paint menu in navigation | TC-102 | browser |
 
+| REQ-103 | UI | Single tabbed workspaces for all asset-editing activities | TC-103 | browser |
+| REQ-104 | UI | Contextual popover for brush and other tool properties | TC-104 | browser |
+| REQ-105 | UI | One canonical visible action per command; hidden DOM aliases retained for legacy calls | TC-105 | browser |
+| REQ-106 | UI | Only settings applicable to the currently active paint tool are displayed | TC-106 | browser |
+| REQ-107 | UI | Sprite extraction shows settings for the chosen mode/algorithm | TC-107 | browser |
+| REQ-108 | UI | Optional image import behavior grouped in a progressive settings module | TC-108 | browser |
+| REQ-109 | UI | Animation clip reuse grouped separately from basic timeline controls | TC-109 | browser |
+| REQ-110 | UI | Keyboard-accessible inspector and canvas settings tabs | TC-110 | browser |
+| REQ-111 | UI | Responsive navigation preserves controls on smaller viewports | TC-111 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

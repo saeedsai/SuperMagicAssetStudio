@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Inventory of every stable HTML editor control, with browser and headless routes. browserOnly denotes a visual-only interaction, not a hidden CLI implementation.",
+  "description": "Every static HTML control and dynamic inspector/import/part/region property; actions with browserOnly require browser. All static settings can be read/written through typed API/CLI, but headless visual semantics are limited to documented mapped operations.",
   "controls": [
     {
       "id": "newProject",
@@ -1879,6 +1879,326 @@
       "section": "paint-and-image",
       "browser": true,
       "cli": "browserOnly"
+    }
+  ],
+  "dynamicProperties": [
+    {
+      "scope": "layer",
+      "field": "name",
+      "command": "setLayer",
+      "path": "name"
+    },
+    {
+      "scope": "layer",
+      "field": "category",
+      "command": "setLayer",
+      "path": "category"
+    },
+    {
+      "scope": "layer",
+      "field": "visible",
+      "command": "setLayer",
+      "path": "visible"
+    },
+    {
+      "scope": "layer",
+      "field": "locked",
+      "command": "setLayer",
+      "path": "locked"
+    },
+    {
+      "scope": "layer",
+      "field": "paintLayer",
+      "command": "setLayer",
+      "path": "paintLayer"
+    },
+    {
+      "scope": "layer",
+      "field": "x",
+      "command": "setTransform",
+      "path": "transform.x"
+    },
+    {
+      "scope": "layer",
+      "field": "y",
+      "command": "setTransform",
+      "path": "transform.y"
+    },
+    {
+      "scope": "layer",
+      "field": "scaleX",
+      "command": "setTransform",
+      "path": "transform.scaleX"
+    },
+    {
+      "scope": "layer",
+      "field": "scaleY",
+      "command": "setTransform",
+      "path": "transform.scaleY"
+    },
+    {
+      "scope": "layer",
+      "field": "rotationDeg",
+      "command": "setTransform",
+      "path": "transform.rotationDeg"
+    },
+    {
+      "scope": "layer",
+      "field": "opacity",
+      "command": "setTransform",
+      "path": "transform.opacity"
+    },
+    {
+      "scope": "layer",
+      "field": "flipX",
+      "command": "setTransform",
+      "path": "transform.flipX"
+    },
+    {
+      "scope": "layer",
+      "field": "flipY",
+      "command": "setTransform",
+      "path": "transform.flipY"
+    },
+    {
+      "scope": "layer",
+      "field": "anchorX",
+      "command": "setTransform",
+      "path": "transform.anchorX"
+    },
+    {
+      "scope": "layer",
+      "field": "anchorY",
+      "command": "setTransform",
+      "path": "transform.anchorY"
+    },
+    {
+      "scope": "layer",
+      "field": "colorBrightness",
+      "command": "setColor",
+      "path": "color.brightness"
+    },
+    {
+      "scope": "layer",
+      "field": "colorContrast",
+      "command": "setColor",
+      "path": "color.contrast"
+    },
+    {
+      "scope": "layer",
+      "field": "colorSaturate",
+      "command": "setColor",
+      "path": "color.saturate"
+    },
+    {
+      "scope": "layer",
+      "field": "colorHue",
+      "command": "setColor",
+      "path": "color.hue"
+    },
+    {
+      "scope": "layer",
+      "field": "colorSepia",
+      "command": "setColor",
+      "path": "color.sepia"
+    },
+    {
+      "scope": "layer",
+      "field": "colorRed",
+      "command": "setColor",
+      "path": "color.red"
+    },
+    {
+      "scope": "layer",
+      "field": "colorGreen",
+      "command": "setColor",
+      "path": "color.green"
+    },
+    {
+      "scope": "layer",
+      "field": "colorBlue",
+      "command": "setColor",
+      "path": "color.blue"
+    },
+    {
+      "scope": "layer",
+      "field": "colorTintAmount",
+      "command": "setColor",
+      "path": "color.tintAmount"
+    },
+    {
+      "scope": "layer",
+      "field": "colorTintHex",
+      "command": "setColor",
+      "path": "color.tintHex"
+    },
+    {
+      "scope": "layer",
+      "field": "cropX",
+      "command": "setCrop",
+      "path": "crop.x"
+    },
+    {
+      "scope": "layer",
+      "field": "cropY",
+      "command": "setCrop",
+      "path": "crop.y"
+    },
+    {
+      "scope": "layer",
+      "field": "cropW",
+      "command": "setCrop",
+      "path": "crop.w"
+    },
+    {
+      "scope": "layer",
+      "field": "cropH",
+      "command": "setCrop",
+      "path": "crop.h"
+    },
+    {
+      "scope": "group",
+      "field": "dx",
+      "command": "setTransform",
+      "path": "relative.dx"
+    },
+    {
+      "scope": "group",
+      "field": "dy",
+      "command": "setTransform",
+      "path": "relative.dy"
+    },
+    {
+      "scope": "group",
+      "field": "scaleX",
+      "command": "setTransform",
+      "path": "relative.scaleX"
+    },
+    {
+      "scope": "group",
+      "field": "scaleY",
+      "command": "setTransform",
+      "path": "relative.scaleY"
+    },
+    {
+      "scope": "group",
+      "field": "rotationDeg",
+      "command": "setTransform",
+      "path": "relative.rotationDeg"
+    },
+    {
+      "scope": "customPart",
+      "field": "id",
+      "command": "updatePart",
+      "path": "parts[].id"
+    },
+    {
+      "scope": "customPart",
+      "field": "name",
+      "command": "updatePart",
+      "path": "parts[].name"
+    },
+    {
+      "scope": "customPart",
+      "field": "group",
+      "command": "updatePart",
+      "path": "parts[].group"
+    },
+    {
+      "scope": "customPart",
+      "field": "default",
+      "command": "updatePart",
+      "path": "parts[].default"
+    },
+    {
+      "scope": "importQueue",
+      "field": "view",
+      "command": "importManifest",
+      "path": "items[].view"
+    },
+    {
+      "scope": "importQueue",
+      "field": "category",
+      "command": "importManifest",
+      "path": "items[].category"
+    },
+    {
+      "scope": "importQueue",
+      "field": "animation",
+      "command": "importManifest",
+      "path": "items[].animation"
+    },
+    {
+      "scope": "importQueue",
+      "field": "frame",
+      "command": "importManifest",
+      "path": "items[].frame"
+    },
+    {
+      "scope": "importQueue",
+      "field": "mirror",
+      "command": "importManifest",
+      "path": "items[].mirror"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "rect",
+      "command": "splitImageManual",
+      "path": "regions[].rect"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "poly",
+      "command": "splitImageManual",
+      "path": "regions[].poly"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "bezier",
+      "command": "splitImageManual",
+      "path": "regions[].bezier"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "wand",
+      "command": "splitImageWand",
+      "path": "regions[].wand"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "normal",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "light",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "dark",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "red",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "brown",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "cool",
+      "command": "setColor",
+      "path": "color"
     }
   ]
 }

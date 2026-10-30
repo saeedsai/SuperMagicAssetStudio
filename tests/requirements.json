@@ -1018,5 +1018,95 @@
       "path": "index.html",
       "contains": "data-menu=\"paint\""
     }
+  },
+  {
+    "id": "REQ-103",
+    "testId": "TC-103",
+    "requirement": "Single tabbed workspace for project, asset, animation, layer and camera operations",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "buildWorkspaces"
+    }
+  },
+  {
+    "id": "REQ-104",
+    "testId": "TC-104",
+    "requirement": "Tool-specific paint properties open in contextual popover",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "paintPropertiesPopover"
+    }
+  },
+  {
+    "id": "REQ-105",
+    "testId": "TC-105",
+    "requirement": "One visible canonical action per command with backwards compatible hidden relays",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/workspace-config.mjs",
+      "contains": "HIDDEN_ACTION_ALIASES"
+    }
+  },
+  {
+    "id": "REQ-106",
+    "testId": "TC-106",
+    "requirement": "Paint settings dynamically filtered to selected tool",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/workspace-config.mjs",
+      "contains": "PAINT_PROPERTY_GROUPS"
+    }
+  },
+  {
+    "id": "REQ-107",
+    "testId": "TC-107",
+    "requirement": "Sprite extraction shows only algorithm- and boundary-specific settings",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "updateSpriteControls"
+    }
+  },
+  {
+    "id": "REQ-108",
+    "testId": "TC-108",
+    "requirement": "Advanced image-import settings are optionally expanded",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "Import behavior"
+    }
+  },
+  {
+    "id": "REQ-109",
+    "testId": "TC-109",
+    "requirement": "Animation clip reuse settings are optionally expanded",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "Reuse animation clips"
+    }
+  },
+  {
+    "id": "REQ-110",
+    "testId": "TC-110",
+    "requirement": "Inspector and canvas options grouped in keyboard-accessible tabs",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/ui-shell.js",
+      "contains": "ArrowRight"
+    }
+  },
+  {
+    "id": "REQ-111",
+    "testId": "TC-111",
+    "requirement": "Responsive, accessible tab navigation on small screens",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/styles.css",
+      "contains": "studio-workspace-tabs"
+    }
   }
 ]

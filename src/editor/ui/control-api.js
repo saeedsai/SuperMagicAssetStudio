@@ -17,10 +17,11 @@ function validate(item,value,el){
  if(item.kind==='select'&&![...el.options].some(o=>o.value===String(value)))throw Error('Option is not currently available for '+item.id);
  if(typeof value!=='string')throw Error('Text/select controls require a string');return value;
 }
-function set(id,value,{notify=true}={}){
+function set(id,value,{notify=true,persist=true}={}){
  const {item,el}=entry(id),v=validate(item,value,el);
  if(item.kind==='checkbox')el.checked=v;else el.value=v;
  if(notify){el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}
+ if(persist)api.setUIOptionState?.(id,valueOf(el,item));
  return valueOf(el,item);
 }
 function get(id){const {item,el}=entry(id);return {id,kind:item.kind,value:valueOf(el,item),enabled:!el.disabled,visible:!!el.getClientRects().length,options:item.values||null,cli:item.cli,operation:item.operation||null};}
@@ -30,9 +31,26 @@ function invoke(id){
  // Browser-only modal/file interactions can require a genuine user gesture.
  el.click();return {id,triggered:true};
 }
+function applyUIOptions(){
+ const saved=api.getUIOptionState?.()||{},result={};
+ for(const [id,value] of Object.entries(saved)){
+  if(!table.has(id))continue;
+  try{result[id]=set(id,value,{persist:false});}catch(error){console.warn('Skipped unavailable saved UI option',id,error.message);}
+ }
+ return result;
+}
+const settingsWithUIState=/^(paint|sprite|bgStandalone|import|sequentialImport|replaceCategory|reuseMirror|reuseReplace|snapGrid|gridSize)/;
+document.addEventListener('change',event=>{
+ const id=event.target?.id,item=table.get(id);
+ if(!item||item.kind==='action'||item.kind==='file'||!settingsWithUIState.test(id))return;
+ api.setUIOptionState?.(id,valueOf(event.target,item));
+});
+
 function defaults(){return inventory.controls.filter(x=>x.kind!=='action'&&x.kind!=='file');}
 Object.assign(api,{
  listCapabilities:()=>structuredClone(inventory),
+ applyUIOptions,
+ getSavedUISettings:()=>api.getUIOptionState?.()||{},
  listUIControls:()=>inventory.controls.map(x=>get(x.id)),
  getUIControl:get,
  setUIControl:set,
@@ -41,3 +59,4 @@ Object.assign(api,{
  setUISettings:(values)=>{if(!values||typeof values!=='object'||Array.isArray(values))throw Error('Settings must be a plain object');const result={};for(const [id,val] of Object.entries(values))result[id]=set(id,val);return result;},
 });
 window.SuperMagicCapabilities=Object.freeze({count:inventory.controls.length,version:inventory.schemaVersion});
+applyUIOptions();

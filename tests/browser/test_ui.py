@@ -401,4 +401,22 @@ for number,verify in API_CASES.items():
     def run_api(self,fn=verify):fn(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_api)
 
+
+def check_120(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicAssetStudioAPI?.listCapabilities)')
+    result=t.page.evaluate("""async()=>{
+      await SuperMagicAssetStudioAPI.runCommands({commands:[
+        {op:'setControlValue',id:'paintSize',value:9},
+        {op:'paint',tool:'brush',points:[{x:80,y:100},{x:130,y:102}],color:'#44cc88',size:9},
+        {op:'getControlValue',id:'paintSize'}
+      ]});
+      return {paintSize:SuperMagicAssetStudioAPI.getUIControl('paintSize').value,
+        assets:Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length};
+    }""")
+    t.assertEqual(result['paintSize'],9)
+    t.assertEqual(result['assets'],1)
+
+def run_command_parity(self):check_120(self)
+setattr(BrowserRegression,'test_TC_120',run_command_parity)
+
 if __name__=='__main__':unittest.main()

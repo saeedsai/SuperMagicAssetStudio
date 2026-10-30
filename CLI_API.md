@@ -205,3 +205,14 @@ Methods: `sourceScale` (same PNG-relative scale), `renderedHeight`, `renderedWid
 ```
 
 When `importToProject:true`, files are also registered as assets and layers and saved through the existing bundled/external JSON pipeline. The PowerShell wrapper executes the same Node CLI; no PowerShell-specific image-processing library is required.
+
+
+## v5.5 sprite tools — new CLI options
+
+`splitImageManual` accepts `regions` with `type: "poly"` (`points`) or `type: "bezier"` (`points`, optional `tension`), in addition to rectangular regions.
+
+`splitImageWand` accepts `source`, `seed: {x,y}`, `mode: "alpha" | "color"`, `tolerance`, `alphaThreshold`, and `outputDir`. It extracts the connected sprite into a transparent PNG without contaminating the selection with neighboring artwork.
+
+`removeBackground` remains a completely separate command and exports one transparent PNG, preserving the original source file.
+
+See `IMAGE_TOOLS_API.md` for examples and exact formats.

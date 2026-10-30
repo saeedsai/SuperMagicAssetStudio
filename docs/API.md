@@ -14,7 +14,7 @@ This is intended for browser automation tools, AI agents, test scripts, and cust
 SuperMagicAssetStudioAPI.version
 ```
 
-Current value: `5.4.0`
+Current value: `5.9.0`
 
 ## Methods
 
@@ -337,3 +337,43 @@ await editor.eraseRasterWithMask(maskCanvas.toDataURL('image/png'), 'paint');
 Rectangle / freeform / magic-wand selection creates a pixel mask that restricts subsequent stroke and fill operations. The magic wand compares RGBA values with a configurable tolerance and uses four-way connectivity. The clone stamp source is chosen with Alt-click, and texture import is local (PNG/JPEG/WebP at most 6 MB). Erasing originals creates a fresh asset ID rather than mutating an image shared by other views.
 
 Generated paint PNGs are embedded in **bundled** project JSON. With **external** project JSON, PNG assets must be saved alongside the JSON and restored through the existing external-image resolution workflow. Other tools only modify the current view and frame unless that frame is linked or the resulting layers are copied into other frames.
+
+## Full UI and Paint API (v5.9)
+
+The canonical machine-readable inventory is [src/shared/ui-capabilities.json](../src/shared/ui-capabilities.json). It enumerates **209 static editor buttons and fields** with stable IDs, kind, section, supported values where static, and CLI availability/operation mapping. Dynamically generated layer buttons are addressed by layer commands rather than this static catalog.
+
+~~~js
+const api = window.SuperMagicAssetStudioAPI;
+api.listCapabilities();                   // {schemaVersion, controls:[]}
+api.listUIControls();                     // live values, visibility and options
+api.getUIControl('paintSize');
+api.setUIControl('paintSize', 32);         // validated, dispatches native events
+api.setUISettings({paintColor:'#ff8800',paintSize:24});
+api.getAllUISettings();
+api.getSavedUISettings();                 // persisted in project.editor.uiOptions
+api.applyUIOptions();                     // restore settings after loading JSON
+api.invokeUIAction('menuAI');             // existing DOM action, no cloned controls
+
+const paint = window.SuperMagicPaintAPI;
+paint.getPaintSettings();
+paint.setPaintSettings({paintSize:20,paintBrushShape:'diamond'});
+paint.getSelectionMask();                 // Uint8Array | null
+paint.setSelectionMask(new Uint8Array(768*768)); // example: empty canvas mask
+await paint.performPaintOperation({
+  tool:'brush',points:[{x:40,y:60},{x:180,y:120}],
+  properties:{paintSize:20,paintColor:'#ee7700'}
+});
+const mask = await paint.performPaintOperation({
+  tool:'selection',selection:{type:'rect',x:10,y:20,w:160,h:100}
+});
+await paint.performPaintOperation({
+  tool:'fill',properties:{paintFillMode:'gradient',paintGradientEnd:'#7744cc'}
+});
+await paint.importPaintTexture(file);     // browser File/Blob
+~~~
+
+Supported programmatic paint tools are brush, eraser, clone, fill, picker, selection, text, and shape-rect, shape-poly, shape-oval, shape-circle, shape-line and shape-curve. Selections can be rectangles, freeform polygons, Bézier outlines or connected RGBA wands. Painting creates standard movable raster layers; erasing can safely target original images or added artwork.
+
+setUIControl operates on the original HTML element and invokes its existing input/change handlers. File-picker controls cannot be set by scripts; use file import APIs instead. Modal/file/clipboard invocations may require real user gestures in a browser. The capability catalog explicitly labels browser-only UI actions rather than claiming a nonexistent CLI counterpart. Saved values in editor.uiOptions round-trip via project JSON; main project properties retain their established paths and semantics.
+
+The capability catalog also contains **53 dynamic property descriptors** for Inspector layer transforms/crops/colors, group transforms, custom parts, import queue fields, color presets and sprite extraction regions. They are exposed as project/command fields, not fixed UI control IDs; use selectLayers / runCommands in the browser or setLayer / setColor / setCrop / setTransform / updatePart / importManifest / image tools in the CLI. Group-relative movement can be implemented by reading current transforms and writing new absolute transforms. A static control catalog cannot replace the runtime layer schema.

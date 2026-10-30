@@ -2,6 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {randomUUID} from 'node:crypto';
+import {executePaint} from './agent-paint.mjs';
+const UI_CATALOG=JSON.parse(fs.readFileSync(new URL('../shared/ui-capabilities.json',import.meta.url),'utf8'));
+const controlById=new Map(UI_CATALOG.controls.map(x=>[x.id,x]));
 
 export const VIEWS=['front','threeQuarterFrontLeft','left','threeQuarterBackLeft','back','threeQuarterBackRight','right','threeQuarterFrontRight'];
 export const MODES=['fullBody','bodyHead','standard','custom'];
@@ -161,6 +164,65 @@ export function execute(p,payload,{projectPath,results=[]}={}){
    case 'unlinkFrame':{const a=sourceAnimation(p,c.animation||active().animation),f=a.frames.find(x=>x.id===(c.frame||active().frame));check(f,'Frame not found');if(f.reuse){for(const v of VIEWS)sourceScene(p,v,a.id,f.id).unshift(...cp(resolveLayers(p,v,f.reuse.animation,f.reuse.frame)).map(l=>({...l,id:uid('layer')})));delete f.reuse;}break;}
    case 'appendClip':{const a=sourceAnimation(p,c.animation||active().animation),source=sourceAnimation(p,c.sourceAnimation);check(a!==source,'Cannot append clip to same animation');const frames=c.frames||source.frames.map(f=>f.id);const n=bounds(number(c.repeats,1),1,100);for(let i=0;i<n;i++)for(const id of frames){check(source.frames.find(f=>f.id===id),'Source frame not found');a.frames.push({id:uid('frame'),name:`↪ ${source.name} ${id}`,reuse:{animation:source.id,frame:id}});}out.added=frames.length*n;break;}
    case 'importManifest':{const m=typeof c.manifest==='string'?JSON.parse(fs.readFileSync(path.resolve(c.manifest),'utf8')):c.manifest;check(Array.isArray(m.items),'Manifest requires items');for(const it of m.items){const a=importedAsset(p,{id:it.id||uid('asset'),file:it.file||it.path,name:it.name,width:it.width,height:it.height,src:it.src,fileRef:it.fileRef},projectPath);const line={op:'addLayer',assetId:a.id,category:it.category,view:it.view,animation:it.animation,frame:it.frame,transform:it.transform,crop:it.crop,color:it.color,visible:it.visible};execute(p,{commands:[line]},{projectPath,results});}out.imported=m.items.length;break;}
+   case 'listCapabilities':out.value={...UI_CATALOG,operations:['paint','getControlValue','setControlValue','invokeControl','listCapabilities']};break;
+   case 'getControlValue':{
+     const spec=controlById.get(c.id);check(spec,'Unknown control '+c.id);
+     if(spec.kind==='action'||spec.kind==='file')throw Error('Control is an action/file, not an editable setting');
+     const values=p.editor.uiOptions||{},fallback=spec.defaultValue??(spec.kind==='checkbox'?false:null);
+     const prop=spec.projectPath||'';
+     if(prop==='projectName')out.value=p.projectName;
+     else if(prop==='mode')out.value=p.mode;
+     else if(prop==='assetStorage')out.value=p.assetStorage;
+     else if(prop==='canvas.width')out.value=p.canvas.width;
+     else if(prop==='canvas.height')out.value=p.canvas.height;
+     else if(prop==='editor.gridSize')out.value=p.editor.gridSize;
+     else if(prop==='editor.snap')out.value=p.editor.snap;
+     else if(prop==='animation.fps')out.value=sourceAnimation(p,active().animation).fps;
+     else out.value=Object.hasOwn(values,c.id)?values[c.id]:fallback;
+     break;
+   }
+   case 'setControlValue':{
+     const spec=controlById.get(c.id);check(spec,'Unknown control '+c.id);
+     check(spec.kind!=='action'&&spec.kind!=='file','Cannot set a button or file picker; use a command or upload file');
+     let value=c.value;
+     if(spec.values){check(spec.values.includes(String(value)),'Unsupported option for '+c.id);}
+     if(spec.kind==='checkbox')check(typeof value==='boolean','Checkbox value must be boolean');
+     if(['number','range'].includes(spec.kind)){check(Number.isFinite(Number(value)),'Number must be finite');value=Number(value);if(spec.min!==undefined)check(value>=spec.min,'Value below minimum for '+c.id);if(spec.max!==undefined)check(value<=spec.max,'Value exceeds maximum for '+c.id);}
+     if(spec.kind==='color')check(/^#[0-9a-f]{6}$/i.test(String(value)),'Invalid color');
+     check(typeof value!=='object'||value===null,'Controls accept scalar values only');
+     const prop=spec.projectPath||'';
+     if(prop==='projectName')p.projectName=String(value);
+     else if(prop==='mode'){check(MODES.includes(value),'Unsupported mode');p.mode=value;}
+     else if(prop==='assetStorage'){check(['bundled','external'].includes(value),'Unknown storage mode');p.assetStorage=value;}
+     else if(prop==='canvas.width'||prop==='canvas.height'){check(value>=1&&value<=4096,'Canvas dimension 1–4096');p.canvas[prop.split('.')[1]]=Math.round(value);}
+     else if(prop==='editor.gridSize')p.editor.gridSize=bounds(value,8,256);
+     else if(prop==='editor.snap')p.editor.snap=value;
+     else if(prop==='animation.fps')sourceAnimation(p,active().animation).fps=bounds(value,1,120);
+     else (p.editor.uiOptions||={})[c.id]=value;
+     out.value=value;break;
+   }
+   case 'invokeControl':{
+     const spec=controlById.get(c.id);check(spec,'Unknown control '+c.id);check(spec.kind==='action','Only action buttons can be invoked');
+     check(spec.operation,'Control '+c.id+' requires a graphical browser; use its documented headless operation instead');
+     check(!['invokeControl','listCapabilities'].includes(spec.operation),'Recursive control invocation is not allowed');
+     const args={...(c.params||{}),op:spec.operation};
+     if(['prevView','menuPrevView'].includes(c.id))args.steps=-1;
+     if(['nextView','menuNextView'].includes(c.id))args.steps=1;
+     if(['layerUp','layerTop'].includes(c.id))args.direction=c.id==='layerTop'?'front':'up';
+     if(['layerDown','layerBottom'].includes(c.id))args.direction=c.id==='layerBottom'?'back':'down';
+     execute(p,{commands:[args]},{projectPath,results});
+     out.invoked=args.op;break;
+   }
+   case 'paint':{
+     const settings=p.editor.uiOptions||{};
+     const defaults={tool:settings.paintTool,size:settings.paintSize,brushShape:settings.paintBrushShape,color:settings.paintColor,
+       opacity:settings.paintOpacity===undefined?undefined:Number(settings.paintOpacity)/100,
+       texture:settings.paintTexture,fillMode:settings.paintFillMode,gradientEnd:settings.paintGradientEnd,
+       eraseMode:settings.paintEraseMode,sides:settings.paintSides,curveBend:settings.paintCurveBend,
+       fontSize:settings.paintFontSize,shapeFill:settings.paintShapeFill,text:settings.paintText};
+     for(const key of Object.keys(defaults))if(defaults[key]===undefined)delete defaults[key];
+     out.value=executePaint(p,{...defaults,...c},{projectPath});break;
+   }
    case 'summary':out.value=summarize(p);break;
    case 'review':out.value=reviewProject(p,projectPath);break;
    case 'listAssets':out.value=p.assets;break;

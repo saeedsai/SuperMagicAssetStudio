@@ -63,3 +63,7 @@ The former 198 KB one-file HTML application was split into markup, 16 KB stylesh
 ## UI ownership (v5.8)
 
 The UI shell activates left/right tabpanels, moves *existing* controls to their contextual home, hides redundant menu relay nodes, and shows the existing paint settings only in the Tool options popover. It never owns project state, raster operations or serialized JSON. `workspace-config.mjs` defines each panel's unique placement, tool-to-property mapping and legacy action aliases. `src/editor/paint-tools.js` continues to own draw/selection behavior; `src/editor/app.js` continues to own editing/project state. The shell is loaded after both via a deferred JS module. The public `SuperMagicStudioUI` facade is layout-only.
+
+## Shared UI/API/CLI contract (v5.9)
+
+The static [control catalog](../src/shared/ui-capabilities.json) is the authoritative inventory of HTML controls and CLI equivalents. src/editor/ui/control-api.js reads this inventory and exposes browser get/set/invoke, using original DOM handlers and persisting option values in project.editor.uiOptions. src/cli/agent-paint.mjs implements PNG-based headless painting without native modules; src/cli/agent-engine.mjs handles capability queries, typed option reads/writes and paint commands. src/cli/agent-cli.mjs supports --list-controls and mapped action routing. A catalog entry with browserOnly indicates a visual-only operation, not false headless feature parity. Tests check that each unique static HTML control is listed and that actual round-trip/painting operations succeed.

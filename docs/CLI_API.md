@@ -216,3 +216,57 @@ When `importToProject:true`, files are also registered as assets and layers and 
 `removeBackground` remains a completely separate command and exports one transparent PNG, preserving the original source file.
 
 See `IMAGE_TOOLS_API.md` for examples and exact formats.
+## Every UI property and headless Paint API (v5.9)
+
+Run **node src/cli/agent-cli.mjs --list-controls** to retrieve the same complete inventory used by the browser. Every static HTML control has a machine-readable ID and capability classification: setting (typed get/set in CLI), filePath (provide a file to a headless import/tool operation), mapped operation (headless action), or browserOnly (visual-only interaction, e.g. dialogs, zoom and playback). The catalog is at [src/shared/ui-capabilities.json](../src/shared/ui-capabilities.json). Headless CLI functionality does not require a browser.
+
+~~~json
+{"commands":[
+ {"op":"listCapabilities"},
+ {"op":"setControlValue","id":"paintSize","value":24},
+ {"op":"setControlValue","id":"paintColor","value":"#ee4400"},
+ {"op":"getControlValue","id":"paintColor"},
+ {"op":"invokeControl","id":"menuNextView"},
+ {"op":"paint","tool":"brush","points":[{"x":40,"y":50},{"x":145,"y":85}]},
+ {"op":"renderPNG","path":"output.png"}
+]}
+~~~
+
+PowerShell accepts the same command payload in -CommandJson or -CommandFile. setControlValue validates select options, checkbox booleans, numeric inputs and hex colors. Model-backed fields update the actual project field (name, mode, storage, dimensions, snap, grid size, FPS). Remaining UI settings are saved under project.editor.uiOptions, round-trip through the JSON file, and supply paint defaults for headless commands.
+
+### Paint command properties
+
+| Field | Allowed values / meaning |
+|---|---|
+| tool | selection, picker, brush, eraser, clone, fill, text, shape-rect, shape-poly, shape-oval, shape-circle, shape-line, shape-curve |
+| points | Stroke path array of {x,y} |
+| start, end, position | {x,y} points for shapes, picker or text |
+| selection | {type:'rect',x,y,w,h}; {type:'poly',points}; {type:'bezier',points,tension}; {type:'wand',seed:{x,y},tolerance} |
+| size, brushShape | Size 1–256; round, square, diamond, soft |
+| color, opacity | #RRGGBB, alpha 0–1 (CLI fraction) |
+| texture, textureFile | solid, dots, stripes, checker, imported; imported requires PNG path |
+| fillMode, gradientEnd | color/texture/gradient; second #RRGGBB |
+| eraseMode, layerId | paint or original; original requires a target layer ID |
+| cloneSource | {x,y} source location |
+| shapeFill, sides, curveBend | stroke/fill; polygon 3–64; curve control offset |
+| text, font, fontSize | text string, font=bitmap, scale in pixels |
+| view, animation, frame | Existing IDs; defaults to CLI cursor |
+
+~~~json
+{"commands":[
+ {"op":"paint","tool":"fill",
+  "selection":{"type":"rect","x":40,"y":50,"w":200,"h":100},
+  "color":"#ee8800","gradientEnd":"#4455cc","fillMode":"gradient"},
+ {"op":"paint","tool":"shape-poly","start":{"x":250,"y":250},
+  "end":{"x":320,"y":280},"sides":7,"size":4,"color":"#ffffff"},
+ {"op":"paint","tool":"text","text":"GOAL!","font":"bitmap",
+  "fontSize":32,"start":{"x":50,"y":200}},
+ {"op":"renderPNG","path":"player-painted.png"}
+]}
+~~~
+
+Headless painting has a 4-megapixel limit and uses PNG source/texture images. Browser Canvas can render system fonts, anti-aliased curves, and certain filtering effects that the dependency-free CLI does not duplicate pixel-for-pixel; CLI text supports the deterministic bitmap font, while browser text supports its existing fonts. Picker and selection inspection do not change the project. Other paint commands add an independent raster layer or clone the original asset before erasing, retaining undo/redo through the CLI history.
+
+The [command JSON schema](../examples/cli-command-schema.json) documents operation names and properties. The [static control catalog](../src/shared/ui-capabilities.json) documents every HTML control including browser-only behaviors. Visual dialogs are callable from browser scripting; they cannot themselves open inside a headless terminal. For mapped actions invokeControl accepts id and params, or use the native CLI operation directly.
+
+The capability catalog also contains **53 dynamic property descriptors** for Inspector layer transforms/crops/colors, group transforms, custom parts, import queue fields, color presets and sprite extraction regions. They are exposed as project/command fields, not fixed UI control IDs; use selectLayers / runCommands in the browser or setLayer / setColor / setCrop / setTransform / updatePart / importManifest / image tools in the CLI. Group-relative movement can be implemented by reading current transforms and writing new absolute transforms. A static control catalog cannot replace the runtime layer schema.

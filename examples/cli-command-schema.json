@@ -36,15 +36,19 @@
               "deleteLayer",
               "duplicateFrame",
               "exportPartsDefinition",
+              "getControlValue",
               "getProject",
               "importManifest",
+              "invokeControl",
               "linkFrame",
               "listAssets",
+              "listCapabilities",
               "listLayers",
               "listParts",
               "lockLayer",
               "mirrorLayer",
               "moveLayer",
+              "paint",
               "redo",
               "removeAsset",
               "removeBackground",
@@ -62,6 +66,7 @@
               "setAnimation",
               "setCanvas",
               "setColor",
+              "setControlValue",
               "setCrop",
               "setDefault",
               "setEditor",
@@ -85,6 +90,153 @@
               "unlinkFrame",
               "updatePart"
             ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Stable UI control ID from --list-controls; also accepted by get/set/invokeControl."
+          },
+          "value": {
+            "description": "Scalar value (typed checkbox, number, color, or select) for setControlValue."
+          },
+          "params": {
+            "type": "object",
+            "description": "Arguments forwarded to mapped CLI operation by invokeControl."
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "selection",
+              "picker",
+              "brush",
+              "eraser",
+              "clone",
+              "fill",
+              "text",
+              "shape-rect",
+              "shape-poly",
+              "shape-oval",
+              "shape-circle",
+              "shape-line",
+              "shape-curve"
+            ]
+          },
+          "selection": {
+            "type": "object",
+            "description": "rect, poly, bezier, or wand pixel region"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "brushShape": {
+            "type": "string",
+            "enum": [
+              "round",
+              "square",
+              "diamond",
+              "soft"
+            ]
+          },
+          "texture": {
+            "type": "string",
+            "enum": [
+              "solid",
+              "dots",
+              "stripes",
+              "checker",
+              "imported"
+            ]
+          },
+          "textureFile": {
+            "type": "string",
+            "description": "PNG file path when texture=imported"
+          },
+          "eraseMode": {
+            "type": "string",
+            "enum": [
+              "paint",
+              "original"
+            ]
+          },
+          "layerId": {
+            "type": "string",
+            "description": "Original layer to erase"
+          },
+          "cloneSource": {
+            "type": "object",
+            "description": "Clone stamp x/y source"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 256
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[a-fA-F0-9]{6}$"
+          },
+          "opacity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fillMode": {
+            "type": "string",
+            "enum": [
+              "color",
+              "texture",
+              "gradient"
+            ]
+          },
+          "gradientEnd": {
+            "type": "string",
+            "pattern": "^#[a-fA-F0-9]{6}$"
+          },
+          "shapeFill": {
+            "type": "string",
+            "enum": [
+              "fill",
+              "stroke"
+            ]
+          },
+          "sides": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 64
+          },
+          "curveBend": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "font": {
+            "type": "string",
+            "enum": [
+              "bitmap"
+            ]
+          },
+          "fontSize": {
+            "type": "number"
+          },
+          "position": {
+            "type": "object"
+          },
+          "start": {
+            "type": "object"
+          },
+          "end": {
+            "type": "object"
           }
         },
         "additionalProperties": true

@@ -1108,5 +1108,105 @@
       "path": "src/editor/styles.css",
       "contains": "studio-workspace-tabs"
     }
+  },
+  {
+    "id": "REQ-112",
+    "testId": "TC-112",
+    "requirement": "All static editor controls represented in machine-readable cross-runtime capability catalog",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/shared/ui-capabilities.json",
+      "contains": "paintSize"
+    }
+  },
+  {
+    "id": "REQ-113",
+    "testId": "TC-113",
+    "requirement": "Browser API exposes typed get/set/list for every static form property",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/control-api.js",
+      "contains": "setUISettings"
+    }
+  },
+  {
+    "id": "REQ-114",
+    "testId": "TC-114",
+    "requirement": "Browser API invokes existing action button without DOM duplication",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/control-api.js",
+      "contains": "invokeUIAction"
+    }
+  },
+  {
+    "id": "REQ-115",
+    "testId": "TC-115",
+    "requirement": "Browser API performs selections, brush drawing and texture/gradient fills",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/paint-tools.js",
+      "contains": "performPaintOperation"
+    }
+  },
+  {
+    "id": "REQ-116",
+    "testId": "TC-116",
+    "requirement": "Browser API supports full saved paint property and mask inspection",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/paint-tools.js",
+      "contains": "getPaintSettings"
+    }
+  },
+  {
+    "id": "REQ-117",
+    "testId": "TC-117",
+    "requirement": "CLI can inspect/update every typed static setting with validation",
+    "verification": "integration",
+    "evidence": {
+      "path": "src/cli/agent-engine.mjs",
+      "contains": "setControlValue"
+    }
+  },
+  {
+    "id": "REQ-118",
+    "testId": "TC-118",
+    "requirement": "CLI implements headless brush, selection, stamp, fill, erase, text and shapes",
+    "verification": "integration",
+    "evidence": {
+      "path": "src/cli/agent-paint.mjs",
+      "contains": "executePaint"
+    }
+  },
+  {
+    "id": "REQ-119",
+    "testId": "TC-119",
+    "requirement": "API/CLI docs, schema and tests document explicit browser-only limitations",
+    "verification": "contract",
+    "evidence": {
+      "path": "docs/CLI_API.md",
+      "contains": "browserOnly"
+    }
+  },
+  {
+    "id": "REQ-120",
+    "testId": "TC-120",
+    "requirement": "Browser structured command runner accepts CLI-style UI setting and paint commands",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "case 'paint':"
+    }
+  },
+  {
+    "id": "REQ-121",
+    "testId": "TC-121",
+    "requirement": "All dynamically rendered Inspector, group, custom-part, import and sprite properties documented in shared capability schema",
+    "verification": "contract",
+    "evidence": {
+      "path": "src/shared/ui-capabilities.json",
+      "contains": "dynamicProperties"
+    }
   }
 ]

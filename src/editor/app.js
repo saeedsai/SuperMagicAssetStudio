@@ -236,7 +236,7 @@ async function exportTurntable(){
   }catch(e){notify('Turntable export failed: '+e.message);}finally{$('#exportTurntable').disabled=false;}
 }
 function resetProject(){stopSpin();if(!confirm('Discard the current project and start a new one?'))return;stop();project=createProject();historyPast=[];historyFuture=[];images.clear();currentView='front';currentAnimation='stand';currentFrame='stand_1';selectedLayer=null;$('#projectName').value=project.projectName;updateDimension();refresh();notify('New project created.');}
-async function loadProject(file){try{const data=JSON.parse(await file.text());if(data.format!=='FootballSpriteStudio'||!data.assets||!data.animations||!data.scenes||!data.canvas)throw new Error('Not a Football Sprite Studio JSON file.');stop();stopSpin();project=migrateProject(data);project.defaults ||= {};project.assetStorage ||= 'bundled';images.clear();currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;selectedLayer=null;$('#projectName').value=project.projectName||'Football character';updateDimension();syncEditorState();for(const [id,a] of Object.entries(project.assets)){if(a.src)loadImg(id);}refresh();const missing=unresolvedAssets().length;notify(missing?`Loaded project. ${missing} external image asset(s) need resolving.`:`Loaded ${Object.keys(project.assets).length} image asset(s).`);}catch(err){notify('Could not load JSON: '+err.message);}}
+async function loadProject(file){try{const data=JSON.parse(await file.text());if(data.format!=='FootballSpriteStudio'||!data.assets||!data.animations||!data.scenes||!data.canvas)throw new Error('Not a Football Sprite Studio JSON file.');stop();stopSpin();project=migrateProject(data);project.defaults ||= {};project.assetStorage ||= 'bundled';images.clear();currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;selectedLayer=null;$('#projectName').value=project.projectName||'Football character';updateDimension();syncEditorState();for(const [id,a] of Object.entries(project.assets)){if(a.src)loadImg(id);}refresh();window.SuperMagicAssetStudioAPI?.applyUIOptions?.();const missing=unresolvedAssets().length;notify(missing?`Loaded project. ${missing} external image asset(s) need resolving.`:`Loaded ${Object.keys(project.assets).length} image asset(s).`);}catch(err){notify('Could not load JSON: '+err.message);}}
 async function resolveExternalImages(fileList){const files=Array.from(fileList||[]);if(!files.length)return;let matched=0;for(const file of files){const found=Object.entries(project.assets).find(([id,a])=>!a.src&&((a.fileRef||a.name||'').replace(/\\/g,'/').split('/').pop().toLowerCase()===file.name.toLowerCase()));if(!found)continue;const [id,a]=found;const src=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});a.src=src;a.mime=file.type||'image/png';a.name=a.name||file.name;a.fileRef=a.fileRef||file.name;images.delete(id);loadImg(id);matched++;}
 refresh();notify(`Resolved ${matched} external image asset(s).`);}
 function moveLayer(by){const ls=scene(),i=ls.findIndex(x=>x.id===selectedLayer),j=i+by;if(i<0||j<0||j>=ls.length)return;[ls[i],ls[j]]=[ls[j],ls[i]];renderLayers();draw();}
@@ -284,7 +284,25 @@ function stepView(direction){const at=VIEW_IDS.indexOf(currentView);setView(VIEW
 function stopSpin(){if(spinning){clearInterval(spinning);spinning=null;}const b=$('#spinView');if(b)b.textContent='▶ 360°';}
 function renderGroupVisibility(){const el=$('#quickVisibility');if(!el)return;const groups={Head:['head','neck','face','eyes','eyebrows','nose','mouth','beard'],Hair:['hairFront','hairBack'],Clothes:['shirt','shorts','sockLeft','sockRight','bootLeft','bootRight'],Arms:['upperArmLeft','upperArmRight','forearmLeft','forearmRight','handLeft','handRight'],Legs:['upperLegLeft','upperLegRight','lowerLegLeft','lowerLegRight','footLeft','footRight'],Accessories:['accessory']};
   el.innerHTML=Object.entries(groups).map(([name,categories])=>{const l=scene().filter(x=>categories.includes(x.category));return `<button type="button" class="${l.length&&l.every(x=>!x.visible)?'off':''}" data-group="${name}" title="Toggle ${name}">${name} ${l.filter(x=>x.visible).length}/${l.length}</button>`;}).join('');}
-function populateChoices(){const cats=Object.entries(CATEGORIES);const options=cats.map(([k,v])=>`<option value="${k}">${v}</option>`).join('');$('#importCategory').innerHTML=options;$('#reuseSource').innerHTML=VIEWS.map(([k,v])=>`<option value="${k}">${v}</option>`).join('');$('#reuseSource').value='threeQuarterFrontRight';$('#reuseCategory').innerHTML=queueOptions([['all','All layers'],...cats],'all');}
+function preferredPartForMode(mode=project.mode){
+  if(mode==='fullBody')return 'fullBody';
+  if(mode==='bodyHead')return 'body';
+  if(mode==='standard')return 'torso';
+  const parts=partDefinitions();
+  return parts.find(p=>p.default)?.id||parts[0]?.id||Object.keys(CATEGORIES)[0];
+}
+function populateChoices(){
+  const cats=Object.entries(CATEGORIES),allowed=new Set(cats.map(([id])=>id));
+  const defaultPart=preferredPartForMode();
+  const partSelect=$('#importCategory'),reuseSelect=$('#reuseCategory'),sourceSelect=$('#reuseSource');
+  const priorPart=partSelect.value,priorReuse=reuseSelect.value,priorSource=sourceSelect.value;
+  partSelect.innerHTML=cats.map(([id,name])=>`<option value="${esc(id)}">${esc(name)}</option>`).join('');
+  partSelect.value=allowed.has(priorPart)?priorPart:(allowed.has(defaultPart)?defaultPart:cats[0]?.[0]||'');
+  reuseSelect.innerHTML=queueOptions([['all','All layers'],...cats],allowed.has(priorReuse)||priorReuse==='all'?priorReuse:'all');
+  reuseSelect.value=allowed.has(priorReuse)||priorReuse==='all'?priorReuse:'all';
+  sourceSelect.innerHTML=VIEWS.map(([id,name])=>`<option value="${esc(id)}">${esc(name)}</option>`).join('');
+  sourceSelect.value=VIEW_IDS.includes(priorSource)?priorSource:'threeQuarterFrontRight';
+}
 function guessView(filename){const v=filename.toLowerCase().replace(/\.[^.]+$/,'').replace(/[\s_-]+/g,'');
   for(const [regex,id] of [[/threequarterfrontleft|34frontleft|frontleft|diagonalfrontleft|qfl/, 'threeQuarterFrontLeft'],[/threequarterfrontright|34frontright|frontright|diagonalfrontright|qfr/,'threeQuarterFrontRight'],[/threequarterbackleft|34backleft|backleft|qbl/,'threeQuarterBackLeft'],[/threequarterbackright|34backright|backright|qbr/,'threeQuarterBackRight'],[/^left|viewleft|sideleft/,'left'],[/^right|viewright|sideright/,'right'],[/^back|rear|viewback/,'back'],[/^front|viewfront/,'front']])if(regex.test(v))return id;return currentView;
 }
@@ -387,7 +405,7 @@ document.addEventListener('pointerdown',e=>{if(!e.target.closest('#cameraMenu'))
 $('#setReference').addEventListener('click',()=>setReference($('#referenceView').value,$('#referenceAnimation').value,$('#referenceFrame').value,num($('#referenceOpacity').value,30)/100));
 $('#clearReference').addEventListener('click',()=>{project.editor.reference=null;draw();notify('Reference cleared.');});
 $('#referenceAnimation').addEventListener('change',()=>{const a=project.animations.find(x=>x.id===$('#referenceAnimation').value);$('#referenceFrame').innerHTML=queueOptions(a.frames.map(f=>[f.id,f.name]),a.frames[0].id);});
-$('#assetMode').addEventListener('change',e=>{recordHistory();project.mode=e.target.value;renderMode();$('#importCategory').value=({fullBody:'fullBody',bodyHead:'body',standard:'torso',custom:'bodyPart'})[e.target.value];});
+
 $('#downloadPartsSchema').addEventListener('click',()=>{const spec=exportPartsDefinition('standard');download(new Blob([JSON.stringify(spec,null,2)],{type:'application/json'}),'supermagic-standard-parts.json');});
 $('#loadPartsSchema').addEventListener('click',()=>$('#partsInput').click());
 $('#partsInput').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());recordHistory();setParts(data);project.mode='custom';renderMode();notify('Custom parts schema imported.');}catch(err){notify(err.message);}e.target.value='';});
@@ -526,6 +544,30 @@ ${JSON.stringify(obj,null,2)}`:msg);
       case 'deleteLayer': {if(!cmd.match||!Object.keys(cmd.match).length)throw new Error('deleteLayer requires a non-empty match selector');const found=findLayers(cmd.match,cmd.scope||'currentFrame'); touch(); let n=0; for(const f of [...found].reverse()){f.layers.splice(f.index,1); n++;} if(selectedLayer && !scene().some(l=>l.id===selectedLayer))selectedLayer=null; say(`✔ Deleted ${n} layer(s)`); break;}
       case 'autoResizeMatching': {const n=applyAutoResize(cmd);say(`✔ Auto-resized ${n} matching layers`);break;}
       case 'setReference': touch(); project.editor.reference={enabled:cmd.enabled!==false,view:cmd.view||currentView,animation:cmd.animation||currentAnimation,frame:cmd.frame||currentFrame,alpha:clamp(num(cmd.alpha,.3),.05,.9)}; say('✔ Reference overlay updated',project.editor.reference); break;
+      case 'listCapabilities': say('UI capabilities',window.SuperMagicAssetStudioAPI.listCapabilities()); break;
+      case 'getControlValue': say('UI control',window.SuperMagicAssetStudioAPI.getUIControl(cmd.id)); break;
+      case 'setControlValue':{
+        if(!window.SuperMagicAssetStudioAPI.setUIControl)throw Error('UI controls are not initialized');
+        touch();const value=window.SuperMagicAssetStudioAPI.setUIControl(cmd.id,cmd.value);
+        say('Updated UI control '+cmd.id,{value});break;
+      }
+      case 'invokeControl':{
+        if(!window.SuperMagicAssetStudioAPI.invokeUIAction)throw Error('UI controls are not initialized');
+        const result=window.SuperMagicAssetStudioAPI.invokeUIAction(cmd.id);
+        say('Invoked UI action',result);break;
+      }
+      case 'paint':{
+        const paintAPI=window.SuperMagicPaintAPI;
+        if(!paintAPI?.performPaintOperation)throw Error('Paint API unavailable');
+        const mapping={size:'paintSize',brushShape:'paintBrushShape',color:'paintColor',texture:'paintTexture',
+          fillMode:'paintFillMode',gradientEnd:'paintGradientEnd',eraseMode:'paintEraseMode',sides:'paintSides',
+          curveBend:'paintCurveBend',shapeFill:'paintShapeFill',text:'paintText',font:'paintFont',fontSize:'paintFontSize'};
+        const options={...(cmd.properties||{})};
+        for(const [key,id] of Object.entries(mapping))if(cmd[key]!==undefined)options[id]=cmd[key];
+        if(cmd.opacity!==undefined)options.paintOpacity=Math.round(Number(cmd.opacity)*100);
+        const info=await paintAPI.performPaintOperation({...cmd,properties:options});
+        say('Paint operation',info);break;
+      }
       case 'summary': say('Summary',window.SuperMagicAssetStudioAPI.getSummary()); break;
       case 'splitImageAuto':case 'splitImageManual':case 'removeBackground':{
         const a=project.assets[cmd.assetId];if(!a?.src)throw new Error('Image command requires an existing image assetId with embedded src');
@@ -605,14 +647,16 @@ $('#zoomIn').addEventListener('click',()=>{zoom=clamp(zoom*1.2,.14,2.5);updateZo
 document.addEventListener('keydown',e=>{const tag=e.target.tagName,isInput=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||e.target.isContentEditable;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){e.preventDefault();resetProject();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('#jsonInput').click();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();saveJSON();return;}if((e.ctrlKey||e.metaKey)&&['z','y'].includes(e.key.toLowerCase())){if(e.target.closest('input,textarea,select'))return;e.preventDefault();if(e.key.toLowerCase()==='y'||(e.key.toLowerCase()==='z'&&e.shiftKey))redo();else undo();return;}if(isInput||$('#cropDialog').open)return;if(e.key==='Escape'){setSelected(null);return;}if(e.key===' '){e.preventDefault();togglePlay();return;}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();recordHistory();deleteSelected();return;}if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){const l=sel();if(!l||l.locked)return;e.preventDefault();recordHistory();const n=e.shiftKey?10:1;const group=selectedLayers().filter(x=>!x.locked);const dx=e.key==='ArrowLeft'?-n:e.key==='ArrowRight'?n:0,dy=e.key==='ArrowUp'?-n:e.key==='ArrowDown'?n:0;for(const item of group){item.transform.x+=dx;item.transform.y+=dy;}draw();renderInspector();}});
 window.addEventListener('resize',()=>{if(!drag)fitZoom();});
 
-$('#assetMode').addEventListener('change',e=>{project.mode=e.target.value;selectedLayer=null;renderMode();refresh();});
+$('#assetMode').addEventListener('change',e=>{recordHistory();project.mode=e.target.value;clearSelection();renderMode();$('#importCategory').value=preferredPartForMode();refresh();});
 $('#imageStorage').addEventListener('change',e=>{project.assetStorage=e.target.value;renderMode();});
 $('#resolveImagesBtn').addEventListener('click',()=>$('#resolveImagesInput').click());
 const resolveInput=document.createElement('input');resolveInput.type='file';resolveInput.accept='image/png,image/webp,image/jpeg';resolveInput.multiple=true;resolveInput.id='resolveImagesInput';resolveInput.style.display='none';document.body.appendChild(resolveInput);
 resolveInput.addEventListener('change',async e=>{await resolveExternalImages(e.target.files);e.target.value='';});
 for(const section of document.querySelectorAll('.sidebar .section,.inspector .section')){const title=section.querySelector('h3');if(!title)continue;section.classList.add('collapsed');if(/Project|Inspector|Layers/.test(title.textContent))section.classList.remove('collapsed');title.addEventListener('click',e=>{if(e.target.closest('button,select,input'))return;section.classList.toggle('collapsed');});}
 window.SuperMagicAssetStudioAPI={
-  version:'5.2.0',
+  version:'5.9.0',
+  getUIOptionState:()=>clone(project.editor?.uiOptions||{}),
+  setUIOptionState:(id,value)=>{project.editor ||= {};project.editor.uiOptions ||= {};project.editor.uiOptions[id]=clone(value);return value;},
   getProject:()=>clone(project),
   exportProjectObject:(options={})=>clone(exportProjectObject(options)),
   getSummary:()=>({name:project.projectName,mode:project.mode,assetStorage:project.assetStorage,views:[...VIEW_IDS],animations:project.animations.map(a=>({id:a.id,name:a.name,frames:a.frames.length,fps:a.fps})),assets:Object.keys(project.assets).length,unresolvedAssets:unresolvedAssets().map(a=>a.fileRef||a.name),partsDefinitionCount:partDefinitions().length}),
@@ -622,7 +666,7 @@ window.SuperMagicAssetStudioAPI={
   getPartDefinitions:()=>clone(exportPartsDefinition('custom')),
   setPartDefinitions:(spec)=>{recordHistory(); const out=setCustomPartsSpec(spec||{}); renderMode(); refresh(); return clone(out);},
   exportPartDefinitions:(mode='custom')=>clone(exportPartsDefinition(mode)),
-  importProjectObject:(obj)=>{if(!obj||obj.format!=='FootballSpriteStudio'||!obj.canvas||!obj.assets||!obj.scenes||!Array.isArray(obj.animations))throw new Error('Invalid FootballSpriteStudio project');project=migrateProject(clone(obj));images.clear();for(const [id,a] of Object.entries(project.assets||{})){if(a.src)loadImg(id);}currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;selectedLayer=null;$('#projectName').value=project.projectName||'Football character';syncEditorState();refresh();return clone(project);},
+  importProjectObject:(obj)=>{if(!obj||obj.format!=='FootballSpriteStudio'||!obj.canvas||!obj.assets||!obj.scenes||!Array.isArray(obj.animations))throw new Error('Invalid FootballSpriteStudio project');project=migrateProject(clone(obj));images.clear();for(const [id,a] of Object.entries(project.assets||{})){if(a.src)loadImg(id);}currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;selectedLayer=null;$('#projectName').value=project.projectName||'Football character';syncEditorState();refresh();window.SuperMagicAssetStudioAPI.applyUIOptions?.();return clone(project);},
   resolveExternalImages: async (files)=>resolveExternalImages(files),
   setView:(view)=>{setView(view);return currentView;},
   setAnimation:(id)=>{setAnimation(id);return currentAnimation;},

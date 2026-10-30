@@ -126,6 +126,20 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-110 | UI | Keyboard-accessible inspector and canvas settings tabs | TC-110 | browser |
 | REQ-111 | UI | Responsive navigation preserves controls on smaller viewports | TC-111 | browser |
 
+
+| REQ-112 | API | Complete machine-readable catalog of static editor UI controls | TC-112 | browser |
+| REQ-113 | API | Browser get/set/list for typed editor property controls | TC-113 | browser |
+| REQ-114 | API | Browser action invocation without duplicate UI nodes | TC-114 | browser |
+| REQ-115 | PAINT | Scriptable brush and mask operations through browser API | TC-115 | browser |
+| REQ-116 | PAINT | Browser settings and gradient fill controllable through API | TC-116 | browser |
+| REQ-117 | CLI | Typed UI option queries/updates round-trip through JSON | TC-117 | integration |
+| REQ-118 | CLI | Headless brush, mask, erase, stamp, fill, text and shape operations | TC-118 | integration |
+| REQ-119 | DOC | Browser/CLI API contract and explicit browser-only limitations | TC-119 | contract |
+
+| REQ-120 | API | Browser structured commands expose UI properties and paint editing | TC-120 | browser |
+
+| REQ-121 | API | Dynamic Inspector, group, import, custom-part and sprite region properties cataloged | TC-121 | contract |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

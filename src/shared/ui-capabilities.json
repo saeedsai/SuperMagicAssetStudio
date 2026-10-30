@@ -1,0 +1,2274 @@
+{
+  "schemaVersion": 1,
+  "description": "Every static HTML control and dynamic inspector/import/part/region property; actions with browserOnly require browser. All static settings can be read/written through typed API/CLI, but headless visual semantics are limited to documented mapped operations.",
+  "controls": [
+    {
+      "id": "newProject",
+      "name": "Start a new project",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "createProject",
+      "operation": "createProject"
+    },
+    {
+      "id": "loadProject",
+      "name": "load Project",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "saveProject",
+      "name": "save Project",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "getProject",
+      "operation": "getProject"
+    },
+    {
+      "id": "exportPNG",
+      "name": "export PNG",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderPNG",
+      "operation": "renderPNG"
+    },
+    {
+      "id": "menuNewProject",
+      "name": "menu New Project",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "createProject",
+      "operation": "createProject"
+    },
+    {
+      "id": "menuLoadProject",
+      "name": "menu Load Project",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuSaveProject",
+      "name": "menu Save Project",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "getProject",
+      "operation": "getProject"
+    },
+    {
+      "id": "menuExportPNG",
+      "name": "menu Export PNG",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderPNG",
+      "operation": "renderPNG"
+    },
+    {
+      "id": "menuExportGIF",
+      "name": "menu Export GIF",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderGIF",
+      "operation": "renderGIF"
+    },
+    {
+      "id": "menuExportTurntable",
+      "name": "menu Export Turntable",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderTurntable",
+      "operation": "renderTurntable"
+    },
+    {
+      "id": "menuExportSheet",
+      "name": "menu Export Sheet",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderSpriteSheet",
+      "operation": "renderSpriteSheet"
+    },
+    {
+      "id": "menuImportImages",
+      "name": "menu Import Images",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuManualSplit",
+      "name": "menu Manual Split",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "splitImageManual",
+      "operation": "splitImageManual"
+    },
+    {
+      "id": "menuAutoSplit",
+      "name": "menu Auto Split",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "splitImageAuto",
+      "operation": "splitImageAuto"
+    },
+    {
+      "id": "menuRemoveBackground",
+      "name": "menu Remove Background",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "menuImportParts",
+      "name": "menu Import Parts",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuDownloadParts",
+      "name": "menu Download Parts",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuResolveImages",
+      "name": "menu Resolve Images",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuPrevView",
+      "name": "menu Prev View",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "rotateView",
+      "operation": "rotateView"
+    },
+    {
+      "id": "menuNextView",
+      "name": "menu Next View",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "rotateView",
+      "operation": "rotateView"
+    },
+    {
+      "id": "menuSpinView",
+      "name": "menu Spin View",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuZoomFit",
+      "name": "menu Zoom Fit",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuToggleGrid",
+      "name": "menu Toggle Grid",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "setGrid",
+      "operation": "setGrid"
+    },
+    {
+      "id": "menuToggleRulers",
+      "name": "menu Toggle Rulers",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "setGrid",
+      "operation": "setGrid"
+    },
+    {
+      "id": "menuToggleGuides",
+      "name": "menu Toggle Guides",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuToggleCropHandles",
+      "name": "menu Toggle Crop Handles",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuAddAnimation",
+      "name": "menu Add Animation",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "createAnimation",
+      "operation": "createAnimation"
+    },
+    {
+      "id": "menuDeleteAnimation",
+      "name": "menu Delete Animation",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "deleteAnimation",
+      "operation": "deleteAnimation"
+    },
+    {
+      "id": "menuAddFrame",
+      "name": "menu Add Frame",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "addFrame",
+      "operation": "addFrame"
+    },
+    {
+      "id": "menuDuplicateFrame",
+      "name": "menu Duplicate Frame",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "duplicateFrame",
+      "operation": "duplicateFrame"
+    },
+    {
+      "id": "menuDeleteFrame",
+      "name": "menu Delete Frame",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "deleteFrame",
+      "operation": "deleteFrame"
+    },
+    {
+      "id": "menuPlayAnimation",
+      "name": "menu Play Animation",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuAppendClip",
+      "name": "menu Append Clip",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "appendClip",
+      "operation": "appendClip"
+    },
+    {
+      "id": "menuUnlinkFrame",
+      "name": "menu Unlink Frame",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "unlinkFrame",
+      "operation": "unlinkFrame"
+    },
+    {
+      "id": "menuUndo",
+      "name": "menu Undo",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "undo",
+      "operation": "undo"
+    },
+    {
+      "id": "menuRedo",
+      "name": "menu Redo",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "redo",
+      "operation": "redo"
+    },
+    {
+      "id": "menuAutoFit",
+      "name": "menu Auto Fit",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "autoFit",
+      "operation": "autoFit"
+    },
+    {
+      "id": "menuImageTools",
+      "name": "menu Image Tools",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuStandaloneBackground",
+      "name": "menu Standalone Background",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "menuAutoResize",
+      "name": "menu Auto Resize",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "autoResizeMatching",
+      "operation": "autoResizeMatching"
+    },
+    {
+      "id": "menuAI",
+      "name": "menu AI",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintClearMenu",
+      "name": "paint Clear Menu",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuHelp",
+      "name": "menu Help",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuAPIDocs",
+      "name": "menu APIDocs",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuCLIHelp",
+      "name": "menu CLIHelp",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuJSONDocs",
+      "name": "menu JSONDocs",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuAssetGuide",
+      "name": "menu Asset Guide",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuSpriteDocs",
+      "name": "menu Sprite Docs",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "projectName",
+      "name": "Project name",
+      "kind": "text",
+      "section": "project-and-assets",
+      "defaultValue": "Alex - Crown Royal",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "projectName"
+    },
+    {
+      "id": "assetMode",
+      "name": "asset Mode",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "fullBody",
+        "bodyHead",
+        "standard",
+        "custom"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "mode",
+      "defaultValue": "fullBody"
+    },
+    {
+      "id": "imageStorage",
+      "name": "image Storage",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "bundled",
+        "external"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "assetStorage",
+      "defaultValue": "bundled"
+    },
+    {
+      "id": "downloadPartsSchema",
+      "name": "download Parts Schema",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "loadPartsSchema",
+      "name": "load Parts Schema",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "resolveImagesBtn",
+      "name": "resolve Images Btn",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "customBaseTemplate",
+      "name": "custom Base Template",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "current",
+        "bodyHead",
+        "standard",
+        "fullBody"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "current"
+    },
+    {
+      "id": "applyCustomBase",
+      "name": "apply Custom Base",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "mergeCustomBase",
+      "name": "merge Custom Base",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "exportCustomParts",
+      "name": "export Custom Parts",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "customPartId",
+      "name": "custom Part Id",
+      "kind": "text",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "customPartName",
+      "name": "custom Part Name",
+      "kind": "text",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "customPartGroup",
+      "name": "custom Part Group",
+      "kind": "text",
+      "section": "project-and-assets",
+      "defaultValue": "Custom",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "customPartDefault",
+      "name": "custom Part Default",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": false
+    },
+    {
+      "id": "addCustomPart",
+      "name": "add Custom Part",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "resetCustomPartForm",
+      "name": "reset Custom Part Form",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "reuseSource",
+      "name": "reuse Source",
+      "kind": "select",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "reuseCategory",
+      "name": "reuse Category",
+      "kind": "select",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "reuseMirror",
+      "name": "reuse Mirror",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": true
+    },
+    {
+      "id": "reuseReplace",
+      "name": "reuse Replace",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": true
+    },
+    {
+      "id": "reuseView",
+      "name": "reuse View",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "reuseView",
+      "operation": "reuseView"
+    },
+    {
+      "id": "animationSelect",
+      "name": "Animation",
+      "kind": "select",
+      "section": "animation",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "addAnimation",
+      "name": "Add animation",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "createAnimation",
+      "operation": "createAnimation"
+    },
+    {
+      "id": "deleteAnimation",
+      "name": "Delete animation",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "deleteAnimation",
+      "operation": "deleteAnimation"
+    },
+    {
+      "id": "fps",
+      "name": "fps",
+      "kind": "number",
+      "section": "animation",
+      "defaultValue": "8",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "animation.fps",
+      "min": 1,
+      "max": 30
+    },
+    {
+      "id": "addFrame",
+      "name": "add Frame",
+      "kind": "action",
+      "section": "animation",
+      "browser": true,
+      "cli": "addFrame",
+      "operation": "addFrame"
+    },
+    {
+      "id": "duplicateFrame",
+      "name": "duplicate Frame",
+      "kind": "action",
+      "section": "animation",
+      "browser": true,
+      "cli": "duplicateFrame",
+      "operation": "duplicateFrame"
+    },
+    {
+      "id": "deleteFrame",
+      "name": "delete Frame",
+      "kind": "action",
+      "section": "animation",
+      "browser": true,
+      "cli": "deleteFrame",
+      "operation": "deleteFrame"
+    },
+    {
+      "id": "clipSource",
+      "name": "clip Source",
+      "kind": "select",
+      "section": "animation",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "clipStart",
+      "name": "clip Start",
+      "kind": "number",
+      "section": "animation",
+      "defaultValue": "1",
+      "browser": true,
+      "cli": "setting",
+      "min": 1
+    },
+    {
+      "id": "clipEnd",
+      "name": "clip End",
+      "kind": "number",
+      "section": "animation",
+      "defaultValue": "1",
+      "browser": true,
+      "cli": "setting",
+      "min": 1
+    },
+    {
+      "id": "clipRepeats",
+      "name": "clip Repeats",
+      "kind": "number",
+      "section": "animation",
+      "defaultValue": "1",
+      "browser": true,
+      "cli": "setting",
+      "min": 1,
+      "max": 20
+    },
+    {
+      "id": "appendClip",
+      "name": "append Clip",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "appendClip",
+      "operation": "appendClip"
+    },
+    {
+      "id": "unlinkFrame",
+      "name": "unlink Frame",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "unlinkFrame",
+      "operation": "unlinkFrame"
+    },
+    {
+      "id": "importCategory",
+      "name": "import Category",
+      "kind": "select",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "sequentialImport",
+      "name": "sequential Import",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": false
+    },
+    {
+      "id": "replaceCategory",
+      "name": "replace Category",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": false
+    },
+    {
+      "id": "importMirror",
+      "name": "import Mirror",
+      "kind": "checkbox",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": false
+    },
+    {
+      "id": "applyQueue",
+      "name": "apply Queue",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "clearQueue",
+      "name": "clear Queue",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintTool",
+      "name": "paint Tool",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "select",
+        "select-rect",
+        "select-freeform",
+        "select-wand",
+        "brush",
+        "eraser",
+        "clone",
+        "fill",
+        "picker",
+        "text",
+        "shape-rect",
+        "shape-poly",
+        "shape-oval",
+        "shape-circle",
+        "shape-line",
+        "shape-curve"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.uiOptions.paintTool",
+      "defaultValue": "select"
+    },
+    {
+      "id": "paintColor",
+      "name": "paint Color",
+      "kind": "color",
+      "section": "paint-and-image",
+      "defaultValue": "#f7c66d",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.uiOptions.paintColor"
+    },
+    {
+      "id": "paintSize",
+      "name": "paint Size",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "18",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.uiOptions.paintSize",
+      "min": 1,
+      "max": 256
+    },
+    {
+      "id": "paintBrushShape",
+      "name": "paint Brush Shape",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "round",
+        "square",
+        "diamond",
+        "soft"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "round"
+    },
+    {
+      "id": "paintTexture",
+      "name": "paint Texture",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "solid",
+        "dots",
+        "stripes",
+        "checker",
+        "imported"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "solid"
+    },
+    {
+      "id": "paintOpacity",
+      "name": "paint Opacity",
+      "kind": "range",
+      "section": "paint-and-image",
+      "defaultValue": "100",
+      "browser": true,
+      "cli": "setting",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "id": "paintTolerance",
+      "name": "paint Tolerance",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "35",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 255
+    },
+    {
+      "id": "paintImportTexture",
+      "name": "paint Import Texture",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintTextureFile",
+      "name": "paint Texture File",
+      "kind": "file",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "paintFillMode",
+      "name": "paint Fill Mode",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "color",
+        "texture",
+        "gradient"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "color"
+    },
+    {
+      "id": "paintGradientEnd",
+      "name": "paint Gradient End",
+      "kind": "color",
+      "section": "paint-and-image",
+      "defaultValue": "#714ce8",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "paintEraseMode",
+      "name": "paint Erase Mode",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "paint",
+        "original"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "paint"
+    },
+    {
+      "id": "paintSides",
+      "name": "paint Sides",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "6",
+      "browser": true,
+      "cli": "setting",
+      "min": 3,
+      "max": 64
+    },
+    {
+      "id": "paintCurveBend",
+      "name": "paint Curve Bend",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "35",
+      "browser": true,
+      "cli": "setting",
+      "min": -300,
+      "max": 300
+    },
+    {
+      "id": "paintShapeFill",
+      "name": "paint Shape Fill",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "stroke",
+        "fill"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "stroke"
+    },
+    {
+      "id": "paintText",
+      "name": "paint Text",
+      "kind": "text",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "paintFont",
+      "name": "paint Font",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "Arial",
+        "Verdana",
+        "Georgia",
+        "Times New Roman",
+        "Courier New",
+        "Trebuchet MS",
+        "Impact",
+        "system-ui"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "Arial"
+    },
+    {
+      "id": "paintFontSize",
+      "name": "paint Font Size",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "48",
+      "browser": true,
+      "cli": "setting",
+      "min": 8,
+      "max": 320
+    },
+    {
+      "id": "paintFinishFreeform",
+      "name": "paint Finish Freeform",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintClearSelection",
+      "name": "paint Clear Selection",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintStop",
+      "name": "paint Stop",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "layerUp",
+      "name": "Move in front",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "moveLayer",
+      "operation": "moveLayer"
+    },
+    {
+      "id": "layerDown",
+      "name": "Move behind",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "moveLayer",
+      "operation": "moveLayer"
+    },
+    {
+      "id": "layerTop",
+      "name": "layer Top",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "moveLayer",
+      "operation": "moveLayer"
+    },
+    {
+      "id": "layerBottom",
+      "name": "layer Bottom",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "moveLayer",
+      "operation": "moveLayer"
+    },
+    {
+      "id": "deleteLayer",
+      "name": "delete Layer",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "deleteLayer",
+      "operation": "deleteLayer"
+    },
+    {
+      "id": "duplicateLayer",
+      "name": "duplicate Layer",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "cloneLayer",
+      "operation": "cloneLayer"
+    },
+    {
+      "id": "copyFrames",
+      "name": "Copy selected layer to every frame of this animation",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "cloneLayer",
+      "operation": "cloneLayer"
+    },
+    {
+      "id": "copyAnimations",
+      "name": "Copy selected layer to every animation frame of this view",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "cloneLayer",
+      "operation": "cloneLayer"
+    },
+    {
+      "id": "zoomOut",
+      "name": "zoom Out",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "zoomIn",
+      "name": "zoom In",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "zoomFit",
+      "name": "zoom Fit",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "toggleGrid",
+      "name": "toggle Grid",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "gridToggle",
+      "name": "grid Toggle",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "setGrid",
+      "operation": "setGrid"
+    },
+    {
+      "id": "rulerToggle",
+      "name": "ruler Toggle",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setGrid",
+      "operation": "setGrid"
+    },
+    {
+      "id": "cropTool",
+      "name": "crop Tool",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "undoBtn",
+      "name": "Undo Ctrl+Z",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "undo",
+      "operation": "undo"
+    },
+    {
+      "id": "redoBtn",
+      "name": "Redo Ctrl+Y",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "redo",
+      "operation": "redo"
+    },
+    {
+      "id": "prevView",
+      "name": "Previous 45° view",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "rotateView",
+      "operation": "rotateView"
+    },
+    {
+      "id": "nextView",
+      "name": "Next 45° view",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "rotateView",
+      "operation": "rotateView"
+    },
+    {
+      "id": "spinView",
+      "name": "Auto-cycle eight directions",
+      "kind": "action",
+      "section": "canvas",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "playBtn",
+      "name": "play Btn",
+      "kind": "action",
+      "section": "animation",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "referenceView",
+      "name": "reference View",
+      "kind": "select",
+      "section": "canvas",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "referenceAnimation",
+      "name": "reference Animation",
+      "kind": "select",
+      "section": "canvas",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "referenceFrame",
+      "name": "reference Frame",
+      "kind": "select",
+      "section": "canvas",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "referenceOpacity",
+      "name": "reference Opacity",
+      "kind": "number",
+      "section": "canvas",
+      "defaultValue": "30",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.reference.alpha",
+      "min": 5,
+      "max": 90
+    },
+    {
+      "id": "setReference",
+      "name": "set Reference",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setReference",
+      "operation": "setReference"
+    },
+    {
+      "id": "clearReference",
+      "name": "clear Reference",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "clearReference",
+      "operation": "clearReference"
+    },
+    {
+      "id": "gridSize",
+      "name": "grid Size",
+      "kind": "number",
+      "section": "canvas",
+      "defaultValue": "32",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.gridSize",
+      "min": 8,
+      "max": 256,
+      "step": 4
+    },
+    {
+      "id": "snapGrid",
+      "name": "snap Grid",
+      "kind": "checkbox",
+      "section": "canvas",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "editor.snap",
+      "defaultValue": false
+    },
+    {
+      "id": "canvasWidth",
+      "name": "canvas Width",
+      "kind": "number",
+      "section": "canvas",
+      "defaultValue": "768",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "canvas.width",
+      "min": 128,
+      "max": 2048
+    },
+    {
+      "id": "canvasHeight",
+      "name": "canvas Height",
+      "kind": "number",
+      "section": "canvas",
+      "defaultValue": "768",
+      "browser": true,
+      "cli": "setting",
+      "projectPath": "canvas.height",
+      "min": 128,
+      "max": 2048
+    },
+    {
+      "id": "useCameraAsReference",
+      "name": "use Camera As Reference",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setReference",
+      "operation": "setReference"
+    },
+    {
+      "id": "clearCameraReference",
+      "name": "clear Camera Reference",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "clearReference",
+      "operation": "clearReference"
+    },
+    {
+      "id": "exportGIF",
+      "name": "export GIF",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderGIF",
+      "operation": "renderGIF"
+    },
+    {
+      "id": "exportTurntable",
+      "name": "export Turntable",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderTurntable",
+      "operation": "renderTurntable"
+    },
+    {
+      "id": "exportSheet",
+      "name": "export Sheet",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "renderSpriteSheet",
+      "operation": "renderSpriteSheet"
+    },
+    {
+      "id": "closeAutoResize",
+      "name": "close Auto Resize",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "autoResizeScope",
+      "name": "auto Resize Scope",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "currentFrame",
+        "currentAnimation",
+        "currentView",
+        "all"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "currentFrame"
+    },
+    {
+      "id": "autoResizeMatch",
+      "name": "auto Resize Match",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "category",
+        "name",
+        "assetId"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "category"
+    },
+    {
+      "id": "autoResizeMethod",
+      "name": "auto Resize Method",
+      "kind": "select",
+      "section": "project-and-assets",
+      "values": [
+        "sourceScale",
+        "renderedHeight",
+        "renderedWidth"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "sourceScale"
+    },
+    {
+      "id": "cancelAutoResize",
+      "name": "cancel Auto Resize",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "applyAutoResize",
+      "name": "apply Auto Resize",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "autoResizeMatching",
+      "operation": "autoResizeMatching"
+    },
+    {
+      "id": "partsInput",
+      "name": "parts Input",
+      "kind": "file",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "imageInput",
+      "name": "image Input",
+      "kind": "file",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "replaceImageInput",
+      "name": "replace Image Input",
+      "kind": "file",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "jsonInput",
+      "name": "json Input",
+      "kind": "file",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "closeCrop",
+      "name": "close Crop",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "resetCrop",
+      "name": "reset Crop",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "cancelCrop",
+      "name": "cancel Crop",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "applyCrop",
+      "name": "apply Crop",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "closeHelp",
+      "name": "close Help",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "openAIPanelFromHelp",
+      "name": "open AIPanel From Help",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "closeHelpFooter",
+      "name": "close Help Footer",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "closeAIDialog",
+      "name": "close AIDialog",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "aiCommandInput",
+      "name": "ai Command Input",
+      "kind": "textarea",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "runAICommands",
+      "name": "run AICommands",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "loadAIExample",
+      "name": "load AIExample",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "copyAISchema",
+      "name": "copy AISchema",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "aiHelpBtn",
+      "name": "ai Help Btn",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "closeAIDialogFooter",
+      "name": "close AIDialog Footer",
+      "kind": "action",
+      "section": "project-and-assets",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteToolsUpload",
+      "name": "sprite Tools Upload",
+      "kind": "file",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "spriteToolsClose",
+      "name": "sprite Tools Close",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteToolsExisting",
+      "name": "sprite Tools Existing",
+      "kind": "select",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "spriteToolsChooseFile",
+      "name": "sprite Tools Choose File",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteDetectMethod",
+      "name": "sprite Detect Method",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "alpha",
+        "grid"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "alpha"
+    },
+    {
+      "id": "spriteMinArea",
+      "name": "sprite Min Area",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "1000",
+      "browser": true,
+      "cli": "setting",
+      "min": 50,
+      "step": 50
+    },
+    {
+      "id": "spriteAlphaThreshold",
+      "name": "sprite Alpha Threshold",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "25",
+      "browser": true,
+      "cli": "setting",
+      "min": 1,
+      "max": 254
+    },
+    {
+      "id": "spriteGridRows",
+      "name": "sprite Grid Rows",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "2",
+      "browser": true,
+      "cli": "setting",
+      "min": 1,
+      "max": 32
+    },
+    {
+      "id": "spriteGridColumns",
+      "name": "sprite Grid Columns",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "3",
+      "browser": true,
+      "cli": "setting",
+      "min": 1,
+      "max": 32
+    },
+    {
+      "id": "spritePadding",
+      "name": "sprite Padding",
+      "kind": "number",
+      "section": "paint-and-image",
+      "defaultValue": "3",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 120
+    },
+    {
+      "id": "spriteSelectionShape",
+      "name": "sprite Selection Shape",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "rect",
+        "poly",
+        "bezier",
+        "wand"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "rect"
+    },
+    {
+      "id": "spriteCurveSmooth",
+      "name": "sprite Curve Smooth",
+      "kind": "range",
+      "section": "paint-and-image",
+      "defaultValue": "75",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "id": "spriteWandMode",
+      "name": "sprite Wand Mode",
+      "kind": "select",
+      "section": "paint-and-image",
+      "values": [
+        "alpha",
+        "color"
+      ],
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": "alpha"
+    },
+    {
+      "id": "spriteWandTolerance",
+      "name": "sprite Wand Tolerance",
+      "kind": "range",
+      "section": "paint-and-image",
+      "defaultValue": "40",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 180
+    },
+    {
+      "id": "spriteAutoDetect",
+      "name": "sprite Auto Detect",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "splitImageAuto",
+      "operation": "splitImageAuto"
+    },
+    {
+      "id": "spriteManualDraw",
+      "name": "sprite Manual Draw",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteFinishPolygon",
+      "name": "sprite Finish Polygon",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteEditPoints",
+      "name": "sprite Edit Points",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteDeletePoint",
+      "name": "sprite Delete Point",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteClearRegions",
+      "name": "sprite Clear Regions",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteBackgroundColor",
+      "name": "sprite Background Color",
+      "kind": "color",
+      "section": "paint-and-image",
+      "defaultValue": "#ffffff",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "spriteBackgroundTolerance",
+      "name": "sprite Background Tolerance",
+      "kind": "range",
+      "section": "paint-and-image",
+      "defaultValue": "38",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 130
+    },
+    {
+      "id": "spriteBackgroundConnected",
+      "name": "sprite Background Connected",
+      "kind": "checkbox",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": true
+    },
+    {
+      "id": "spriteBackgroundSample",
+      "name": "sprite Background Sample",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "spriteBackgroundPreview",
+      "name": "sprite Background Preview",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "spriteBackgroundRestore",
+      "name": "sprite Background Restore",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "spriteToolsDownload",
+      "name": "sprite Tools Download",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "splitImageManual",
+      "operation": "splitImageManual"
+    },
+    {
+      "id": "spriteToolsQueue",
+      "name": "sprite Tools Queue",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "splitImageManual",
+      "operation": "splitImageManual"
+    },
+    {
+      "id": "spriteToolsCloseFooter",
+      "name": "sprite Tools Close Footer",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "bgStandaloneFile",
+      "name": "bg Standalone File",
+      "kind": "file",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "filePath"
+    },
+    {
+      "id": "bgStandaloneClose",
+      "name": "bg Standalone Close",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "bgStandaloneChoose",
+      "name": "bg Standalone Choose",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "bgStandaloneColor",
+      "name": "bg Standalone Color",
+      "kind": "color",
+      "section": "paint-and-image",
+      "defaultValue": "#ffffff",
+      "browser": true,
+      "cli": "setting"
+    },
+    {
+      "id": "bgStandaloneTolerance",
+      "name": "bg Standalone Tolerance",
+      "kind": "range",
+      "section": "paint-and-image",
+      "defaultValue": "38",
+      "browser": true,
+      "cli": "setting",
+      "min": 0,
+      "max": 180
+    },
+    {
+      "id": "bgStandaloneConnected",
+      "name": "bg Standalone Connected",
+      "kind": "checkbox",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "setting",
+      "defaultValue": true
+    },
+    {
+      "id": "bgStandaloneRestore",
+      "name": "bg Standalone Restore",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "bgStandalonePreview",
+      "name": "bg Standalone Preview",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "bgStandaloneDownload",
+      "name": "bg Standalone Download",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "removeBackground",
+      "operation": "removeBackground"
+    },
+    {
+      "id": "bgStandaloneQueue",
+      "name": "bg Standalone Queue",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "bgStandaloneCloseFooter",
+      "name": "bg Standalone Close Footer",
+      "kind": "action",
+      "section": "paint-and-image",
+      "browser": true,
+      "cli": "browserOnly"
+    }
+  ],
+  "dynamicProperties": [
+    {
+      "scope": "layer",
+      "field": "name",
+      "command": "setLayer",
+      "path": "name"
+    },
+    {
+      "scope": "layer",
+      "field": "category",
+      "command": "setLayer",
+      "path": "category"
+    },
+    {
+      "scope": "layer",
+      "field": "visible",
+      "command": "setLayer",
+      "path": "visible"
+    },
+    {
+      "scope": "layer",
+      "field": "locked",
+      "command": "setLayer",
+      "path": "locked"
+    },
+    {
+      "scope": "layer",
+      "field": "paintLayer",
+      "command": "setLayer",
+      "path": "paintLayer"
+    },
+    {
+      "scope": "layer",
+      "field": "x",
+      "command": "setTransform",
+      "path": "transform.x"
+    },
+    {
+      "scope": "layer",
+      "field": "y",
+      "command": "setTransform",
+      "path": "transform.y"
+    },
+    {
+      "scope": "layer",
+      "field": "scaleX",
+      "command": "setTransform",
+      "path": "transform.scaleX"
+    },
+    {
+      "scope": "layer",
+      "field": "scaleY",
+      "command": "setTransform",
+      "path": "transform.scaleY"
+    },
+    {
+      "scope": "layer",
+      "field": "rotationDeg",
+      "command": "setTransform",
+      "path": "transform.rotationDeg"
+    },
+    {
+      "scope": "layer",
+      "field": "opacity",
+      "command": "setTransform",
+      "path": "transform.opacity"
+    },
+    {
+      "scope": "layer",
+      "field": "flipX",
+      "command": "setTransform",
+      "path": "transform.flipX"
+    },
+    {
+      "scope": "layer",
+      "field": "flipY",
+      "command": "setTransform",
+      "path": "transform.flipY"
+    },
+    {
+      "scope": "layer",
+      "field": "anchorX",
+      "command": "setTransform",
+      "path": "transform.anchorX"
+    },
+    {
+      "scope": "layer",
+      "field": "anchorY",
+      "command": "setTransform",
+      "path": "transform.anchorY"
+    },
+    {
+      "scope": "layer",
+      "field": "colorBrightness",
+      "command": "setColor",
+      "path": "color.brightness"
+    },
+    {
+      "scope": "layer",
+      "field": "colorContrast",
+      "command": "setColor",
+      "path": "color.contrast"
+    },
+    {
+      "scope": "layer",
+      "field": "colorSaturate",
+      "command": "setColor",
+      "path": "color.saturate"
+    },
+    {
+      "scope": "layer",
+      "field": "colorHue",
+      "command": "setColor",
+      "path": "color.hue"
+    },
+    {
+      "scope": "layer",
+      "field": "colorSepia",
+      "command": "setColor",
+      "path": "color.sepia"
+    },
+    {
+      "scope": "layer",
+      "field": "colorRed",
+      "command": "setColor",
+      "path": "color.red"
+    },
+    {
+      "scope": "layer",
+      "field": "colorGreen",
+      "command": "setColor",
+      "path": "color.green"
+    },
+    {
+      "scope": "layer",
+      "field": "colorBlue",
+      "command": "setColor",
+      "path": "color.blue"
+    },
+    {
+      "scope": "layer",
+      "field": "colorTintAmount",
+      "command": "setColor",
+      "path": "color.tintAmount"
+    },
+    {
+      "scope": "layer",
+      "field": "colorTintHex",
+      "command": "setColor",
+      "path": "color.tintHex"
+    },
+    {
+      "scope": "layer",
+      "field": "cropX",
+      "command": "setCrop",
+      "path": "crop.x"
+    },
+    {
+      "scope": "layer",
+      "field": "cropY",
+      "command": "setCrop",
+      "path": "crop.y"
+    },
+    {
+      "scope": "layer",
+      "field": "cropW",
+      "command": "setCrop",
+      "path": "crop.w"
+    },
+    {
+      "scope": "layer",
+      "field": "cropH",
+      "command": "setCrop",
+      "path": "crop.h"
+    },
+    {
+      "scope": "group",
+      "field": "dx",
+      "command": "setTransform",
+      "path": "relative.dx"
+    },
+    {
+      "scope": "group",
+      "field": "dy",
+      "command": "setTransform",
+      "path": "relative.dy"
+    },
+    {
+      "scope": "group",
+      "field": "scaleX",
+      "command": "setTransform",
+      "path": "relative.scaleX"
+    },
+    {
+      "scope": "group",
+      "field": "scaleY",
+      "command": "setTransform",
+      "path": "relative.scaleY"
+    },
+    {
+      "scope": "group",
+      "field": "rotationDeg",
+      "command": "setTransform",
+      "path": "relative.rotationDeg"
+    },
+    {
+      "scope": "customPart",
+      "field": "id",
+      "command": "updatePart",
+      "path": "parts[].id"
+    },
+    {
+      "scope": "customPart",
+      "field": "name",
+      "command": "updatePart",
+      "path": "parts[].name"
+    },
+    {
+      "scope": "customPart",
+      "field": "group",
+      "command": "updatePart",
+      "path": "parts[].group"
+    },
+    {
+      "scope": "customPart",
+      "field": "default",
+      "command": "updatePart",
+      "path": "parts[].default"
+    },
+    {
+      "scope": "importQueue",
+      "field": "view",
+      "command": "importManifest",
+      "path": "items[].view"
+    },
+    {
+      "scope": "importQueue",
+      "field": "category",
+      "command": "importManifest",
+      "path": "items[].category"
+    },
+    {
+      "scope": "importQueue",
+      "field": "animation",
+      "command": "importManifest",
+      "path": "items[].animation"
+    },
+    {
+      "scope": "importQueue",
+      "field": "frame",
+      "command": "importManifest",
+      "path": "items[].frame"
+    },
+    {
+      "scope": "importQueue",
+      "field": "mirror",
+      "command": "importManifest",
+      "path": "items[].mirror"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "rect",
+      "command": "splitImageManual",
+      "path": "regions[].rect"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "poly",
+      "command": "splitImageManual",
+      "path": "regions[].poly"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "bezier",
+      "command": "splitImageManual",
+      "path": "regions[].bezier"
+    },
+    {
+      "scope": "spriteRegion",
+      "field": "wand",
+      "command": "splitImageWand",
+      "path": "regions[].wand"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "normal",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "light",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "dark",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "red",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "brown",
+      "command": "setColor",
+      "path": "color"
+    },
+    {
+      "scope": "colorPreset",
+      "field": "cool",
+      "command": "setColor",
+      "path": "color"
+    }
+  ]
+}

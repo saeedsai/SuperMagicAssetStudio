@@ -42,7 +42,7 @@ class BrowserRegression(unittest.TestCase):
     def _present(self,*selectors):
         for s in selectors:self.assertGreater(self.page.locator(s).count(),0,s)
     def _menu(self,name):
-        self.page.locator(f'[data-menu="{name}"] .menu-btn').click()
+        self.page.locator(f'.menu-btn[data-menu="{name}"]').click()
     def _project(self):
         return self.page.evaluate('window.SuperMagicAssetStudioAPI.getProject()')
     def _mode(self,name):
@@ -54,7 +54,9 @@ def check_014(t):
     t.page.locator('#customPartId').fill('cape');t.page.locator('#customPartName').fill('Cape');t.page.locator('#addCustomPart').click()
     t.assertIn('cape',[p['id'] for p in t._project()['partDefinitions']['parts']])
 def check_015(t):
-    t._mode('custom');t._present('#customPartDefault','#customPartsList','[data-part-action="up"]')
+    t._mode('custom');t._present('#customPartDefault','#customPartsList')
+    t.page.locator('#customPartId').fill('testCape');t.page.locator('#customPartName').fill('Test Cape');t.page.locator('#addCustomPart').click()
+    t._present('[data-part-action="up"]')
 def check_016(t):
     t._mode('custom');t._present('#customBaseTemplate','#applyCustomBase','#mergeCustomBase','#exportCustomParts','#loadPartsSchema')
     t.page.locator('#customBaseTemplate').select_option('standard');t.page.locator('#applyCustomBase').click()
@@ -133,6 +135,7 @@ def check_087(t):
     paint_choose(t,'brush')
     paint_drag(t,180,180,220,180)
     t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length>=1')
+    t.page.wait_for_function('document.getElementById("artCanvas").getContext("2d").getImageData(190,180,1,1).data[3]>0')
     paint_choose(t,'select-wand');paint_click(t,190,180)
     t.assertGreater(t.page.evaluate('SuperMagicPaintAPI.getSelectionCount()'),0)
 
@@ -161,6 +164,7 @@ def check_091(t):
     t.page.evaluate('(id)=>SuperMagicAssetStudioAPI.selectLayers([id])',paint_assets(t)[1][0]['id'])
     t.page.locator('#paintEraseMode').select_option('original')
     paint_choose(t,'eraser');paint_drag(t)
+    t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length===2')
     after=paint_assets(t)[1][0]['assetId'];t.assertNotEqual(before,after)
     t.assertIn(before,t._project()['assets'])
 
@@ -192,6 +196,7 @@ def check_095(t):
 def check_096(t):
     t.page.locator('#paintColor').fill('#aa6611')
     paint_choose(t,'brush');paint_drag(t)
+    t.page.wait_for_function('document.getElementById("artCanvas").getContext("2d").getImageData(180,180,1,1).data[3]>0')
     paint_choose(t,'picker');paint_click(t,180,180)
     t.assertEqual(t.page.locator('#paintColor').input_value(),'#aa6611')
 

@@ -41,7 +41,7 @@ test('CLI project properties and paint settings are writable, inspectable and ve
  const p=make();
  run(p,{op:'setControlValue',id:'paintSize',value:12});
  run(p,{op:'setControlValue',id:'paintColor',value:'#ff3300'});
- run(p,{op:'setControlValue',id:'canvasWidth',value:40});
+ run(p,{op:'setControlValue',id:'canvasWidth',value:128});
  const o=run(p,{op:'getControlValue',id:'paintSize'});
  assert.equal(o.at(-1).value,12);
  assert.equal(p.editor.uiOptions.paintColor,'#ff3300');

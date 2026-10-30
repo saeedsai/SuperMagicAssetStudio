@@ -155,3 +155,8 @@ Notes:
 ## Extracted sprite manifest (v5.4)
 
 The image tools also export a separate manifest with `format:"FootballSpriteAssetBundle"`, `version:1`, and an `items` array. Each item provides `file`, `view`, `category`, `animation`, `frame`, `mirror` and optionally `cropSource:{x,y,w,h}` in the original sheet. The crop rectangle records provenance; the cropped PNG itself is now its own source image. The manifest may be imported together with its PNG files through the regular bulk import queue. See `IMAGE_TOOLS_API.md`.
+
+
+## Source sprite regions (v5.5)
+
+`cropSource` in an exported sprite manifest can record a rectangle (`type: rect`), polygon (`type: poly`, `points`), Bézier curve (`type: bezier`, `points`, `tension`), or wand selection (`type: wand`, `seed`, `mode`, `tolerance`, and the optional encoded pixel mask). Extracted PNG pixels are already alpha-masked; games use the output PNG directly.

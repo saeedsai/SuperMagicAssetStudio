@@ -1,9 +1,9 @@
 # SuperMagic Asset Studio — verification report
 
-**Branch:** `dev`  
+**Branch:** `dev` (release audit; corresponding previous refactor promoted to `main`)  
 **Date:** 2026-10-30  
-**Last fully verified source commit:** `322d506b7b4cf014ffddb2e0461fb4211824ab1b`  
-**GitHub Actions:** [successful gate](https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41034420907)
+**Last verified production-branch CI commit:** `d5ac681c70a1e304bd9b94564a894bc0c164fdb9`  
+**GitHub Actions:** [successful gate](https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41034947618)
 
 ## Verified automated results
 
@@ -16,7 +16,7 @@
 | Required GitHub regression gate | **PASS** | Both required jobs completed successfully |
 | Native Windows PowerShell | **NOT EXECUTED** | No actual Windows job yet |
 | Production artwork visual golden tests | **NOT EXECUTED** | No canonical image fixture yet |
-| Render production deployment | **PENDING MAIN MERGE** | Static service tracks `main` |
+| Render production deployment | **NOT VERIFIED for current main** | Last Render live deployment listed commit `f94daf6097ecd401cfc86c059d5f2e0a04c7bde6`; production release needs update |
 
 ## Changes completed on dev
 
@@ -37,4 +37,12 @@
 2. Native Windows PowerShell and mobile/touch usability still need dedicated runner/device tests.
 3. External-asset JSON intentionally strips image data; generated paint PNGs must be kept alongside that JSON and resolved via the existing external-image workflow. Bundled JSON includes paint pixels.
 4. The legacy `src/editor/app.js` controller remains large and should be gradually modularized.
-5. The Render static site auto-deploys from `main` only. Verify its deployment after the PR merges.
+5. The Render static site tracks `main`, but its latest listed live deploy is an older v5.5 commit. Redeploy and verify the current main SHA.
+
+## Release audit performed 2026-10-30
+
+- Repository has `AGENTS.md`, 102 traceable requirements (`REQ-001`…`REQ-102`), 102 named test-case records, modular `src/editor`, `src/cli`, `src/runtime`, separate `docs` and `examples`, and `.github/workflows/ci.yml`.
+- GitHub Actions for `main` at `d5ac681c70a1e304bd9b94564a894bc0c164fdb9`: both runs `41034947618` and `41034946679` concluded **success**.
+- `dev` was fast-forwarded to the verified main commit to prevent divergence before this documentation update.
+- Coverage is mixed-strength: each feature is traceable, but not every requirement has an independent browser end-to-end assertion. Preserve this distinction in future reports.
+- Render's latest live deployment still reported old commit `f94daf6097ecd401cfc86c059d5f2e0a04c7bde6`; do not claim the latest release is deployed until Render returns the newer commit as live.

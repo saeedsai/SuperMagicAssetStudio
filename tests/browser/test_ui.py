@@ -191,6 +191,7 @@ def check_094(t):
     import base64
     png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==')
     t.page.locator('#paintTextureFile').set_input_files({'name':'pattern.png','mimeType':'image/png','buffer':png})
+    t.page.wait_for_function('document.getElementById("paintTexture").value === "imported"',timeout=12000)
     t.assertEqual(t.page.locator('#paintTexture').input_value(),'imported')
 
 def check_095(t):

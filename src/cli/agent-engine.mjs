@@ -187,7 +187,7 @@ export function execute(p,payload,{projectPath,results=[]}={}){
      let value=c.value;
      if(spec.values){check(spec.values.includes(String(value)),'Unsupported option for '+c.id);}
      if(spec.kind==='checkbox')check(typeof value==='boolean','Checkbox value must be boolean');
-     if(['number','range'].includes(spec.kind)){check(Number.isFinite(Number(value)),'Number must be finite');value=Number(value);}
+     if(['number','range'].includes(spec.kind)){check(Number.isFinite(Number(value)),'Number must be finite');value=Number(value);if(spec.min!==undefined)check(value>=spec.min,'Value below minimum for '+c.id);if(spec.max!==undefined)check(value<=spec.max,'Value exceeds maximum for '+c.id);}
      if(spec.kind==='color')check(/^#[0-9a-f]{6}$/i.test(String(value)),'Invalid color');
      check(typeof value!=='object'||value===null,'Controls accept scalar values only');
      const prop=spec.projectPath||'';
@@ -215,7 +215,7 @@ export function execute(p,payload,{projectPath,results=[]}={}){
    }
    case 'paint':{
      const settings=p.editor.uiOptions||{};
-     const defaults={size:settings.paintSize,brushShape:settings.paintBrushShape,color:settings.paintColor,
+     const defaults={tool:settings.paintTool,size:settings.paintSize,brushShape:settings.paintBrushShape,color:settings.paintColor,
        opacity:settings.paintOpacity===undefined?undefined:Number(settings.paintOpacity)/100,
        texture:settings.paintTexture,fillMode:settings.paintFillMode,gradientEnd:settings.paintGradientEnd,
        eraseMode:settings.paintEraseMode,sides:settings.paintSides,curveBend:settings.paintCurveBend,

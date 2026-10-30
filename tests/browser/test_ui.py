@@ -108,7 +108,7 @@ def paint_canvas_point(t,x,y):
 
 def paint_choose(t,mode):
     t.page.wait_for_function('Boolean(window.SuperMagicPaintAPI)')
-    t.page.locator('#paintTool').select_option(mode)
+    t.page.evaluate('(mode)=>{SuperMagicPaintAPI.setTool(mode);SuperMagicStudioUI.openPaintProperties()}',mode)
 
 def paint_drag(t,x0=160,y0=160,x1=220,y1=220):
     p0=paint_canvas_point(t,x0,y0);p1=paint_canvas_point(t,x1,y1)
@@ -140,21 +140,24 @@ def check_087(t):
     t.assertGreater(t.page.evaluate('SuperMagicPaintAPI.getSelectionCount()'),0)
 
 def check_088(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintSize').fill('35')
     t.page.locator('#paintBrushShape').select_option('square')
     t.page.locator('#paintColor').fill('#ff4400')
-    paint_choose(t,'brush');paint_drag(t)
+    paint_drag(t)
     count,layers=paint_assets(t);t.assertEqual(count,1);t.assertEqual(len(layers),1)
 
 def check_089(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintTexture').select_option('stripes')
-    paint_choose(t,'brush');paint_drag(t);t.assertEqual(paint_assets(t)[0],1)
+    paint_drag(t);t.assertEqual(paint_assets(t)[0],1)
 
 def check_090(t):
     paint_choose(t,'brush');paint_drag(t)
     before=paint_assets(t)[1][0]['assetId']
+    paint_choose(t,'eraser')
     t.page.locator('#paintEraseMode').select_option('paint')
-    paint_choose(t,'eraser');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length===2')
     after=paint_assets(t)[1][0]['assetId'];t.assertNotEqual(before,after)
 
@@ -162,8 +165,9 @@ def check_091(t):
     paint_choose(t,'brush');paint_drag(t)
     before=paint_assets(t)[1][0]['assetId']
     t.page.evaluate('(id)=>SuperMagicAssetStudioAPI.selectLayers([id])',paint_assets(t)[1][0]['id'])
+    paint_choose(t,'eraser')
     t.page.locator('#paintEraseMode').select_option('original')
-    paint_choose(t,'eraser');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('Object.keys(SuperMagicAssetStudioAPI.getProject().assets).length===2')
     after=paint_assets(t)[1][0]['assetId'];t.assertNotEqual(before,after)
     t.assertIn(before,t._project()['assets'])
@@ -183,33 +187,39 @@ def check_093(t):
     paint_click(t,140,150);t.assertEqual(paint_assets(t)[0],1)
 
 def check_094(t):
+    paint_choose(t,'brush')
     import base64
     png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==')
     t.page.locator('#paintTextureFile').set_input_files({'name':'pattern.png','mimeType':'image/png','buffer':png})
+    t.page.wait_for_function('document.getElementById("paintTexture").value === "imported"',timeout=12000)
     t.assertEqual(t.page.locator('#paintTexture').input_value(),'imported')
 
 def check_095(t):
     paint_choose(t,'select-rect');paint_drag(t,100,100,200,200)
+    paint_choose(t,'fill')
     t.page.locator('#paintFillMode').select_option('gradient')
-    paint_choose(t,'fill');paint_click(t);t.assertEqual(paint_assets(t)[0],1)
+    paint_click(t);t.assertEqual(paint_assets(t)[0],1)
 
 def check_096(t):
+    paint_choose(t,'brush')
     t.page.locator('#paintColor').fill('#aa6611')
-    paint_choose(t,'brush');paint_drag(t)
+    paint_drag(t)
     t.page.wait_for_function('document.getElementById("artCanvas").getContext("2d").getImageData(180,180,1,1).data[3]>0')
     paint_choose(t,'picker');paint_click(t,180,180)
     t.assertEqual(t.page.locator('#paintColor').input_value(),'#aa6611')
 
 def check_097(t):
+    paint_choose(t,'text')
     t.page.locator('#paintText').fill('GOAL!')
     t.page.locator('#paintFont').select_option('Georgia')
     t.page.locator('#paintFontSize').fill('52')
-    paint_choose(t,'text');paint_click(t)
+    paint_click(t)
     t.assertIn('Text: GOAL!',paint_assets(t)[1][0]['name'])
 
 def check_098(t):
+    paint_choose(t,'shape-poly')
     t.page.locator('#paintSides').fill('8')
-    paint_choose(t,'shape-poly');paint_drag(t)
+    paint_drag(t)
     t.assertEqual(paint_assets(t)[0],1)
     paint_choose(t,'shape-rect');paint_drag(t,260,260,320,330)
     t.assertEqual(paint_assets(t)[0],2)
@@ -243,5 +253,102 @@ PAINT_CASES={85:check_085,86:check_086,87:check_087,88:check_088,89:check_089,
 for number,verify in PAINT_CASES.items():
     def run_paint(self,fn=verify):fn(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_paint)
+
+
+# Modular UI regression: original nodes remain single-instance and executable.
+def ui_ready(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicStudioUI)')
+def check_103(t):
+    ui_ready(t)
+    t.assertEqual(t.page.locator('.sidebar').get_attribute('data-active-workspace'),'project')
+    t.page.locator('#studio-tab-assets').click()
+    t.assertTrue(t.page.locator('#dropzone').is_visible())
+    t.assertFalse(t.page.locator('#projectName').is_visible())
+    t.page.locator('#studio-tab-project').click()
+    t.assertTrue(t.page.locator('#projectName').is_visible())
+
+def check_104(t):
+    ui_ready(t)
+    t._menu('paint')
+    t.page.locator('[data-paint-menu="brush"]').click()
+    t.assertTrue(t.page.locator('#paintPropertiesPopover').is_visible())
+    t.assertTrue(t.page.locator('#paintSize').is_visible())
+    t.assertFalse(t.page.locator('#paintSides').is_visible())
+    t.page.locator('#paintPropertiesClose').click()
+    t.assertFalse(t.page.locator('#paintPropertiesPopover').is_visible())
+
+def check_105(t):
+    ui_ready(t)
+    t.assertEqual(t.page.evaluate('SuperMagicStudioUI.getVisibleActionAliases()'),[])
+    t.assertFalse(t.page.locator('#saveProject').is_visible())
+    t._menu('file')
+    t.assertTrue(t.page.locator('#menuSaveProject').is_visible())
+    t.assertEqual(t.page.locator('[id="paintSize"]').count(),1)
+
+def check_106(t):
+    ui_ready(t)
+    paint_choose(t,'shape-poly')
+    t.assertTrue(t.page.locator('#paintSides').is_visible())
+    t.assertFalse(t.page.locator('#paintFont').is_visible())
+    paint_choose(t,'text')
+    t.assertTrue(t.page.locator('#paintFontSize').is_visible())
+    t.assertFalse(t.page.locator('#paintSides').is_visible())
+    paint_choose(t,'fill')
+    t.page.locator('#paintFillMode').select_option('gradient')
+    t.assertTrue(t.page.locator('#paintGradientEnd').is_visible())
+
+def check_107(t):
+    ui_ready(t)
+    t._menu('import');t.page.locator('#menuAutoSplit').click()
+    t.page.locator('#spriteDetectMethod').select_option('grid')
+    t.assertTrue(t.page.locator('#spriteGridRows').is_visible())
+    t.assertFalse(t.page.locator('#spriteMinArea').is_visible())
+    t.page.locator('#spriteDetectMethod').select_option('alpha')
+    t.assertTrue(t.page.locator('#spriteMinArea').is_visible())
+    t.page.locator('#spriteToolsDialog .studio-dialog-group').nth(1).evaluate('(e)=>e.open=true')
+    t.page.locator('#spriteSelectionShape').select_option('wand')
+    t.assertTrue(t.page.locator('#spriteWandMode').is_visible())
+    t.assertFalse(t.page.locator('#spriteCurveSmooth').is_visible())
+
+def check_108(t):
+    ui_ready(t)
+    t.page.locator('#studio-tab-assets').click()
+    t.assertTrue(t.page.locator('#dropzone').is_visible())
+    t.assertFalse(t.page.locator('#sequentialImport').is_visible())
+    t.page.locator('#dropzone + details summary').click()
+    t.assertTrue(t.page.locator('#sequentialImport').is_visible())
+
+def check_109(t):
+    ui_ready(t)
+    t.page.locator('#studio-tab-animate').click()
+    t.assertTrue(t.page.locator('#fps').is_visible())
+    t.assertFalse(t.page.locator('#clipSource').is_visible())
+    t.page.locator('details.studio-inline-advanced summary').last.click()
+    t.assertTrue(t.page.locator('#clipSource').is_visible())
+
+def check_110(t):
+    ui_ready(t)
+    t.assertTrue(t.page.locator('#inspectorContent').is_visible())
+    t.page.locator('#properties-tab-canvas').click()
+    t.assertTrue(t.page.locator('#canvasWidth').is_visible())
+    t.assertFalse(t.page.locator('#inspectorContent').is_visible())
+    t.page.locator('#properties-tab-canvas').focus()
+    t.page.keyboard.press('ArrowRight')
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'shortcuts')
+
+def check_111(t):
+    ui_ready(t)
+    t.page.set_viewport_size({'width':760,'height':950})
+    t.assertTrue(t.page.locator('#stage').is_visible())
+    t.assertTrue(t.page.locator('#studio-tab-layers').is_visible())
+    t.page.locator('#studio-tab-layers').click()
+    t.assertTrue(t.page.locator('#layersList').is_visible())
+    t.assertLessEqual(t.page.evaluate('document.documentElement.scrollWidth-window.innerWidth'),3)
+
+UI_CASES={103:check_103,104:check_104,105:check_105,106:check_106,
+107:check_107,108:check_108,109:check_109,110:check_110,111:check_111}
+for number,verify in UI_CASES.items():
+    def run_workspace(self,fn=verify):fn(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_workspace)
 
 if __name__=='__main__':unittest.main()

@@ -5,7 +5,7 @@ export const SIDE_WORKSPACES = Object.freeze([
  {id:'project',label:'Project',icon:'◈',sectionIndexes:[0]},
  {id:'assets',label:'Assets',icon:'▧',sectionIndexes:[2,4]},
  {id:'animate',label:'Animation',icon:'▶',sectionIndexes:[3]},
- {id:'layers',label:'Layers',icon:'▤',sectionIndexes:[6]},
+ {id:'layers',label:'Layers',icon:'▤',sectionIndexes:[5]},
  {id:'camera',label:'Camera',icon:'◉',sectionIndexes:[1]}
 ]);
 export const RIGHT_WORKSPACES = Object.freeze([

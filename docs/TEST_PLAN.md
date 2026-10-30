@@ -12,14 +12,14 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 ## Case matrix and evidence
 
-`tests/requirements.json` assigns **one independent TC identifier to each of 102 requirements**. The Node traceability test reports those 102 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
+`tests/requirements.json` assigns **one independent TC identifier to each of 111 requirements**. The Node traceability test reports those 111 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|
 | Node domain/image | ~29 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
 | Node CLI integration | 2 | JSON round-trip, render, manifest, undo/redo, dry run | Mandatory |
-| Requirement traceability | 104 | 102 named acceptance contracts plus uniqueness checks | Mandatory |
-| Browser Chromium | 37 | UI startup, menu and control behaviors, scripted commands | Mandatory |
+| Requirement traceability | 113 | 102 named acceptance contracts plus uniqueness checks | Mandatory |
+| Browser Chromium | 46 | UI startup, menu and control behaviors, scripted commands | Mandatory |
 | Human visual QA | Checklist | Artistic quality, overlap, anti-aliasing, anatomical handedness, animations | Release review, reported separately |
 
 ## Manual QA checklist
@@ -46,3 +46,7 @@ Use `docs/TEST_REPORT_CURRENT.md` for the latest verified run. Distinguish local
 ## Paint and selection acceptance (TC-085 through TC-102)
 
 Main-canvas rectangle, freeform polygon and flood selection all produce reusable selection masks. Brush tips, preset/imported textures, erase mode, clone, fill, two-color gradient, eyedropper, text, and six shape tools are covered by a named Chromium check for every requirement. Nine additional Node tests cover geometry, masked alpha and wand bounds. Save/undo and the Paint menu are exercised in Chromium. Actual visual texture fidelity, font rendering on non-Linux platforms, and mobile touch gestures require manual validation.
+
+## UI modularity acceptance (TC-103 to TC-111)
+
+Browser checks exercise tabs, keyboard navigation, active tool properties, duplicate action aliases, sprite extraction context, advanced import/clip disclosure and small viewport usability. The original DOM IDs and all 102 prior requirements remain, with the same JSON schema, engine APIs, and command handlers. Static unit tests independently verify unique DOM IDs, workspace allocation, property mappings and the continued existence of major feature controls.

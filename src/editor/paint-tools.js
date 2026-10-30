@@ -108,8 +108,8 @@ async function commit(label,erase=false){
  for(let i=3;i<pixels.length;i+=4){if(pixels[i]){hasPixels=true;break;}}
  if(!hasPixels){message('No pixels changed inside the selection.');return;}
  try{
-  if(erase){const count=await api.eraseRasterWithMask(active.toDataURL('image/png'),$('paintEraseMode').value);message('Erased '+count+' layer(s). Undo is available.');}
-  else{api.createRasterPaintLayer(active.toDataURL('image/png'),label);message(label+' added as a movable editable layer. Undo is available.');}
+  if(erase){const count=await api.eraseRasterWithMask(active.toDataURL('image/png'),$('paintEraseMode').value);message('Erased '+count+' layer(s). Undo is available.');return {affected:count};}
+  else{const layerId=api.createRasterPaintLayer(active.toDataURL('image/png'),label);message(label+' added as a movable editable layer. Undo is available.');return {layerId};}
  }catch(err){message('Paint error: '+err.message);}
 }
 function finishFreeform(){
@@ -189,5 +189,73 @@ $('paintTextureFile').addEventListener('change',async e=>{
 new MutationObserver(()=>syncSize()).observe(art,{attributes:true,attributeFilter:['width','height']});
 let previousScene=$('sceneTitle').textContent;
 new MutationObserver(()=>{const s=$('sceneTitle').textContent;if(s!==previousScene){previousScene=s;clearSelection();}}).observe($('sceneTitle'),{childList:true,characterData:true,subtree:true});
-window.SuperMagicPaintAPI={setTool,clearSelection,finishFreeform,getSelectionCount:()=>state.selection?.reduce((a,b)=>a+b,0)||0,getTool:()=>state.tool};
+const PROPERTY_IDS=['paintColor','paintSize','paintBrushShape','paintTexture','paintOpacity','paintTolerance',
+ 'paintFillMode','paintGradientEnd','paintEraseMode','paintSides','paintCurveBend','paintShapeFill','paintText','paintFont','paintFontSize'];
+function getPaintSettings(){return Object.fromEntries(PROPERTY_IDS.map(id=>[id,$(id).value]));}
+function setPaintSettings(settings={}){
+ for(const [id,value] of Object.entries(settings)){
+  if(!PROPERTY_IDS.includes(id))throw Error('Unknown paint property '+id);
+  const field=$(id);if(field.tagName==='SELECT'&&![...field.options].some(x=>x.value===String(value)))throw Error('Unknown option for '+id);
+  if(field.type==='number'||field.type==='range'){if(!Number.isFinite(Number(value))||Number(value)<Number(field.min)||Number(value)>Number(field.max))throw Error('Out of range '+id);}
+  if(field.type==='color'&&!/^#[0-9a-f]{6}$/i.test(value))throw Error('Invalid color');
+  field.value=String(value);field.dispatchEvent(new Event('change',{bubbles:true}));
+ }return getPaintSettings();
+}
+async function performPaintOperation(spec={}){
+ syncSize();if(spec.properties)setPaintSettings(spec.properties);
+ const kind=spec.tool||state.tool;
+ if(spec.selection){
+  const s=spec.selection,w=canvas.width,h=canvas.height;
+  if(s.type==='rect')setSelection(rectangleMask(w,h,{x:s.x,y:s.y},{x:s.x+s.w,y:s.y+s.h}));
+  else if(['poly','freeform','bezier'].includes(s.type)){
+   const pts=s.type==='bezier'?window.SuperMagicAssetStudioAPI.getCurveOutline?.(s,24):s.points;
+   if(!pts?.length)throw Error('Selection requires points');setSelection(polygonMask(w,h,pts));
+  }else if(s.type==='wand'){
+   const data=art.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h).data;
+   setSelection(floodMask(data,w,h,s.seed.x,s.seed.y,s.tolerance??$('paintTolerance').value));
+  }else throw Error('Unsupported selection type '+s.type);
+ }
+ if(kind==='selection')return {selectedPixels:state.selection?.reduce((a,b)=>a+b,0)||0};
+ if(kind==='picker'){pick(spec.position||spec.start);return {color:$('paintColor').value};}
+ setTool(kind);
+ if(kind==='fill'){
+  if(!state.selection)throw Error('Fill needs a selection');const g=work();
+  g.save();g.globalAlpha=opacity();const mode=$('paintFillMode').value;
+  g.fillStyle=mode==='gradient'?fillPaint(g,true):mode==='texture'?pattern():color();
+  g.fillRect(0,0,canvas.width,canvas.height);g.restore();return await commit('Selection fill');
+ }
+ if(kind==='text'){
+  const text=$('paintText').value.trim();if(!text)throw Error('Text is empty');
+  const g=work(),p=spec.start||spec.position||{x:0,y:0},font=$('paintFont').value.replace(/[^a-zA-Z -]/g,''),fontSize=limit($('paintFontSize').value,8,320);
+  g.save();g.globalAlpha=opacity();g.fillStyle=color();g.font=fontSize+'px "'+font+'"';g.textBaseline='top';g.fillText(text,p.x,p.y,canvas.width-p.x);g.restore();
+  return await commit('Text: '+text.slice(0,28));
+ }
+ if(toolIsShape(kind)){
+  const a=spec.start||spec.points?.[0],b=spec.end||spec.points?.at(-1);
+  if(!a||!b)throw Error('Shape requires start and end points');
+  const g=work();drawShape(g,a,b);return await commit('Shape: '+kind.slice(6));
+ }
+ if(['brush','eraser','clone'].includes(kind)){
+  const points=spec.points||[spec.start||spec.position];if(!points?.length||!points[0])throw Error('Stroke needs points');
+  const g=work();if(kind==='clone'){
+   if(!spec.cloneSource)throw Error('Clone stamp needs cloneSource');
+   state.cloneReference=makeCanvas();state.cloneReference.getContext('2d').drawImage(art,0,0);
+   state.cloneOffset={x:spec.cloneSource.x-points[0].x,y:spec.cloneSource.y-points[0].y};
+  }
+  stamp(g,points[0],kind==='clone');
+  for(let i=1;i<points.length;i++)dabLine(g,points[i-1],points[i],kind==='clone');
+  return await commit(kind==='clone'?'Clone stamp':'Brush stroke',kind==='eraser');
+ }
+ throw Error('Unsupported paint operation '+kind);
+}
+async function importPaintTexture(file){
+ if(!(file instanceof Blob)||file.size>6000000)throw Error('Texture must be a File/Blob under 6MB');
+ const source=URL.createObjectURL(file),img=new Image();
+ try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('Texture decode failed'));img.src=source;});}
+ finally{URL.revokeObjectURL(source);}
+ state.texture=img;$('paintTexture').value='imported';$('paintTextureName').textContent=file.name||'Imported texture';
+ return {width:img.width,height:img.height};
+}
+
+window.SuperMagicPaintAPI={setTool,clearSelection,finishFreeform,getSelectionCount:()=>state.selection?.reduce((a,b)=>a+b,0)||0,getSelectionMask:()=>state.selection?.slice()||null,setSelectionMask:(mask)=>{if(!(mask instanceof Uint8Array)||mask.length!==canvas.width*canvas.height)throw Error('Selection mask size mismatch');setSelection(mask.slice());},getTool:()=>state.tool,getPaintSettings,setPaintSettings,performPaintOperation,importPaintTexture};
 setTool('select');

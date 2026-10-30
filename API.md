@@ -280,3 +280,34 @@ const currentBoxes = api.getDetectedRegions();
 The structured AI command panel supports **`splitImageAuto`**, **`splitImageManual`**, and **`removeBackground`**. For these browser commands, supply an existing project `assetId` whose asset has embedded image data; generated PNGs enter the import queue. Optional `assignments:[{view,category,animation,frame,mirror}]` prefill the first items.
 
 For headless file-based processing from PowerShell or Node, see `IMAGE_TOOLS_API.md` and `CLI_API.md`.
+
+
+### Image region shapes
+
+`cropImageRegions(canvas, regions)` accepts both rectangle and freeform polygon regions.
+
+Rectangle:
+
+```js
+{type:"rect", x:20, y:30, w:140, h:220}
+```
+
+Freeform polygon:
+
+```js
+{type:"poly", points:[{x:10,y:10},{x:150,y:12},{x:165,y:120},{x:18,y:140}]}
+```
+
+Polygon regions are clipped to the shape and exported with transparent pixels outside the boundary.
+
+
+## Advanced sprite extraction (v5.5)
+
+`window.SuperMagicAssetStudioAPI` now also supports:
+
+- `magicWandRegion(canvas, {x,y}, {mode:'alpha'|'color', tolerance, alphaThreshold})` — returns an irregular connected-pixel selection mask
+- `getCurveOutline(region, steps=12)` — returns sampled points for a closed, smooth Bézier path
+- `cropImageRegions(canvas, regions)` — accepts rectangles, polygons, Bézier regions and wand masks and returns transparent PNG file blobs
+- `openStandaloneBackground()` — opens standalone background cleanup, without importing/splitting
+
+See `IMAGE_TOOLS_API.md` for schema, limitations and CLI equivalent.

@@ -644,6 +644,31 @@ def check_130(t):
     }""")
     capture('paint:clear-selection')
     t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    # Bulk import queue actions appear only after an image is staged.
+    import base64
+    tab('left','assets')
+    image_data=t.page.evaluate("""()=>{
+      const c=document.createElement('canvas');c.width=8;c.height=8;
+      c.getContext('2d').fillRect(0,0,8,8);
+      return c.toDataURL('image/png').split(',')[1];
+    }""")
+    t.page.locator('#imageInput').set_input_files({'name':'reachability.png',
+      'mimeType':'image/png','buffer':base64.b64decode(image_data)})
+    t.page.wait_for_selector('#importQueue .queue-row')
+    capture('import:queue-items-staged')
+    t.assertTrue(t.page.locator('#applyQueue').is_visible())
+    t.assertTrue(t.page.locator('#clearQueue').is_visible())
+    for field in ['view','category','animation','frame','mirror']:
+        t.assertTrue(t.page.locator('#importQueue [data-q="'+field+'"]').is_visible(),field)
+    t.page.locator('#clearQueue').click()
+    # Camera's image-reference context actions are reached by right-clicking
+    # a view thumbnail; the direct Reference controls are available elsewhere.
+    tab('left','camera')
+    t.page.locator('#viewButtons [data-view]').first.click(button='right')
+    capture('camera:reference-context-menu')
+    t.assertTrue(t.page.locator('#useCameraAsReference').is_visible())
+    t.assertTrue(t.page.locator('#clearCameraReference').is_visible())
+    t.page.locator('#clearCameraReference').click()
     # Real layer: each image editing property module, plus multi-selection.
     image_edit_fixture(t)
     t.page.wait_for_selector('.image-edit-group[data-image-group="color"]')
@@ -714,7 +739,11 @@ def check_130(t):
         t.assertIn(new,visible,old+' has no visible replacement '+new)
     for fileid,trigger in contract['fileInputTriggers'].items():
         t.assertIn(trigger,visible,'File picker '+fileid+' has no reachable trigger '+trigger)
-    exempt=set(aliases)|set(contract['fileInputTriggers'])|set(contract['alternativeControls'])
+    for old,new in contract['hiddenHostAliases'].items():
+        t.assertIn(new,visible,'Hidden export relay '+old+' has no discoverable '+new)
+        t.assertFalse(t.page.locator('#'+old).is_visible(),
+          'Redundant legacy export relay should not create a duplicate button')
+    exempt=set(aliases)|set(contract['hiddenHostAliases'])|set(contract['fileInputTriggers'])|set(contract['alternativeControls'])
     not_reached=sorted(expected-exempt-visible)
     t.assertFalse(not_reached,
       'Static controls never visible in any of the '+str(len(stages))+

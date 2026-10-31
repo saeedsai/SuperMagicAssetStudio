@@ -730,4 +730,44 @@ def check_130(t):
 def test_all_ui_control_reachability(self):check_130(self)
 setattr(BrowserRegression,'test_TC_130',test_all_ui_control_reachability)
 
+
+# Existing layers must remain editable when the project changes modular structures.
+def check_131(t):
+    image_edit_fixture(t)
+    t.page.locator('#studio-tab-project').click()
+    t._mode('custom')
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer'])")
+    t.assertTrue(t.page.locator('#inspectorContent [data-prop="scaleX"]').is_visible())
+    category=t.page.locator('#inspectorContent [data-prop="category"]')
+    t.assertEqual(category.input_value(),'head')
+    t.assertTrue(category.locator('option[value="head"]').count()==1)
+    t.assertIn('head',t.page.locator('#inspectorContent').inner_text().lower())
+    t.page.locator('#inspectorContent [data-prop="scaleX"]').fill('1.75')
+    t.page.locator('#inspectorContent [data-prop="scaleX"]').press('Tab')
+    t.assertEqual(t._project()['scenes']['front']['stand']['stand_1'][0]['transform']['scaleX'],1.75)
+
+def check_132(t):
+    t.page.set_viewport_size({'width':390,'height':844})
+    t.page.wait_for_function('Boolean(window.SuperMagicStudioUI&&window.SuperMagicImageEditor)')
+    t.page.locator('#studio-tab-assets').click()
+    t.assertTrue(t.page.locator('#dropzone').is_visible())
+    t.page.locator('#studio-tab-project').click()
+    t.assertTrue(t.page.locator('#assetMode').is_visible())
+    t._menu('paint')
+    t.page.locator('[data-paint-menu="brush"]').click()
+    t.assertTrue(t.page.locator('#paintSize').is_visible())
+    t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    t._menu('tools')
+    t.assertTrue(t.page.locator('#menuStandaloneBackground').is_visible())
+    t.page.locator('#menuStandaloneBackground').click()
+    t.assertTrue(t.page.locator('#bgStandaloneColor').is_visible())
+    t.page.locator('#bgStandaloneClose').click()
+    image_edit_fixture(t)
+    t.page.locator('#imageEditorToggle').click()
+    t.assertTrue(t.page.locator('[data-prop="colorHue"]').is_visible())
+
+for number,fn in {131:check_131,132:check_132}.items():
+    def run_mobile_and_legacy(self,case=fn):case(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_mobile_and_legacy)
+
 if __name__=='__main__':unittest.main()

@@ -1016,7 +1016,7 @@
     "verification": "browser",
     "evidence": {
       "path": "index.html",
-      "contains": "data-menu=\"paint\""
+      "contains": "id=\"paintPanel\""
     }
   },
   {

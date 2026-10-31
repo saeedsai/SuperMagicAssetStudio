@@ -1,3 +1,26 @@
+# Menu consolidation and icon-based Paint sidebar — v5.9.4
+
+**Date:** 2026-10-31  
+**Verified source:** `c9d88e48dce9320911dd370ddb78948171001aab`  
+**Verified PR run:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41198298120  
+**Navigation documentation:** [UI_MENU_NAVIGATION.md](UI_MENU_NAVIGATION.md)
+
+| Verification | Result |
+|---|---|
+| Node domain, CLI, contracts and UI unit tests | **194/194 pass** |
+| Requirement traceability | **137/137 pass** (135 requirements + 2 uniqueness assertions; included in Node total) |
+| Chromium UI regression | **66/66 pass** |
+| Complete real-browser static UI audit | **211 controls**, **63 interaction states**, 27 intentional aliases and 7 native file picker alternatives; **zero unreachable controls** |
+| Required PR regression gate | **PASS** |
+
+**Functional coverage:** TC-133 checks that Import and Tools now appear as one Edit menu without losing split/background/AI actions. TC-134 verifies that both File → Import image and Edit → Import image open the same native image import picker. TC-135 checks all 17 iconified right-sidebar Paint actions, the real selection tool state and Clear selection behavior. Existing Inspector/image editing, export and API/CLI tests remain passing.
+
+**Regression corrected during verification:** The new Paint sidebar section originally used the Shortcuts section index, making its tools invisible; the correct mapping is now Paint index 5 and Shortcuts index 6. The isolated release also uses only the original main editor code plus the new import relay, avoiding unrelated concurrent development on `dev`.
+
+**Limitations:** This checks real browser behavior and static UI reachability, not pixel-perfect rendering on every device, native touch/stylus workflows or Render production sync. Verify main branch and GitHub Pages after merge separately.
+
+---
+
 # Full UI capability and visibility audit — v5.9.3
 
 **Date:** 2026-10-31  

@@ -68,3 +68,7 @@ The **Paint** menu and **Tool options** popover control painting new pixels, bru
 ## Full UI reachability validation (v5.9.3)
 
 The [full 210-control audit](docs/UI_COVERAGE_AUDIT.md) records all editor buttons and properties, the 53 dynamic property descriptors, contextual visibility rules, native file-picker alternatives, and the 63 automated interaction scenarios. The mandatory browser regression checks workspaces, menus, all painting modes, background cleanup, sprite splitting, animation clips, Inspector, legacy modular categories, camera context menu, the actual import queue, and a 390px mobile viewport. Two previously difficult-to-reach workflows were corrected: integrated sprite-sheet background preview is now distinct from standalone cleanup, and layers with legacy categories remain editable after switching to custom structure.
+
+## Consolidated release (v5.10.0)
+
+This version combines the v5.9.4 **File / Edit / right Paint** interface with development work on JSON and ZIP project archives, import/merge, cut/copy of raster selections into movable layers, and hierarchical joints/anchors/poses. Existing keyboard commands, image tools, UI control catalog and CLI/JSON entry points remain available. Read [Project packages](docs/PROJECT_PACKAGES.md), [Selection transforms](docs/SELECTION_TRANSFORMS.md) and [Skeleton animation](docs/SKELETON_ANIMATION.md) for formats, commands and limitations. Art validation, native PowerShell and actual production Render deployment require separate verification.

@@ -563,14 +563,20 @@ def check_130(t):
     expected={x['id'] for x in catalog}
     visible=set()
     stages={}
+    select_options={}
     def capture(stage):
-        ids=t.page.evaluate("""()=>{
+        controls=t.page.evaluate("""()=>{
           return [...document.querySelectorAll('button[id],input[id],select[id],textarea[id],#dropzone')]
             .filter(el=>el.getClientRects().length>0 && getComputedStyle(el).visibility!=='hidden' &&
               !el.closest('[inert],[aria-hidden="true"]'))
-            .map(el=>el.id).filter(Boolean);
+            .map(el=>({id:el.id,options:el.tagName==='SELECT'?[...el.options].map(o=>o.value):null}))
+            .filter(el=>el.id);
         }""")
+        ids=[x['id'] for x in controls]
         visible.update(ids)
+        for item in controls:
+            if item['options'] is not None:
+                select_options.setdefault(item['id'],set()).update(item['options'])
         stages[stage]=len(ids)
     def tab(side,name):
         t.page.locator('#'+('studio' if side=='left' else 'properties')+'-tab-'+name).click()
@@ -714,6 +720,9 @@ def check_130(t):
       'Static controls never visible in any of the '+str(len(stages))+
       ' user-reachable states: '+repr(not_reached)+'; stages='+repr(stages))
     t.assertEqual(len(expected),len(set(expected)))
+    for setting in (x for x in catalog if x['kind']=='select' and x.get('values') and x['id']!='paintTool'):
+        missing=set(setting['values'])-select_options.get(setting['id'],set())
+        t.assertFalse(missing,'Selectable choices never appeared for '+setting['id']+': '+repr(sorted(missing)))
     print('UI AUDIT: '+str(len(expected))+' static controls; '+str(len(contract['hiddenAliases']))+
       ' intentional aliases with replacements; '+str(len(contract['fileInputTriggers']))+
       ' hidden file inputs with triggers; '+str(len(stages))+' interaction states; '+

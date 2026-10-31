@@ -12,14 +12,14 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 ## Case matrix and evidence
 
-`tests/requirements.json` assigns **one independent TC identifier to each of 125 requirements**. The Node traceability test reports those 125 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
+`tests/requirements.json` assigns **one independent TC identifier to each of 129 requirements**. The Node traceability test reports those 125 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|
 | Node domain/image | ~29 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
 | Node CLI integration | 2 | JSON round-trip, render, manifest, undo/redo, dry run | Mandatory |
 | Requirement traceability | 127 | 119 named acceptance contracts plus uniqueness checks | Mandatory |
-| Browser Chromium | 56 | UI startup, menu and control behaviors, scripted commands | Mandatory |
+| Browser Chromium | 60 | UI startup, menu and control behaviors, scripted commands | Mandatory |
 | Human visual QA | Checklist | Artistic quality, overlap, anti-aliasing, anatomical handedness, animations | Release review, reported separately |
 
 ## Manual QA checklist
@@ -62,3 +62,7 @@ Dynamic property contract coverage checks the mutable Inspector/custom part/impo
 ## Image editing discoverability (TC-122–125)
 
 The Edit image toolbar action is the unique navigation entry for editing a selected image. Selection automatically opens the right Edit image workspace; if none is selected, the left Layers workspace opens to guide selection. The existing Inspector control DOM nodes are reparented (not cloned) into Image & layer, Transform & mirror, Color & tint, Source crop and Auto-fit & defaults groups. Browser tests verify that the original mirror and color handlers still mutate the selected layer, crop/auto-fit are expandable, and access is retained at narrow viewport sizes.
+
+## Inspector selection visibility regression (TC-126–TC-129)
+
+Chromium tests import a genuine raster asset and layer, then verify visible transform/color settings following layer-list selection, direct on-canvas picking, the Edit image toolbar action, and multi-layer selection. Tests explicitly collapse the Inspector and switch away before selection, assert the Inspector workspace reopens, and edit a transform field to confirm actual persisted project data. The toolbar action remains owned by image-edit-panel.js; UI-shell provides one shared reveal method rather than adding a duplicate listener.

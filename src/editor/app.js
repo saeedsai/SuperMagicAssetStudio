@@ -137,7 +137,8 @@ function resolvedLayers(view,animation,frameId,seen=new Set()){
   const local=project.scenes[view]?.[animation]?.[frameId]||[];
   return base.concat(local);
 }
-function renderTo(context,view=currentView,animation=currentAnimation,frameId=currentFrame){context.clearRect(0,0,W(),H());for(const l of resolvedLayers(view,animation,frameId))paintLayer(context,l);}
+function posedLayers(view,animation,frameId){const layers=resolvedLayers(view,animation,frameId),rig=project.rigs?.[view],api=window.SuperMagicSkeleton;if(!rig||!api)return layers;return api.applyPoseToLayers(layers,rig,project.poses?.[view]?.[animation]?.[frameId]||{});}
+function renderTo(context,view=currentView,animation=currentAnimation,frameId=currentFrame){context.clearRect(0,0,W(),H());for(const l of posedLayers(view,animation,frameId))paintLayer(context,l);}
 function localPoint(l,p){const t=l.transform,angle=-t.rotationDeg*Math.PI/180,dx=p.x-t.x,dy=p.y-t.y;const rx=dx*Math.cos(angle)-dy*Math.sin(angle),ry=dx*Math.sin(angle)+dy*Math.cos(angle);return {x:rx/(t.scaleX*(t.flipX?-1:1)),y:ry/(t.scaleY*(t.flipY?-1:1))};}
 function layerCorners(l){const t=l.transform,c=l.crop,ax=t.anchorX??.5,ay=t.anchorY??.5;const pts=[[-c.w*ax,-c.h*ay],[c.w*(1-ax),-c.h*ay],[c.w*(1-ax),c.h*(1-ay)],[-c.w*ax,c.h*(1-ay)]];const rad=t.rotationDeg*Math.PI/180;return pts.map(([x,y])=>{x*=t.scaleX*(t.flipX?-1:1);y*=t.scaleY*(t.flipY?-1:1);return {x:t.x+x*Math.cos(rad)-y*Math.sin(rad),y:t.y+x*Math.sin(rad)+y*Math.cos(rad)};});}
 function rotationHandle(l,corners){const t=l.transform,top={x:(corners[0].x+corners[1].x)/2,y:(corners[0].y+corners[1].y)/2};const angle=t.rotationDeg*Math.PI/180;return {x:top.x+32*Math.sin(angle),y:top.y-32*Math.cos(angle)};}
@@ -146,7 +147,7 @@ function draw(){
  ctx.clearRect(0,0,W(),H());
  const ref=project.editor?.reference;
  if(ref?.enabled){const tmp=document.createElement('canvas');tmp.width=W();tmp.height=H();renderTo(tmp.getContext('2d'),ref.view,ref.animation,ref.frame);ctx.save();ctx.globalAlpha=clamp(num(ref.alpha,.3),.05,.9);ctx.drawImage(tmp,0,0);ctx.restore();}
- for(const layer of resolvedLayers(currentView,currentAnimation,currentFrame))paintLayer(ctx,layer);
+ for(const layer of posedLayers(currentView,currentAnimation,currentFrame))paintLayer(ctx,layer);
  octx.clearRect(0,0,W(),H());octx.save();
  if(showGrid){octx.strokeStyle='#5978b04c';octx.lineWidth=1;const step=gridSize;for(let x=0;x<=W();x+=step){octx.beginPath();octx.moveTo(x+.5,0);octx.lineTo(x+.5,H());octx.stroke();}for(let y=0;y<=H();y+=step){octx.beginPath();octx.moveTo(0,y+.5);octx.lineTo(W(),y+.5);octx.stroke();}}
  if(showGuides){octx.strokeStyle='#88a0cd99';octx.setLineDash([7,7]);octx.beginPath();octx.moveTo(W()/2,0);octx.lineTo(W()/2,H());octx.moveTo(0,H()/2);octx.lineTo(W(),H()/2);octx.stroke();octx.setLineDash([]);}
@@ -627,6 +628,21 @@ ${JSON.stringify(obj,null,2)}`:msg);
         if(cmd.opacity!==undefined)options.paintOpacity=Math.round(Number(cmd.opacity)*100);
         const info=await paintAPI.performPaintOperation({...cmd,properties:options});
         say('Paint operation',info);break;
+      }
+      case 'createRig':case 'setRig':case 'setJoint':case 'bindPart':case 'setPose':case 'setMotion':case 'getRig':case 'getPose':case 'samplePose':case 'listPosedLayers':{
+        const api=window.SuperMagicSkeleton;if(!api)throw Error('Rig module not ready');
+        const view=cmd.view||currentView,animation=cmd.animation||currentAnimation,frame=cmd.frame||currentFrame;
+        if(!VIEW_IDS.includes(view))throw Error('Unknown view');
+        const rig=project.rigs?.[view];let value;
+        if(op==='createRig'||op==='setRig'){touch();project.rigs||={};project.rigs[view]=op==='createRig'?api.createRig(cmd.joints||[],cmd.bindings||[]):api.createRig(cmd.rig.joints,cmd.rig.bindings);value=project.rigs[view];}
+        else if(op==='setJoint'||op==='bindPart'){if(!rig)throw Error('Create rig first');touch();project.rigs[view]=op==='setJoint'?api.setJoint(rig,cmd.id,cmd.changes||{}):api.bindPart(rig,cmd.category,cmd.joint,cmd.anchor||{x:0,y:0});value=project.rigs[view];}
+        else if(op==='setPose'){if(!rig)throw Error('Create rig first');if(!project.animations.find(a=>a.id===animation)?.frames.some(f=>f.id===frame))throw Error('Unknown animation/frame');api.evaluateRig(rig,cmd.pose||{});touch();project.poses||={};(((project.poses[view]||={})[animation]||={}))[frame]=clone(cmd.pose||{});value=project.poses[view][animation][frame];}
+        else if(op==='setMotion'){if(!rig)throw Error('Create rig first');if(!project.animations.some(a=>a.id===animation))throw Error('Unknown animation');if(!Array.isArray(cmd.keyframes))throw Error('keyframes must be array');for(const k of cmd.keyframes){if(!Number.isFinite(k.timeMs)||k.timeMs<0)throw Error('Invalid keyframe time');api.evaluateRig(rig,k.pose||{});}touch();project.motions||={};((project.motions[view]||={}))[animation]={keyframes:clone(cmd.keyframes)};value=project.motions[view][animation];}
+        else if(op==='getRig')value=rig||null;
+        else if(op==='getPose')value=project.poses?.[view]?.[animation]?.[frame]||{};
+        else if(op==='samplePose')value=api.sampleMotion(project.motions?.[view]?.[animation],cmd.timeMs||0);
+        else value=rig?api.applyPoseToLayers(resolvedLayers(view,animation,frame),rig,cmd.timeMs!=null?api.sampleMotion(project.motions?.[view]?.[animation],cmd.timeMs):project.poses?.[view]?.[animation]?.[frame]||{}):resolvedLayers(view,animation,frame);
+        say('Rig '+op,value);break;
       }
       case 'summary': say('Summary',window.SuperMagicAssetStudioAPI.getSummary()); break;
       case 'splitImageAuto':case 'splitImageManual':case 'removeBackground':{

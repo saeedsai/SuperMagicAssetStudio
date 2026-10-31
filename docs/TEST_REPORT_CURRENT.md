@@ -1,3 +1,28 @@
+# Full UI capability and visibility audit — v5.9.3
+
+**Date:** 2026-10-31  
+**Verified development CI:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41195559915  
+**Audit guide:** [UI_COVERAGE_AUDIT.md](UI_COVERAGE_AUDIT.md)
+
+| Verification | Result |
+|---|---|
+| Static HTML inputs/actions cataloged and visibility-audited | **210/210** (contextual equivalents included) |
+| Dynamic property descriptors retained | **53** (schema audit plus Inspector/import browser tests) |
+| Real browser interaction states exercised | **63** |
+| Hidden compatibility actions checked for visible replacements | **32/32** |
+| Hidden file inputs checked for visible triggers | **7/7** |
+| Hidden export relays with visible menu alternatives | **3/3** |
+| Node/domain/CLI/UI contract tests | **PASS — 189/189** |
+| Requirement traceability | **PASS — 134/134** (132 requirements + 2 uniqueness checks; included in Node test count) |
+| Chromium UI tests | **PASS — 63/63** |
+| Mandatory development CI gate | **PASS** |
+
+**Confirmed fixes:** `menuRemoveBackground` now opens the integrated sprite extraction background-removal panel, while `menuStandaloneBackground` remains visibly reachable from Tools and opens the standalone dialog. Custom-mode structure changes no longer crash Inspector rendering for a layer category inherited from another structure; the original type is preserved as a selectable option. All documented duplicate buttons retain canonical interactive counterparts, and the contextual import queue/camera reference commands are tested through real input events.
+
+**Limitations:** Browser DOM visibility and behavior coverage does not prove pixel-perfect layout on all physical screens, production-art visual correctness or native touch/pen/Windows workflows. Render deployment requires separate validation after main merge.
+
+---
+
 # Inspector property visibility hotfix — v5.9.2
 
 **Date:** 2026-10-31  

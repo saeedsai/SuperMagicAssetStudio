@@ -140,7 +140,7 @@ for(const id of new Set(Object.values(PAINT_PROPERTY_GROUPS).flat())){
  wrapper.dataset.property=id;
  propertyTargets.set(id,wrapper);
 }
-const finish=get('paintFinishFreeform'),clear=get('paintClearSelection'),move=get('paintStop');
+const finish=get('paintFinishFreeform'),clear=get('paintClearSelection'),move=get('paintStop'),copy=get('paintCopySelection'),cut=get('paintCutSelection');
 const footer=finish.closest('.toolrow');
 footer.classList.add('studio-properties-footer');
 paint.querySelectorAll('.paint-controls-grid').forEach(grid=>grid.classList.add('studio-property-grid'));
@@ -180,10 +180,13 @@ function paintContextUpdate(){
  for(const grid of paint.querySelectorAll('.studio-property-grid')){
   grid.hidden=![...grid.children].some(child=>!child.hidden);
  }
+ const selectionActive=(window.SuperMagicPaintAPI?.getSelectionCount?.()||0)>0;
  finish.hidden=active!=='select-freeform';
- clear.hidden=!(window.SuperMagicPaintAPI?.getSelectionCount?.()>0);
+ clear.hidden=!selectionActive;
+ if(copy)copy.hidden=!selectionActive;
+ if(cut)cut.hidden=!selectionActive;
  move.hidden=active==='select';
- footer.hidden=![finish,clear,move].some(visible);
+ footer.hidden=![finish,clear,move,copy,cut].some(visible);
  const label=PAINT_TOOL_LABELS[active]||active;
  popTitle.textContent=label+' settings';
  propsButton.textContent='⚙ '+label+(applicable.has('paintSize')?' · '+get('paintSize').value+'px':'');

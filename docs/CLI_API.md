@@ -270,3 +270,8 @@ Headless painting has a 4-megapixel limit and uses PNG source/texture images. Br
 The [command JSON schema](../examples/cli-command-schema.json) documents operation names and properties. The [static control catalog](../src/shared/ui-capabilities.json) documents every HTML control including browser-only behaviors. Visual dialogs are callable from browser scripting; they cannot themselves open inside a headless terminal. For mapped actions invokeControl accepts id and params, or use the native CLI operation directly.
 
 The capability catalog also contains **53 dynamic property descriptors** for Inspector layer transforms/crops/colors, group transforms, custom parts, import queue fields, color presets and sprite extraction regions. They are exposed as project/command fields, not fixed UI control IDs; use selectLayers / runCommands in the browser or setLayer / setColor / setCrop / setTransform / updatePart / importManifest / image tools in the CLI. Group-relative movement can be implemented by reading current transforms and writing new absolute transforms. A static control catalog cannot replace the runtime layer schema.
+
+
+## Skeleton animation (experimental)
+
+Browser structured commands support `createRig`, `setRig`, `setJoint`, `bindPart`, `setPose`, `getRig`, `getPose`, `setMotion`, `samplePose` and `listPosedLayers`. The main UI exposes **Skeleton / Pose** beside the animation selector. Rig math lives in `src/shared/skeleton.mjs`, accessible in the browser as `window.SuperMagicSkeleton`. See [Skeleton animation](SKELETON_ANIMATION.md).

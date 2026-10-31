@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import {resolveLayers,VIEWS} from './agent-engine.mjs';
+import {applyPoseToLayers,sampleMotion} from '../shared/skeleton.mjs';
 const SIGNATURE=Buffer.from('89504e470d0a1a0a','hex');
 const clamp=(v,a=0,b=255)=>Math.max(a,Math.min(b,v));
 export function readPNG(buf){
@@ -65,15 +66,18 @@ function drawLayer(out,img,layer){const co=layer.crop,t=layer.transform;const sw
   for(let c=0;c<3;c++)out.data[dest+c]=Math.round(rgb[c]*k+out.data[dest+c]*(1-k));out.data[dest+3]=Math.round(outA*255);
  }
 }
-export function renderFrame(p,{view='front',animation='stand',frame=null,scale=1,hiddenCategories=[]}={},projectPath,cache=new Map()){
+export function renderFrame(p,{view='front',animation='stand',frame=null,scale=1,hiddenCategories=[],timeMs=null}={},projectPath,cache=new Map()){
  const a=p.animations.find(a=>a.id===animation);if(!a)throw new Error('Unknown animation '+animation);const f=a.frames.find(x=>x.id===frame)||a.frames[0];if(!VIEWS.includes(view))throw new Error('Unknown view '+view);
  const w=Math.round(p.canvas.width*scale),h=Math.round(p.canvas.height*scale);if(w*h>8000000)throw new Error('Image too large for CLI renderer (limit 8MP)');const out={width:w,height:h,data:Buffer.alloc(w*h*4)};
- for(const l of resolveLayers(p,view,animation,f.id))if(l.visible!==false&&!hiddenCategories.includes(l.category)){
+ const rig=p.rigs?.[view],base=resolveLayers(p,view,animation,f.id),motion=p.motions?.[view]?.[animation];
+ const pose=timeMs!==null&&motion?sampleMotion(motion,timeMs):p.poses?.[view]?.[animation]?.[f.id]||{};
+ const layers=rig?applyPoseToLayers(base,rig,pose):base;
+ for(const l of layers)if(l.visible!==false&&!hiddenCategories.includes(l.category)){
   const image=readAsset(p,l.assetId,projectPath,cache);const tr={...l,transform:{...l.transform,x:l.transform.x*scale,y:l.transform.y*scale,scaleX:l.transform.scaleX*scale,scaleY:l.transform.scaleY*scale}};drawLayer(out,image,tr);
  }return out;
 }
 export function renderSpriteSheet(p,{view='front',animation='stand',columns=4,scale=1}={},projectPath){const a=p.animations.find(x=>x.id===animation);if(!a)throw new Error('Unknown animation');const cols=clamp(Math.round(columns),1,Math.max(1,a.frames.length)),rows=Math.ceil(a.frames.length/cols);const cellW=Math.round(p.canvas.width*scale),cellH=Math.round(p.canvas.height*scale);if(cols*cellW*rows*cellH>12000000)throw new Error('Sprite sheet too large (limit 12MP)');const out={width:cols*cellW,height:rows*cellH,data:Buffer.alloc(cols*cellW*rows*cellH*4)},cache=new Map();
- for(let i=0;i<a.frames.length;i++){const tile=renderFrame(p,{view,animation,frame:a.frames[i].id,scale},projectPath,cache),ox=(i%cols)*cellW,oy=Math.floor(i/cols)*cellH;for(let y=0;y<cellH;y++)tile.data.copy(out.data,((oy+y)*out.width+ox)*4,y*cellW*4,(y+1)*cellW*4);}return out;
+ for(let i=0;i<a.frames.length;i++){const tile=renderFrame(p,{view,animation,frame:a.frames[i].id,scale,timeMs:p.motions?.[view]?.[animation]?i*1000/a.fps:null},projectPath,cache),ox=(i%cols)*cellW,oy=Math.floor(i/cols)*cellH;for(let y=0;y<cellH;y++)tile.data.copy(out.data,((oy+y)*out.width+ox)*4,y*cellW*4,(y+1)*cellW*4);}return out;
 }
 function packGIF(frames,w,h,delayCs){const bytes=[],u8=n=>bytes.push(n&255),u16=n=>{u8(n);u8(n>>8);},ascii=s=>{for(const ch of s)u8(ch.charCodeAt(0));};ascii('GIF89a');u16(w);u16(h);u8(0xf7);u8(0);u8(0);
  for(let i=0;i<256;i++){const v=Math.max(0,i-1);u8(Math.round(((v>>5)&7)*255/7));u8(Math.round(((v>>2)&7)*255/7));u8(Math.round((v&3)*255/3));}
@@ -86,6 +90,6 @@ function packGIF(frames,w,h,delayCs){const bytes=[],u8=n=>bytes.push(n&255),u16=
 }
 export function renderGIF(p,{view='front',animation='stand',scale=null,turntable=false}={},projectPath){const ratio=scale??Math.min(1,480/Math.max(p.canvas.width,p.canvas.height)),cache=new Map(),frames=[];
  const a=p.animations.find(x=>x.id===animation);if(!a)throw new Error('Unknown animation');if(turntable){for(const v of VIEWS)frames.push(renderFrame(p,{view:v,animation,frame:a.frames[0].id,scale:ratio},projectPath,cache));}
- else for(const f of a.frames)frames.push(renderFrame(p,{view,animation,frame:f.id,scale:ratio},projectPath,cache));
+ else for(const [i,f] of a.frames.entries())frames.push(renderFrame(p,{view,animation,frame:f.id,scale:ratio,timeMs:p.motions?.[view]?.[animation]?i*1000/a.fps:null},projectPath,cache));
  return packGIF(frames,frames[0].width,frames[0].height,turntable?35:Math.round(100/a.fps));
 }

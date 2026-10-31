@@ -384,3 +384,8 @@ The capability catalog also contains **53 dynamic property descriptors** for Ins
 Select an image layer on the canvas or in **Layers**, then use the prominent **Edit image** action beside the canvas toolbar, or open the **Edit image** tab on the right. The editor automatically returns to the image editing workspace when a new layer is selected. The right-hand controls are organized as **Image & layer** (replace), **Transform & mirror** (Flip X/Y, position, scale, rotation, opacity), **Color & tint** (brightness, contrast, saturation, hue, sepia, RGB channels, tint and presets), **Source crop** (original pixel crop), and **Auto-fit & defaults** (automatic fit, reset, saved placements). Crop and auto-fit modules are expandable. All original editing handlers and DOM IDs remain intact.
 
 The **Paint** menu and **Tool options** popover control painting new pixels, brush texture, fill, wand and eraser; they do not replace layer color and mirror settings in Edit image. To select an image while a painting tool is active, click **Edit image**; it returns to layer selection first.
+
+
+## Skeleton animation (experimental)
+
+Browser structured commands support `createRig`, `setRig`, `setJoint`, `bindPart`, `setPose`, `getRig`, `getPose`, `setMotion`, `samplePose` and `listPosedLayers`. The main UI exposes **Skeleton / Pose** beside the animation selector. Rig math lives in `src/shared/skeleton.mjs`, accessible in the browser as `window.SuperMagicSkeleton`. See [Skeleton animation](SKELETON_ANIMATION.md).

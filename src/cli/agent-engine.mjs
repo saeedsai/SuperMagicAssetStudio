@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {executePaint} from './agent-paint.mjs';
+import {createRig,validateRig,setJoint,bindPart,evaluateRig,applyPoseToLayers,sampleMotion} from '../shared/skeleton.mjs';
 const UI_CATALOG=JSON.parse(fs.readFileSync(new URL('../shared/ui-capabilities.json',import.meta.url),'utf8'));
 const controlById=new Map(UI_CATALOG.controls.map(x=>[x.id,x]));
 
@@ -223,6 +224,16 @@ export function execute(p,payload,{projectPath,results=[]}={}){
      for(const key of Object.keys(defaults))if(defaults[key]===undefined)delete defaults[key];
      out.value=executePaint(p,{...defaults,...c},{projectPath});break;
    }
+   case 'createRig':{p.rigs||={};const view=c.view||active().view;check(VIEWS.includes(view),'Unknown view');p.rigs[view]=createRig(c.joints||[],c.bindings||[]);out.value=p.rigs[view];break;}
+   case 'setRig':{p.rigs||={};const view=c.view||active().view;check(VIEWS.includes(view),'Unknown view');p.rigs[view]=validateRig(cp(c.rig));break;}
+   case 'setJoint':{const view=c.view||active().view;check(p.rigs?.[view],'No rig for view');p.rigs[view]=setJoint(p.rigs[view],c.id,c.changes||{});break;}
+   case 'bindPart':{const view=c.view||active().view;check(p.rigs?.[view],'No rig for view');p.rigs[view]=bindPart(p.rigs[view],c.category,c.joint,c.anchor||{x:0,y:0});break;}
+   case 'setPose':{const view=c.view||active().view,animation=c.animation||active().animation,frame=c.frame||active().frame;check(p.rigs?.[view],'No rig for view');sourceScene(p,view,animation,frame);p.poses||={};(((p.poses[view]||={})[animation]||={}))[frame]=cp(c.pose||{});evaluateRig(p.rigs[view],c.pose||{});break;}
+   case 'setMotion':{sourceAnimation(p,c.animation||active().animation);p.motions||={};const view=c.view||active().view;check(p.rigs?.[view],'No rig for view');check(Array.isArray(c.keyframes),'keyframes array required');for(const k of c.keyframes){check(Number.isFinite(k.timeMs)&&k.timeMs>=0,'Invalid keyframe time');evaluateRig(p.rigs[view],k.pose||{});}((p.motions[view]||={}))[c.animation||active().animation]={keyframes:cp(c.keyframes)};break;}
+   case 'samplePose':{const view=c.view||active().view,animation=c.animation||active().animation;out.value=sampleMotion(p.motions?.[view]?.[animation],c.timeMs||0);break;}
+   case 'getRig':out.value=cp(p.rigs?.[c.view||active().view]||null);break;
+   case 'getPose':out.value=cp(p.poses?.[c.view||active().view]?.[c.animation||active().animation]?.[c.frame||active().frame]||{});break;
+   case 'listPosedLayers':{const view=c.view||active().view,animation=c.animation||active().animation,frame=c.frame||active().frame;const layers=resolveLayers(p,view,animation,frame);out.value=p.rigs?.[view]?applyPoseToLayers(layers,p.rigs[view],c.timeMs!=null?sampleMotion(p.motions?.[view]?.[animation],c.timeMs):p.poses?.[view]?.[animation]?.[frame]||{}):cp(layers);break;}
    case 'summary':out.value=summarize(p);break;
    case 'review':out.value=reviewProject(p,projectPath);break;
    case 'listAssets':out.value=p.assets;break;

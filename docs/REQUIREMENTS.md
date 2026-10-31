@@ -159,10 +159,22 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-134 | UI | File and Edit both visibly offer image import through the same existing PNG/JSON file picker | TC-134 | browser |
 | REQ-135 | UI | Paint options are moved from the top navigation to a dedicated right workspace with a visible SVG icon and working tool selection for each action | TC-135 | browser |
 
+## Skeleton animation and modular assembly requirements
+
+| ID | Area | Requirement | Test case | Verification |
+|---|---|---|---|---|
+| REQ-136 | RIG | Rig graph supports unique hierarchical joints and rejects cycles | TC-136 | unit |
+| REQ-137 | RIG | Part-to-joint attachment with editable pivot offset preserves rest pose | TC-137 | unit |
+| REQ-138 | RIG | Independent per-view skeleton and per-frame non-destructive pose JSON | TC-138 | integration |
+| REQ-139 | RIG | Motion keyframes interpolate joint position and rotation | TC-139 | unit |
+| REQ-140 | RIG | Skeleton editor offers joint drag, attachment and pose controls | TC-140 | browser |
+| REQ-141 | RIG | Headless and game runtime export/playback apply skeletal poses | TC-141 | integration |
+| REQ-142 | RIG | Football running jumping celebration reusable pose presets | TC-142 | unit |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.
 
-**Future backlog, not implemented / not silently treated as passing:** semantic AI-powered part fitting; robust removal of complex photo backgrounds; non-destructive per-sprite extraction mask editing; frame tweening and rigged skeleton; GPU/performance optimization for thousands of parts; end-to-end Windows PowerShell CI on actual Windows; visual golden-image comparisons using a canonical production art pack. Record issues with acceptance criteria when prioritized.
+**Future backlog, not implemented / not silently treated as passing:** semantic AI-powered part fitting; robust removal of complex photo backgrounds; non-destructive per-sprite extraction mask editing; advanced IK, mesh skinning and subframe timeline authoring; GPU/performance optimization for thousands of parts; end-to-end Windows PowerShell CI on actual Windows; visual golden-image comparisons using a canonical production art pack. Record issues with acceptance criteria when prioritized.
 
 **Release gate:** all automated test cases must pass, all broken references must be fixed, `dev` must be reviewed and merged via PR, and deployment must be checked after main updates.

@@ -31,3 +31,13 @@ export function applyPoseToLayers(layers,rig,pose={}){
 }
 export function interpolatePose(a={},b={},t=0){const u=Math.max(0,Math.min(1,finite(t,'time'))),out={};for(const id of new Set([...Object.keys(a),...Object.keys(b)])){const l=a[id]||{},r=b[id]||{};out[id]={};for(const prop of ['x','y','rotationDeg']){const v=l[prop]??0,w=r[prop]??0;finite(v,prop);finite(w,prop);out[id][prop]=v+(w-v)*u;}}return out;}
 export function sampleMotion(motion,timeMs){if(!motion?.keyframes?.length)return {};const keys=[...motion.keyframes].sort((a,b)=>a.timeMs-b.timeMs);for(let i=0;i<keys.length;i++)finite(keys[i].timeMs,'timeMs');if(timeMs<=keys[0].timeMs)return copy(keys[0].pose||{});if(timeMs>=keys.at(-1).timeMs)return copy(keys.at(-1).pose||{});for(let i=1;i<keys.length;i++)if(timeMs<=keys[i].timeMs){const a=keys[i-1],b=keys[i];return interpolatePose(a.pose,b.pose,(timeMs-a.timeMs)/(b.timeMs-a.timeMs));}return {};}
+
+/** Reusable football pose templates; missing joints are ignored by the evaluator. */
+export const FOOTBALL_POSES=Object.freeze({
+ idle: {},
+ runLeft: {root:{y:-8,rotationDeg:-3},spine:{rotationDeg:4},shoulderLeft:{rotationDeg:30},elbowLeft:{rotationDeg:-45},shoulderRight:{rotationDeg:-35},elbowRight:{rotationDeg:50},hipLeft:{rotationDeg:-35},kneeLeft:{rotationDeg:55},hipRight:{rotationDeg:40},kneeRight:{rotationDeg:-35}},
+ runRight: {root:{y:-12,rotationDeg:3},spine:{rotationDeg:-4},shoulderLeft:{rotationDeg:-35},elbowLeft:{rotationDeg:50},shoulderRight:{rotationDeg:30},elbowRight:{rotationDeg:-45},hipLeft:{rotationDeg:40},kneeLeft:{rotationDeg:-35},hipRight:{rotationDeg:-35},kneeRight:{rotationDeg:55}},
+ jump: {root:{y:-45},spine:{rotationDeg:-5},shoulderLeft:{rotationDeg:-125},shoulderRight:{rotationDeg:125},hipLeft:{rotationDeg:20},kneeLeft:{rotationDeg:70},hipRight:{rotationDeg:-20},kneeRight:{rotationDeg:-70}},
+ celebrate: {root:{y:-10},spine:{rotationDeg:-8},head:{rotationDeg:10},shoulderLeft:{rotationDeg:-135},elbowLeft:{rotationDeg:-20},shoulderRight:{rotationDeg:135},elbowRight:{rotationDeg:20},hipLeft:{rotationDeg:-8},hipRight:{rotationDeg:8}}
+});
+export function footballPose(name,rig){const pose=FOOTBALL_POSES[name];if(!pose)throw new Error('Unknown football pose '+name);const ids=new Set(validateRig(rig).joints.map(x=>x.id));return Object.fromEntries(Object.entries(pose).filter(([id])=>ids.has(id)).map(([id,v])=>[id,structuredClone(v)]));}

@@ -210,67 +210,7 @@ function exportProjectObject(options={}){
   }
   return data;
 }
-function standaloneProject(){const data=exportProjectObject({assetStorage:'bundled'});for(const [id,a] of Object.entries(data.assets)){if(!a.src)throw new Error('Image '+id+' is unresolved. Resolve external images before saving.');}return data;}
-function saveJSON(){try{const data=standaloneProject();download(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),slug(project.projectName)+'-sprite-project.json');notify('Standalone JSON saved, with all images embedded.');}catch(err){notify(err.message);}}
-function projectZipData(){
- const data=standaloneProject(),entries=[];
- data.assetStorage='external';
- for(const [id,a] of Object.entries(data.assets)){
-  const match=/^data:(image\\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(a.src);
-  if(!match)throw new Error('Unsupported embedded image: '+id);
-  const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[match[1]];
-  const raw=atob(match[2]),content=Uint8Array.from(raw,ch=>ch.charCodeAt(0));
-  const name='images/'+id+'.'+ext;
-  entries.push({name,data:content});a.fileRef=name;a.mime=match[1];delete a.src;
- }
- entries.unshift({name:'project.json',data:JSON.stringify(data,null,2)});
- return entries;
-}
-function saveZIP(){try{download(window.SuperMagicProjectArchive.pack(projectZipData()),slug(project.projectName)+'-sprite-project.zip');notify('ZIP saved with project.json and separate image files.');}catch(err){notify('Could not save ZIP: '+err.message);}}
-function validateProjectData(data){if(!data||data.format!=='FootballSpriteStudio'||!data.assets||!Array.isArray(data.animations)||!data.animations.length||!data.animations.every(a=>a.id&&Array.isArray(a.frames)&&a.frames.length)||!data.scenes||!data.canvas)throw new Error('Invalid FootballSpriteStudio project');return data;}
-async function readProjectPackage(file){
- if(!/\\.zip$/i.test(file.name))return validateProjectData(JSON.parse(await file.text()));
- const entries=await window.SuperMagicProjectArchive.unpack(file);
- if(!entries.has('project.json'))throw new Error('ZIP missing project.json');
- const data=validateProjectData(JSON.parse(new TextDecoder().decode(entries.get('project.json'))));
- for(const [id,a] of Object.entries(data.assets)){
-  const name=a.fileRef;
-  if(!name||!entries.has(name))throw new Error('ZIP missing image for '+id+': '+name);
-  const content=entries.get(name),mime=a.mime||(/\\.jpe?g$/i.test(name)?'image/jpeg':/\\.webp$/i.test(name)?'image/webp':'image/png');
-  let binary='';for(let i=0;i<content.length;i+=16384)binary+=String.fromCharCode(...content.subarray(i,i+16384));
-  a.src='data:'+mime+';base64,'+btoa(binary);
- }
- data.assetStorage='bundled';
- return data;
-}
-function mergeProjectData(input){
- const incoming=migrateProject(clone(validateProjectData(input)));
- if(incoming.canvas.width!==project.canvas.width||incoming.canvas.height!==project.canvas.height)throw new Error('Canvas sizes differ; resize a project before merging.');
- recordHistory();
- const assetIds=new Map(),animationIds=new Map();
- for(const [id,a] of Object.entries(incoming.assets)){
-  if(!a.src)throw new Error('Imported image '+id+' is missing');
-  const newId=uid('asset');assetIds.set(id,newId);project.assets[newId]=clone(a);loadImg(newId);
- }
- const remapLayer=l=>{const n=clone(l);n.id=uid('layer');if(!assetIds.has(n.assetId))throw new Error('Layer references unknown image');n.assetId=assetIds.get(n.assetId);return n;};
- for(const a of incoming.animations){
-  const newId=uid('animation');animationIds.set(a.id,newId);
-  const frameIds=new Map(),frames=a.frames.map(f=>{const id=uid('frame');frameIds.set(f.id,id);return {...clone(f),id};});
-  project.animations.push({...clone(a),id:newId,frames});
-  for(const view of VIEW_IDS){
-   project.scenes[view]||={};project.scenes[view][newId]={};
-   for(const f of a.frames){
-    const layers=incoming.scenes[view]?.[a.id]?.[f.id]||[];
-    project.scenes[view][newId][frameIds.get(f.id)]=layers.map(remapLayer);
-   }
-  }
- }
- if(incoming.partDefinitions?.parts?.length&&(!project.partDefinitions?.parts?.length))project.partDefinitions=clone(incoming.partDefinitions);
- refresh();
- return {assets:assetIds.size,animations:animationIds.size};
-}
-async function mergeProjectFile(file){try{const imported=await readProjectPackage(file);const summary=mergeProjectData(imported);notify('Merged '+summary.assets+' images and '+summary.animations+' animations. Undo is available.');}catch(err){notify('Could not merge project: '+err.message);}}
-
+function saveJSON(){const data=exportProjectObject();const str=JSON.stringify(data,null,2);download(new Blob([str],{type:'application/json'}),slug(project.projectName)+'-sprite-project.json');notify(data.assetStorage==='external'?'JSON saved without embedded images. Keep the referenced PNG files next to the JSON.':'JSON saved with embedded images and all layer transforms.');}
 function slug(x){return String(x).trim().replace(/[^a-z0-9-_]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'sprite';}
 function download(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);}
 async function imageBlob(c){return await new Promise(r=>c.toBlob(r,'image/png'));}
@@ -296,7 +236,7 @@ async function exportTurntable(){
   }catch(e){notify('Turntable export failed: '+e.message);}finally{$('#exportTurntable').disabled=false;}
 }
 function resetProject(){stopSpin();if(!confirm('Discard the current project and start a new one?'))return;stop();project=createProject();historyPast=[];historyFuture=[];images.clear();currentView='front';currentAnimation='stand';currentFrame='stand_1';selectedLayer=null;$('#projectName').value=project.projectName;updateDimension();refresh();notify('New project created.');}
-async function loadProject(file){try{const data=await readProjectPackage(file);stop();stopSpin();project=migrateProject(data);project.defaults ||= {};images.clear();historyPast=[];historyFuture=[];currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;clearSelection();$('#projectName').value=project.projectName||'Football character';updateDimension();syncEditorState();for(const [id,a] of Object.entries(project.assets)){if(a.src)loadImg(id);}refresh();historyButtons();window.SuperMagicAssetStudioAPI?.applyUIOptions?.();notify('Opened '+Object.keys(project.assets).length+' image asset(s).');}catch(err){notify('Could not open project: '+err.message);}}
+async function loadProject(file){try{const data=JSON.parse(await file.text());if(data.format!=='FootballSpriteStudio'||!data.assets||!data.animations||!data.scenes||!data.canvas)throw new Error('Not a Football Sprite Studio JSON file.');stop();stopSpin();project=migrateProject(data);project.defaults ||= {};project.assetStorage ||= 'bundled';images.clear();currentView='front';currentAnimation=project.animations[0].id;currentFrame=project.animations[0].frames[0].id;selectedLayer=null;$('#projectName').value=project.projectName||'Football character';updateDimension();syncEditorState();for(const [id,a] of Object.entries(project.assets)){if(a.src)loadImg(id);}refresh();window.SuperMagicAssetStudioAPI?.applyUIOptions?.();const missing=unresolvedAssets().length;notify(missing?`Loaded project. ${missing} external image asset(s) need resolving.`:`Loaded ${Object.keys(project.assets).length} image asset(s).`);}catch(err){notify('Could not load JSON: '+err.message);}}
 async function resolveExternalImages(fileList){const files=Array.from(fileList||[]);if(!files.length)return;let matched=0;for(const file of files){const found=Object.entries(project.assets).find(([id,a])=>!a.src&&((a.fileRef||a.name||'').replace(/\\/g,'/').split('/').pop().toLowerCase()===file.name.toLowerCase()));if(!found)continue;const [id,a]=found;const src=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});a.src=src;a.mime=file.type||'image/png';a.name=a.name||file.name;a.fileRef=a.fileRef||file.name;images.delete(id);loadImg(id);matched++;}
 refresh();notify(`Resolved ${matched} external image asset(s).`);}
 function moveLayer(by){const ls=scene(),i=ls.findIndex(x=>x.id===selectedLayer),j=i+by;if(i<0||j<0||j>=ls.length)return;[ls[i],ls[j]]=[ls[j],ls[i]];renderLayers();draw();}
@@ -699,7 +639,7 @@ $('#closeAutoResize').addEventListener('click',()=>$('#autoResizeDialog').close(
 $('#inspectorContent').addEventListener('change',e=>{const field=e.target.closest('[data-prop]'),l=sel();if(!field||!l)return;const key=field.dataset.prop,v=field.value;const t=l.transform,c=l.crop,a=asset(l);if(key.startsWith('color')){l.color||={};const name={colorBrightness:'brightness',colorContrast:'contrast',colorSaturate:'saturate',colorHue:'hue',colorSepia:'sepia',colorRed:'red',colorGreen:'green',colorBlue:'blue',colorTintHex:'tintHex',colorTintAmount:'tintAmount'}[key];if(name==='tintHex')l.color.tintHex=/^#[0-9a-f]{6}$/i.test(v)?v:'#ffffff';else l.color[name]=num(v,['hue','sepia','tintAmount'].includes(name)?0:100);}else if(key==='name')l.name=v;else if(key==='category')l.category=v;else if(key==='cropX')c.x=clamp(Math.round(num(v)),0,a.width-c.w);else if(key==='cropY')c.y=clamp(Math.round(num(v)),0,a.height-c.h);else if(key==='cropW')c.w=clamp(Math.round(num(v,1)),1,a.width-c.x);else if(key==='cropH')c.h=clamp(Math.round(num(v,1)),1,a.height-c.y);else if(key==='scaleX'||key==='scaleY')t[key]=clamp(num(v,1),.001,30);else if(key==='opacity')t.opacity=clamp(num(v,1),0,1);else if(key in t)t[key]=num(v);renderLayers();renderInspector();draw();});
 $('#inspectorContent').addEventListener('click',e=>{const l=sel(),b=e.target.closest('button');if(!l||!b)return;const id=b.id;if(b.dataset.colorpreset){const presets={normal:{brightness:100,contrast:100,saturate:100,hue:0,sepia:0,red:100,green:100,blue:100},light:{brightness:122,contrast:107,saturate:100,hue:0,sepia:0,red:110,green:110,blue:110},dark:{brightness:77,contrast:114,saturate:95,hue:0,sepia:0,red:88,green:88,blue:88},red:{brightness:105,contrast:105,saturate:145,hue:-35,sepia:42,red:138,green:92,blue:92},brown:{brightness:94,contrast:114,saturate:88,hue:0,sepia:70,red:120,green:100,blue:82},cool:{brightness:104,contrast:102,saturate:120,hue:37,sepia:0,red:94,green:104,blue:126}};l.color=clone(presets[b.dataset.colorpreset]);renderInspector();draw();return;}if(id==='cropLayer')openCrop();else if(id==='cropHere')toggleCrop();else if(id==='autoFitLayer')geometryAutoFit();else if(id==='replaceImage')$('#replaceImageInput').click();else if(id==='flipX'){l.transform.flipX=!l.transform.flipX;renderInspector();draw();}else if(id==='flipY'){l.transform.flipY=!l.transform.flipY;renderInspector();draw();}else if(id==='toggleLock'){l.locked=!l.locked;renderInspector();renderLayers();}else if(id==='fitLayer'){const h={fullBody:H()*.74,bodyPart:H()*.26,head:H()*.27,shirt:H()*.38,shorts:H()*.23,accessory:H()*.16}[l.category]||H()*.2;l.transform.scaleX=l.transform.scaleY=h/l.crop.h;renderInspector();draw();}else if(id==='resetLayer')defaultReset(l);else if(id==='saveDefault'){project.defaults[currentView]||={};project.defaults[currentView][l.category]=clone(l.transform);notify(`Default ${CATEGORIES[l.category]} placement saved for ${currentView}.`);}});
 $('#replaceImageInput').addEventListener('change',async e=>{const l=sel(),f=e.target.files[0];e.target.value='';if(!l||!f)return;try{const before=l.crop.h*l.transform.scaleY,info=await readFile(f);l.assetId=info.id;l.crop=clone(info.bounds);l.transform.scaleX=l.transform.scaleY=before/l.crop.h;l.name=f.name.replace(/\.[^.]+$/,'');renderLayers();renderInspector();draw();notify('PNG replaced. Placement preserved.');}catch(err){notify(err.message);}});
-$('#saveProject').addEventListener('click',saveJSON);$('#menuSavePackage').addEventListener('click',()=>{closeMenus();saveZIP();});$('#menuMergeProject').addEventListener('click',()=>{closeMenus();$('#mergeProjectInput').click();});$('#mergeProjectInput').addEventListener('change',async e=>{if(e.target.files[0])await mergeProjectFile(e.target.files[0]);e.target.value='';});$('#loadProject').addEventListener('click',()=>$('#jsonInput').click());$('#jsonInput').addEventListener('change',async e=>{if(e.target.files[0])await loadProject(e.target.files[0]);e.target.value='';});$('#newProject').addEventListener('click',resetProject);$('#exportPNG').addEventListener('click',exportPNG);$('#exportGIF').addEventListener('click',exportGIF);$('#exportTurntable').addEventListener('click',exportTurntable);$('#exportSheet').addEventListener('click',exportSheet);
+$('#saveProject').addEventListener('click',saveJSON);$('#loadProject').addEventListener('click',()=>$('#jsonInput').click());$('#jsonInput').addEventListener('change',async e=>{if(e.target.files[0])await loadProject(e.target.files[0]);e.target.value='';});$('#newProject').addEventListener('click',resetProject);$('#exportPNG').addEventListener('click',exportPNG);$('#exportGIF').addEventListener('click',exportGIF);$('#exportTurntable').addEventListener('click',exportTurntable);$('#exportSheet').addEventListener('click',exportSheet);
 $('#projectName').addEventListener('change',e=>project.projectName=e.target.value);
 function changeSize(){const w=clamp(Math.round(num($('#canvasWidth').value,768)),128,2048),h=clamp(Math.round(num($('#canvasHeight').value,768)),128,2048);project.canvas={width:w,height:h};updateDimension();draw();}
 $('#canvasWidth').addEventListener('change',changeSize);$('#canvasHeight').addEventListener('change',changeSize);
@@ -735,12 +675,7 @@ window.SuperMagicAssetStudioAPI={
   getSelectedLayerIds:()=>[...selectedLayerIds],
   selectLayers:(ids)=>{const valid=ids.filter(id=>scene().some(l=>l.id===id));selectedLayerIds=new Set(valid);selectedLayer=valid.at(-1)||null;renderLayers();renderInspector();if(valid.length)window.SuperMagicStudioUI?.showLayerInspector();draw();return valid;},
   runCommands: async (payload)=>await runStructuredCommands(payload),
-  saveJSON:()=>saveJSON(),
-  saveZIP:()=>saveZIP(),
-  exportProjectZip:()=>window.SuperMagicProjectArchive.pack(projectZipData()),
-  openProjectFile:async(file)=>loadProject(file),
-  mergeProjectFile:async(file)=>mergeProjectFile(file),
-  mergeProjectObject:(data)=>mergeProjectData(data)
+  saveJSON:()=>saveJSON()
 };
 
 

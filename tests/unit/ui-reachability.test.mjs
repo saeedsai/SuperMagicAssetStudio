@@ -53,7 +53,7 @@ test('Every contextual painting property has an assigned tool and a real source 
  const settings=new Set(Object.values(PAINT_PROPERTY_GROUPS).flat());
  for(const c of catalog.controls.filter(x=>x.id.startsWith('paint'))){
   if(['paintTool','paintClearMenu','paintTextureFile','paintFinishFreeform','paintClearSelection','paintStop'].includes(c.id))continue;
-  if(c.kind==='action'&&c.id==='paintImportTexture')continue;
+  if(c.kind==='action'&&['paintImportTexture','paintCopySelection','paintCutSelection'].includes(c.id))continue;
   assert(settings.has(c.id),'Paint property never shown by any tool: '+c.id);
  }
  for(const id of settings)assert(actionIds.has(id),'Missing contextual paint field '+id);

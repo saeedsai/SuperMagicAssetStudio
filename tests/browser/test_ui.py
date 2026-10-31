@@ -431,7 +431,8 @@ def image_edit_fixture(t):
         {op:'addAsset',id:'image_edit_fixture',name:'Fixture.png',width:32,height:32,src:canvas.toDataURL('image/png')},
         {op:'addLayer',id:'image_fixture_layer',assetId:'image_edit_fixture',category:'head'}
       ]});
-      SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer']);
+      const selected=SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer']);
+      if(selected.length!==1)throw Error('Fixture layer selection failed: '+JSON.stringify(selected));
       return 'image_fixture_layer';
     }""")
 

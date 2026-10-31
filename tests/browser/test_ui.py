@@ -419,4 +419,73 @@ def check_120(t):
 def run_command_parity(self):check_120(self)
 setattr(BrowserRegression,'test_TC_120',run_command_parity)
 
+
+# Image editing discoverability after modularization (v5.9.1).
+def image_edit_fixture(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicImageEditor)')
+    return t.page.evaluate("""async()=>{
+      const canvas=document.createElement('canvas');canvas.width=32;canvas.height=32;
+      canvas.getContext('2d').fillStyle='#ff8844';
+      canvas.getContext('2d').fillRect(0,0,32,32);
+      await SuperMagicAssetStudioAPI.runCommands({commands:[
+        {op:'addAsset',id:'image_edit_fixture',name:'Fixture.png',width:32,height:32,src:canvas.toDataURL('image/png')},
+        {op:'addLayer',id:'image_fixture_layer',assetId:'image_edit_fixture',category:'head'}
+      ]});
+      SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer']);
+      return 'image_fixture_layer';
+    }""")
+
+def check_122(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicImageEditor)')
+    t.assertTrue(t.page.locator('#imageEditorToggle').is_visible())
+    t.assertEqual(t.page.locator('#imageEditorToggle').count(),1)
+    t.page.locator('#properties-tab-canvas').click()
+    t.page.locator('#imageEditorToggle').click()
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'inspector')
+    t.assertEqual(t.page.locator('.sidebar').get_attribute('data-active-workspace'),'layers')
+    t.assertTrue(t.page.locator('#inspectorContent').is_visible())
+    t.assertIn('select',t.page.locator('#inspectorContent').inner_text().lower())
+
+def check_123(t):
+    image_edit_fixture(t)
+    t.page.wait_for_selector('.image-edit-group[data-image-group="color"]')
+    t.assertTrue(t.page.locator('#flipX').is_visible())
+    t.assertTrue(t.page.locator('[data-prop="colorBrightness"]').is_visible())
+    t.assertEqual(t.page.locator('#flipX').count(),1)
+    t.assertEqual(t.page.locator('[data-prop="colorBrightness"]').count(),1)
+    for item in ['image','transform','color','crop','fit']:
+        t.assertEqual(t.page.locator('.image-edit-group[data-image-group="'+item+'"]').count(),1)
+    t.page.locator('.image-edit-group[data-image-group="crop"] summary').click()
+    t.assertTrue(t.page.locator('[data-prop="cropW"]').is_visible())
+    t.page.locator('.image-edit-group[data-image-group="fit"] summary').click()
+    t.assertTrue(t.page.locator('#autoFitLayer').is_visible())
+
+def check_124(t):
+    image_edit_fixture(t)
+    t.page.wait_for_selector('.image-edit-group[data-image-group="transform"]')
+    t.page.locator('#flipX').click()
+    t.assertTrue(t._project()['scenes']['front']['stand']['stand_1'][0]['transform']['flipX'])
+    t.page.locator('[data-prop="colorBrightness"]').fill('135')
+    t.page.locator('[data-prop="colorBrightness"]').press('Tab')
+    t.assertEqual(t._project()['scenes']['front']['stand']['stand_1'][0]['color']['brightness'],135)
+    t.page.locator('#properties-tab-canvas').click()
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers([])")
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer'])")
+    t.page.wait_for_function("document.querySelector('.inspector').dataset.activeWorkspace==='inspector'")
+    t.assertTrue(t.page.locator('#flipY').is_visible())
+
+def check_125(t):
+    t.page.set_viewport_size({'width':760,'height':950})
+    image_edit_fixture(t)
+    t.page.locator('#imageEditorToggle').click()
+    t.assertTrue(t.page.locator('.image-edit-group[data-image-group="color"] summary').is_visible())
+    t.page.locator('[data-prop="colorHue"]').fill('30')
+    t.page.locator('[data-prop="colorHue"]').press('Tab')
+    t.assertEqual(t._project()['scenes']['front']['stand']['stand_1'][0]['color']['hue'],30)
+
+IMAGE_EDIT_CASES={122:check_122,123:check_123,124:check_124,125:check_125}
+for number,verify in IMAGE_EDIT_CASES.items():
+    def run_image_edit(self,fn=verify):fn(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_image_edit)
+
 if __name__=='__main__':unittest.main()

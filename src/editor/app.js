@@ -756,7 +756,7 @@ function createRasterPaintLayer(dataURL,name='Paint stroke',bounds=null){
  const l={id:lId,name,category:'accessory',assetId:id,paintLayer:true,visible:true,locked:false,
    transform:{x:rect.x+rect.w/2,y:rect.y+rect.h/2,scaleX:1,scaleY:1,rotationDeg:0,opacity:1,flipX:false,flipY:false,anchorX:.5,anchorY:.5},
    crop:{...rect}};
- scene().push(l);images.delete(id);loadImg(id);clearSelection();renderLayers();renderInspector();draw();historyButtons();return lId;
+ scene().push(l);images.delete(id);loadImg(id);if(bounds)setSelected(lId);else clearSelection();renderLayers();renderInspector();draw();historyButtons();return lId;
 }
 function decodePaintPNG(src){
  return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Invalid paint image'));img.src=src;});

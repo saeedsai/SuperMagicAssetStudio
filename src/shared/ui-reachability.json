@@ -37,7 +37,8 @@
     "jsonInput": "menuLoadProject",
     "spriteToolsUpload": "spriteToolsChooseFile",
     "bgStandaloneFile": "bgStandaloneChoose",
-    "paintTextureFile": "paintImportTexture"
+    "paintTextureFile": "paintImportTexture",
+    "mergeProjectInput": "menuMergeProject"
   },
   "alternativeControls": {
     "paintTool": "[data-paint-menu]"

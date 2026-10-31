@@ -1,3 +1,26 @@
+# Inspector property visibility hotfix — v5.9.2
+
+**Date:** 2026-10-31  
+**Verified source:** `ec1b8daea0e7b6956d6610a5aeb9b0cb17a5ff2b`  
+**Development CI:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41192667712
+
+| Suite | Result |
+|---|---|
+| Node, CLI, integration, schema and unit tests | **180/180 pass** |
+| Requirement traceability | **131/131 pass** (129 requirements plus 2 uniqueness assertions; part of Node tests) |
+| Chromium browser regression | **60/60 pass** |
+| Required regression gate | **PASS** |
+
+**Root cause:** The right Inspector workspace could be hidden or its section left in the legacy collapsed state even after layer selection. The new Edit image workflow and legacy layer selection did not use a single guaranteed property-panel reveal path.
+
+**Resolution:** Added `SuperMagicStudioUI.showLayerInspector()`; canvas selection, Layers-list selection, multi-selection, browser `selectLayers()`, and the Edit image toolbar action now activate the Inspector workspace and expand its controls. The existing toolbar handler remains owned only by `image-edit-panel.js` to avoid duplication.
+
+**Regression tests TC-126–TC-129:** Select a real PNG layer through the Layers list and edit its scale; select the image directly on canvas; click Edit image after collapsing the Inspector; multi-select layers and verify editable group properties. Existing TC-001–TC-125 remain unchanged and passing.
+
+**Out of scope:** Native Windows PowerShell/device tests and production-art visual golden tests remain unverified. GitHub Pages and Render production status must be checked separately after the release merge.
+
+---
+
 # Image editing discoverability — v5.9.1
 
 **Date:** 2026-10-31  

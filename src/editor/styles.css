@@ -76,3 +76,23 @@
  .editor-toolbar .small-note{max-width:260px}
 }
 @media(prefers-reduced-motion:reduce){.studio-workspace-tab,.studio-properties-trigger{transition:none}}
+
+
+/* v5.9.1 — discoverable per-layer image editing, without duplicate actions. */
+.image-edit-entry{border-color:#a38cdb!important;background:#39305e!important;color:#faf2ff!important;font-weight:700;white-space:nowrap}
+.image-edit-entry:hover,.image-edit-entry:focus-visible{background:#514186!important;box-shadow:0 0 0 2px #bda5ed66}
+.image-editor-modules{display:grid;gap:9px;padding:3px 0}
+.image-edit-group{background:#141f32;border:1px solid #394965;border-radius:10px;overflow:hidden}
+.image-edit-group[open]{border-color:#655c9d}
+.image-edit-group>summary{padding:11px 12px;cursor:pointer;background:#202b42;color:#e8e4ff;font-size:12px;font-weight:750;letter-spacing:.1px}
+.image-edit-group>summary:hover{background:#2a3854}
+.image-edit-group>summary:focus-visible{outline:2px solid #bea9ff;outline-offset:-2px}
+.image-edit-group-body{padding:11px 10px}
+.image-edit-group-body .two{gap:8px}
+.image-edit-group-body .control{min-width:0}
+.image-edit-group-body .control input{max-width:100%}
+.image-edit-group-body .toolrow{display:flex;flex-wrap:wrap;gap:6px}
+.image-edit-group-body .toolrow>.btn{flex:0 1 auto}
+.image-edit-group-body h4{font-size:11px;text-transform:uppercase;color:#cbd5f4;margin:6px 0 10px}
+.image-editor-hint{background:#1b2941;border:1px solid #3b547a;border-radius:9px;padding:12px;line-height:1.5}
+@media(max-width:900px){.image-edit-entry{min-height:36px}.image-edit-group-body{padding:10px}}

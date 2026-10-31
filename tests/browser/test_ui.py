@@ -802,4 +802,82 @@ for number,fn in {131:check_131,132:check_132}.items():
     def run_mobile_and_legacy(self,case=fn):case(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_mobile_and_legacy)
 
+
+# v5.9.4 consolidated menus and icon-based right Paint toolbox.
+def check_133(t):
+    menus=t.page.locator('.menubar > .menu > .menu-btn').all_text_contents()
+    t.assertIn('Edit',menus)
+    t.assertIn('File',menus)
+    t.assertNotIn('Import',menus)
+    t.assertNotIn('Tools',menus)
+    t.assertNotIn('Paint',menus)
+    t._menu('edit')
+    for name in ['menuImportImages','menuImportParts','menuDownloadParts','menuResolveImages',
+                 'menuManualSplit','menuAutoSplit','menuRemoveBackground',
+                 'menuAutoFit','menuAutoResize','menuStandaloneBackground','menuAI']:
+        t.assertTrue(t.page.locator('#'+name).is_visible(),name)
+    t.page.locator('#menuManualSplit').click()
+    t.assertTrue(t.page.locator('#spriteToolsDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#spriteToolsClose').click()
+    t._menu('edit');t.page.locator('#menuStandaloneBackground').click()
+    t.assertTrue(t.page.locator('#bgStandaloneDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#bgStandaloneClose').click()
+    t._menu('edit');t.page.locator('#menuAI').click()
+    t.assertTrue(t.page.locator('#aiDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#closeAIDialog').click()
+
+def check_134(t):
+    t._menu('file')
+    t.assertTrue(t.page.locator('#menuFileImportImage').is_visible())
+    with t.page.expect_file_chooser() as picker:
+        t.page.locator('#menuFileImportImage').click()
+    t.assertEqual(picker.value.element.get_attribute('id'),'imageInput')
+    t._menu('edit')
+    with t.page.expect_file_chooser() as picker2:
+        t.page.locator('#menuImportImages').click()
+    t.assertEqual(picker2.value.element.get_attribute('id'),'imageInput')
+    t.assertEqual(t.page.locator('#imageInput').count(),1)
+    t.assertTrue(t.page.locator('#studio-tab-assets').is_visible())
+
+def check_135(t):
+    t.assertEqual(t.page.locator('.menubar [data-menu="paint"]').count(),0)
+    t._menu('paint')
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'paint')
+    options=t.page.locator('#paintToolboxCommands [data-paint-menu]')
+    t.assertEqual(options.count(),16)
+    all_actions=t.page.locator('#paintToolboxCommands [data-paint-menu],#paintToolboxCommands #paintClearMenu')
+    t.assertEqual(all_actions.count(),17)
+    for action in all_actions.all():
+        t.assertTrue(action.is_visible())
+        t.assertEqual(action.locator('svg.studio-paint-icon[aria-hidden="true"]').count(),1)
+        t.assertGreater(action.locator('svg.studio-paint-icon path,svg.studio-paint-icon rect,svg.studio-paint-icon ellipse,svg.studio-paint-icon circle').count(),0)
+    tools=options.evaluate_all('(els)=>els.map(e=>e.dataset.paintMenu)')
+    for tool in tools:
+        t._menu('paint')
+        element=t.page.locator('#paintToolboxCommands [data-paint-menu="'+tool+'"]')
+        element.click()
+        t.assertEqual(t.page.evaluate('SuperMagicPaintAPI.getTool()'),tool)
+        t.assertEqual(element.get_attribute('aria-pressed'),'true')
+        t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'paint')
+        t.assertTrue(t.page.locator('#paintPropertiesPopover').is_visible())
+        t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    # Context action keeps the existing paint-mask behavior, not a dummy button.
+    t.page.evaluate("""()=>{
+      const p=SuperMagicAssetStudioAPI.getPaintContext();
+      const mask=new Uint8Array(p.width*p.height);
+      mask[42]=1;
+      SuperMagicPaintAPI.setSelectionMask(mask);
+      SuperMagicStudioUI.updatePaintProperties();
+    }""")
+    clear=t.page.locator('#paintClearMenu')
+    t.assertFalse(clear.is_disabled())
+    clear.click()
+    t.assertEqual(t.page.evaluate('SuperMagicPaintAPI.getSelectionCount()'),0)
+    t.assertTrue(t.page.locator('#properties-tab-inspector').is_visible())
+    t.assertTrue(t.page.locator('#properties-tab-canvas').is_visible())
+
+for number,fn in {133:check_133,134:check_134,135:check_135}.items():
+    def run_menu_reorganization(self,check=fn):check(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_menu_reorganization)
+
 if __name__=='__main__':unittest.main()

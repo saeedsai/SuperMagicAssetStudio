@@ -746,15 +746,16 @@ window.SuperMagicAssetStudioAPI={
 
 
 // Paint integration: persist edit strokes as isolated, undoable PNG layers. Existing sources remain immutable.
-function createRasterPaintLayer(dataURL,name='Paint stroke'){
+function createRasterPaintLayer(dataURL,name='Paint stroke',bounds=null){
  if(!/^data:image\/png;base64,/.test(dataURL))throw new Error('Paint data must be a PNG data URL');
  if(dataURL.length>30000000)throw new Error('Paint layer exceeds safe size');
  recordHistory();
  const id=uid('asset'),lId=uid('layer'),w=W(),h=H();
  project.assets[id]={name:name+'.png',fileRef:name+'.png',mime:'image/png',width:w,height:h,src:dataURL};
+ const rect=bounds&&Number.isFinite(bounds.x)&&Number.isFinite(bounds.y)&&Number.isFinite(bounds.w)&&Number.isFinite(bounds.h)&&bounds.w>0&&bounds.h>0&&bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.w<=w&&bounds.y+bounds.h<=h?bounds:{x:0,y:0,w,h};
  const l={id:lId,name,category:'accessory',assetId:id,paintLayer:true,visible:true,locked:false,
-   transform:{x:w/2,y:h/2,scaleX:1,scaleY:1,rotationDeg:0,opacity:1,flipX:false,flipY:false,anchorX:.5,anchorY:.5},
-   crop:{x:0,y:0,w,h}};
+   transform:{x:rect.x+rect.w/2,y:rect.y+rect.h/2,scaleX:1,scaleY:1,rotationDeg:0,opacity:1,flipX:false,flipY:false,anchorX:.5,anchorY:.5},
+   crop:{...rect}};
  scene().push(l);images.delete(id);loadImg(id);clearSelection();renderLayers();renderInspector();draw();historyButtons();return lId;
 }
 function decodePaintPNG(src){

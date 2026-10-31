@@ -74,3 +74,10 @@ TC-130 explores the HTML editor in Chromium across **every left/right workspace,
 ## Menu consolidation and Paint sidebar (TC-133–TC-135)
 
 TC-133 verifies Import and Tools have become one visible **Edit** menu with all original action IDs and exercises image splitting, standalone background removal and AI actions. TC-134 opens File → Import image and Edit → Import PNG/JSON via browser file chooser to confirm they use the same original input and preserve the import workflow. TC-135 verifies Paint no longer occupies a top navigation menu, its right sidebar tab exposes **all 16 paint modes plus Clear selection**, every action has an inline accessible decorative SVG, selecting each mode updates the real Paint API and highlighted button state, and clearing an existing selection works. The previous whole-interface reachability test TC-130 remains mandatory, updating all menu routes to the new locations. Node contracts assert all menu commands, icon path mappings, unique IDs, workspace sections and API control catalog remain intact.
+
+
+## Hierarchical rigging and skeletal animation (TC-136–TC-142)
+
+Node domain tests verify parent-child joint rotations, cycle/duplicate rejection, attachment anchor offsets, non-destructive layer transforms, pose templates, keyframe interpolation and serialized JSON. The command-engine integration test exercises `createRig`, `setPose`, `setMotion`, `samplePose` and `listPosedLayers`. The standalone runtime test verifies that an attached sprite follows a parent joint. Chromium TC-140 opens the actual rig dialog, creates the football skeleton, verifies bone handles, applies the Jump preset and moves a joint. Normal existing UI regression tests must remain green.
+
+**Manual art acceptance still required:** Using actual cutout PNGs for all eight camera views, validate hip/knee/ankle and shoulder/elbow/hand pivot locations, pivot offsets, draw order and joint rotation ranges; play and export idle/run/jump/celebrate at production resolution; inspect frames for gaps, detached limbs, clipping and foot sliding. Physics constraints and 3D view-consistent retargeting are not yet supported.

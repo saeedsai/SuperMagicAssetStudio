@@ -9,7 +9,7 @@ const idSet=new Set(ids);
 
 test('Every interactive DOM control keeps one unique ID',()=>assert.equal(idSet.size,ids.length));
 test('All workspace panels mapped exactly once',()=>{
- for(const [groups,n] of [[SIDE_WORKSPACES,6],[RIGHT_WORKSPACES,6]]){
+ for(const [groups,n] of [[SIDE_WORKSPACES,6],[RIGHT_WORKSPACES,7]]){
   const assigned=groups.flatMap(x=>x.sectionIndexes);
   assert.deepEqual([...assigned].sort((a,b)=>a-b),Array.from({length:n},(_,i)=>i));
   assert.equal(new Set(groups.map(x=>x.id)).size,groups.length);

@@ -11,20 +11,20 @@ export const SIDE_WORKSPACES = Object.freeze([
 export const RIGHT_WORKSPACES = Object.freeze([
  {id:'inspector',label:'Edit image',sectionIndexes:[0,1]},
  {id:'canvas',label:'Canvas',sectionIndexes:[2,3,4]},
- {id:'shortcuts',label:'Shortcuts',sectionIndexes:[5]}
+ {id:'shortcuts',label:'Shortcuts',sectionIndexes:[6]},
+ {id:'paint',label:'Paint',icon:'✎',sectionIndexes:[5]}
 ]);
 
 // Legacy command aliases intentionally remain in DOM for API/event-relay compatibility.
 // Their visible primary controls live in a toolbar, the workspace tab or a single menu.
 export const HIDDEN_ACTION_ALIASES = Object.freeze([
  'newProject','loadProject','saveProject','exportPNG',
- 'menuImportImages','menuImportParts','menuDownloadParts','menuResolveImages',
- 'menuPrevView','menuNextView','menuSpinView','menuZoomFit',
+  'menuPrevView','menuNextView','menuSpinView','menuZoomFit',
  'menuToggleGrid','menuToggleRulers','menuToggleGuides','menuToggleCropHandles',
  'menuAddAnimation','menuDeleteAnimation','menuAddFrame','menuDuplicateFrame',
  'menuDeleteFrame','menuPlayAnimation','menuAppendClip','menuUnlinkFrame',
  'menuUndo','menuRedo','menuImageTools',
- 'paintClearMenu','closeHelpFooter','closeAIDialogFooter','spriteToolsCloseFooter',
+ 'closeHelpFooter','closeAIDialogFooter','spriteToolsCloseFooter',
  'bgStandaloneCloseFooter'
 ]);
 

@@ -1,15 +1,11 @@
 {
   "schemaVersion": 1,
-  "description": "Audit contract: every legacy hidden alias must have a visible equivalent; file input triggers and state-dependent controls are exercised through their real UI states. Standalone background removal must remain distinct from integrated sprite cleanup. The original render relay buttons are inside a hidden compatibility container and map to File > Export menu actions.",
+  "description": "Audit contract: every legacy hidden alias must have a visible equivalent; file input triggers and state-dependent controls are exercised through their real UI states. Standalone background removal must remain distinct from integrated sprite cleanup. The original render relay buttons are inside a hidden compatibility container and map to File > Export menu actions. Import and Tools are consolidated into Edit; the File menu and Edit menu share the canonical image picker. The Paint palette is in the right sidebar with one vector icon per action.",
   "hiddenAliases": {
     "newProject": "menuNewProject",
     "loadProject": "menuLoadProject",
     "saveProject": "menuSaveProject",
     "exportPNG": "menuExportPNG",
-    "menuImportImages": "dropzone",
-    "menuImportParts": "loadPartsSchema",
-    "menuDownloadParts": "downloadPartsSchema",
-    "menuResolveImages": "resolveImagesBtn",
     "menuPrevView": "prevView",
     "menuNextView": "nextView",
     "menuSpinView": "spinView",
@@ -29,7 +25,6 @@
     "menuUndo": "undoBtn",
     "menuRedo": "redoBtn",
     "menuImageTools": "menuManualSplit",
-    "paintClearMenu": "paintClearSelection",
     "closeHelpFooter": "closeHelp",
     "closeAIDialogFooter": "closeAIDialog",
     "spriteToolsCloseFooter": "spriteToolsClose",
@@ -66,5 +61,22 @@
     "exportGIF": "menuExportGIF",
     "exportTurntable": "menuExportTurntable",
     "exportSheet": "menuExportSheet"
-  }
+  },
+  "mainMenu": {
+    "file": "File",
+    "edit": "Edit",
+    "help": "Help"
+  },
+  "rightSidebarWorkspaces": [
+    "inspector",
+    "canvas",
+    "shortcuts",
+    "paint"
+  ],
+  "imageImportRoutes": [
+    "menuFileImportImage",
+    "menuImportImages",
+    "dropzone"
+  ],
+  "paintToolIcons": 17
 }

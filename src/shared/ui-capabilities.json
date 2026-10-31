@@ -55,6 +55,14 @@
       "cli": "browserOnly"
     },
     {
+      "id": "menuFileImportImage",
+      "name": "Import image from File menu",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
       "id": "menuSaveProject",
       "name": "menu Save Project",
       "kind": "action",

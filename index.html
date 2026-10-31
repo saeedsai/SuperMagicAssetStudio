@@ -18,12 +18,31 @@
       </div>
     </div>
     <nav class="menubar" id="menubar" aria-label="Main menu">
-      <div class="menu"><button class="menu-btn" data-menu="file">File</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Project</div><button class="menu-item" id="menuNewProject">New project <small>Ctrl+N</small></button><button class="menu-item" id="menuLoadProject">Load project JSON <small>Ctrl+O</small></button><button class="menu-item" id="menuSaveProject">Save project JSON <small>Ctrl+S</small></button></div><div class="menu-section"><div class="menu-title">Export</div><button class="menu-item" id="menuExportPNG">Export transparent PNG</button><button class="menu-item" id="menuExportGIF">Export animation GIF</button><button class="menu-item" id="menuExportTurntable">Export 360° GIF</button><button class="menu-item" id="menuExportSheet">Export sprite sheet</button></div></div></div>
-      <div class="menu"><button class="menu-btn" data-menu="import">Import</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Images & schemas</div><button class="menu-item" id="menuImportImages">Import PNG / JSON files</button><div class="menu-section"><div class="menu-title">Sprite sheet processing</div><button class="menu-item" id="menuManualSplit">✂ Manual crop & split</button><button class="menu-item" id="menuAutoSplit">✦ Auto-split multiple sprites</button><button class="menu-item" id="menuRemoveBackground">◻ Remove image background</button></div><button class="menu-item" id="menuImportParts">Import parts schema JSON</button><button class="menu-item" id="menuDownloadParts">Download standard parts schema</button><button class="menu-item" id="menuResolveImages">Resolve external images</button></div></div></div>
+      <div class="menu"><button class="menu-btn" data-menu="file">File</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Project</div><button class="menu-item" id="menuNewProject">New project <small>Ctrl+N</small></button><button class="menu-item" id="menuLoadProject">Load project JSON <small>Ctrl+O</small></button><button class="menu-item" id="menuFileImportImage">Import image / PNG…</button><button class="menu-item" id="menuSaveProject">Save project JSON <small>Ctrl+S</small></button></div><div class="menu-section"><div class="menu-title">Export</div><button class="menu-item" id="menuExportPNG">Export transparent PNG</button><button class="menu-item" id="menuExportGIF">Export animation GIF</button><button class="menu-item" id="menuExportTurntable">Export 360° GIF</button><button class="menu-item" id="menuExportSheet">Export sprite sheet</button></div></div></div>
+      <div class="menu"><button class="menu-btn" data-menu="edit">Edit</button><div class="menu-panel">
+        <div class="menu-section"><div class="menu-title">Import images and schemas</div>
+          <button class="menu-item" id="menuImportImages">Import PNG / JSON files</button>
+          <button class="menu-item" id="menuImportParts">Import parts schema JSON</button>
+          <button class="menu-item" id="menuDownloadParts">Download standard parts schema</button>
+          <button class="menu-item" id="menuResolveImages">Resolve external images</button>
+        </div>
+        <div class="menu-section"><div class="menu-title">Sprite and image editing</div>
+          <button class="menu-item" id="menuManualSplit">✂ Manual crop & split</button>
+          <button class="menu-item" id="menuAutoSplit">✦ Auto-split multiple sprites</button>
+          <button class="menu-item" id="menuRemoveBackground">◻ Remove image background</button>
+          <button class="menu-item" id="menuImageTools">Image splitter & background tools</button>
+          <button class="menu-item" id="menuStandaloneBackground">Remove background — standalone</button>
+        </div>
+        <div class="menu-section"><div class="menu-title">Edit and automation</div>
+          <button class="menu-item" id="menuUndo">Undo <small>Ctrl+Z</small></button>
+          <button class="menu-item" id="menuRedo">Redo <small>Ctrl+Y</small></button>
+          <button class="menu-item" id="menuAutoFit">Auto-fit current layer</button>
+          <button class="menu-item" id="menuAutoResize">Auto-resize across views / animations</button>
+          <button class="menu-item" id="menuAI">AI command panel</button>
+        </div>
+      </div></div>
       <div class="menu"><button class="menu-btn" data-menu="view">View</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Camera & canvas</div><button class="menu-item" id="menuPrevView">Previous view <small>←</small></button><button class="menu-item" id="menuNextView">Next view <small>→</small></button><button class="menu-item" id="menuSpinView">Play / stop 360°</button><button class="menu-item" id="menuZoomFit">Fit canvas</button></div><div class="menu-section"><div class="menu-title">Overlays</div><button class="menu-item" id="menuToggleGrid">Toggle grid</button><button class="menu-item" id="menuToggleRulers">Toggle rulers</button><button class="menu-item" id="menuToggleGuides">Toggle center guides</button><button class="menu-item" id="menuToggleCropHandles">Toggle crop handles</button></div></div></div>
       <div class="menu"><button class="menu-btn" data-menu="animation">Animation</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Timeline</div><button class="menu-item" id="menuAddAnimation">Add animation</button><button class="menu-item" id="menuDeleteAnimation">Delete animation</button><button class="menu-item" id="menuAddFrame">Add frame</button><button class="menu-item" id="menuDuplicateFrame">Duplicate frame</button><button class="menu-item" id="menuDeleteFrame">Delete frame</button><button class="menu-item" id="menuPlayAnimation">Play / pause</button></div><div class="menu-section"><div class="menu-title">Reuse</div><button class="menu-item" id="menuAppendClip">Append linked clip</button><button class="menu-item" id="menuUnlinkFrame">Make current frame editable</button></div></div></div>
-      <div class="menu"><button class="menu-btn" data-menu="tools">Tools</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Editor</div><button class="menu-item" id="menuUndo">Undo <small>Ctrl+Z</small></button><button class="menu-item" id="menuRedo">Redo <small>Ctrl+Y</small></button><button class="menu-item" id="menuAutoFit">Auto-fit current layer</button><button class="menu-item" id="menuImageTools">Image splitter & background tools</button><button class="menu-item" id="menuStandaloneBackground">Remove background — standalone</button><button class="menu-item" id="menuAutoResize">Auto-resize across views / animations</button><button class="menu-item" id="menuAI">AI command panel</button></div></div></div>
-      <div class="menu"><button class="menu-btn" data-menu="paint">Paint</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Canvas selection</div><button class="menu-item" data-paint-menu="select-rect">Rectangle selection</button><button class="menu-item" data-paint-menu="select-freeform">Freeform selection</button><button class="menu-item" data-paint-menu="select-wand">Magic wand selection</button><button class="menu-item" id="paintClearMenu">Clear selection</button></div><div class="menu-section"><div class="menu-title">Painting</div><button class="menu-item" data-paint-menu="brush">Brush</button><button class="menu-item" data-paint-menu="eraser">Eraser</button><button class="menu-item" data-paint-menu="clone">Clone stamp</button><button class="menu-item" data-paint-menu="fill">Fill / texture / gradient</button><button class="menu-item" data-paint-menu="picker">Color picker</button><button class="menu-item" data-paint-menu="text">Text</button></div><div class="menu-section"><div class="menu-title">Shapes</div><button class="menu-item" data-paint-menu="shape-rect">Rectangle</button><button class="menu-item" data-paint-menu="shape-poly">Polygon</button><button class="menu-item" data-paint-menu="shape-oval">Oval</button><button class="menu-item" data-paint-menu="shape-circle">Circle</button><button class="menu-item" data-paint-menu="shape-line">Line</button><button class="menu-item" data-paint-menu="shape-curve">Curve</button></div></div></div>
       <div class="menu"><button class="menu-btn" data-menu="help">Help</button><div class="menu-panel"><div class="menu-section"><div class="menu-title">Documentation</div><button class="menu-item" id="menuHelp">Open quick help</button><button class="menu-item" id="menuAPIDocs">Open API docs</button><button class="menu-item" id="menuCLIHelp">PowerShell / Agent CLI</button><button class="menu-item" id="menuJSONDocs">Open JSON format docs</button><button class="menu-item" id="menuAssetGuide">Asset creation guide</button><button class="menu-item" id="menuSpriteDocs">Sprite splitting API</button></div></div></div>
     </nav>
   </header>
@@ -68,6 +87,34 @@
     <aside class="inspector">
       <section class="section"><h3>Inspector</h3><div id="inspectorContent"><div class="empty">Select a layer or upload a PNG to edit its placement.</div></div></section>
       <section class="section"><h3>Show / hide part groups</h3><div id="quickVisibility" class="quickvis"></div><p>Group toggles affect all matching layers in the current view and animation frame.</p></section><section class="section"><h3>Reference / onion skin (preview only)</h3><div class="two"><div class="control"><label>Reference view</label><select id="referenceView"></select></div><div class="control"><label>Reference animation</label><select id="referenceAnimation"></select></div><div class="control"><label>Reference frame</label><select id="referenceFrame"></select></div><div class="control"><label>Opacity (%)</label><input id="referenceOpacity" type="number" min="5" max="90" value="30"></div></div><div class="toolrow" style="margin-top:8px"><button id="setReference" class="btn sm">Set reference</button><button id="clearReference" class="btn sm">Clear reference</button></div><p>Reference only displays in the editor. Exports remain transparent.</p></section><section class="section"><h3>Canvas guides / snap</h3><div class="formline"><label>Grid spacing (px)</label><input id="gridSize" type="number" min="8" max="256" step="4" value="32"></div><label class="check"><input id="snapGrid" type="checkbox"> Snap dragged parts to grid</label><p>Grid and X/Y coordinate rulers are preview guides, not exported artwork.</p></section><section class="section"><h3>Canvas settings</h3><div class="two"><div class="control"><label>Width (px)</label><input type="number" id="canvasWidth" min="128" max="2048" value="768" /></div><div class="control"><label>Height (px)</label><input type="number" id="canvasHeight" min="128" max="2048" value="768" /></div></div><p>World coordinates are saved as pixels. Use the same reference size in your game.</p></section>
+      <section class="section" id="paintToolbox"><h3>Paint tools</h3>
+        <p class="studio-paint-help">Choose a tool here. Use <b>Tool options</b> above the canvas to adjust its settings.</p>
+        <div id="paintToolboxCommands" class="studio-paint-groups">
+          <div class="menu-section"><div class="menu-title">Select</div>
+            <button class="menu-item" data-paint-menu="select">Move / select layers</button>
+            <button class="menu-item" data-paint-menu="select-rect">Rectangle selection</button>
+            <button class="menu-item" data-paint-menu="select-freeform">Freeform selection</button>
+            <button class="menu-item" data-paint-menu="select-wand">Magic wand selection</button>
+            <button class="menu-item" id="paintClearMenu">Clear selection</button>
+          </div>
+          <div class="menu-section"><div class="menu-title">Painting</div>
+            <button class="menu-item" data-paint-menu="brush">Brush</button>
+            <button class="menu-item" data-paint-menu="eraser">Eraser</button>
+            <button class="menu-item" data-paint-menu="clone">Clone stamp</button>
+            <button class="menu-item" data-paint-menu="fill">Fill / texture / gradient</button>
+            <button class="menu-item" data-paint-menu="picker">Color picker</button>
+            <button class="menu-item" data-paint-menu="text">Text</button>
+          </div>
+          <div class="menu-section"><div class="menu-title">Shapes</div>
+            <button class="menu-item" data-paint-menu="shape-rect">Rectangle</button>
+            <button class="menu-item" data-paint-menu="shape-poly">Polygon</button>
+            <button class="menu-item" data-paint-menu="shape-oval">Oval</button>
+            <button class="menu-item" data-paint-menu="shape-circle">Circle</button>
+            <button class="menu-item" data-paint-menu="shape-line">Line</button>
+            <button class="menu-item" data-paint-menu="shape-curve">Curve</button>
+          </div>
+        </div>
+      </section>
       <section class="section"><h3>Keyboard shortcuts</h3><div class="help small-note"><span class="kbd">Del</span> Delete layer<br><span class="kbd">← ↑ ↓ →</span> Nudge 1 px (<span class="kbd">Shift</span> 10 px)<br><span class="kbd">Ctrl/⌘ S</span> Save JSON<br><span class="kbd">Ctrl/⌘ Z</span> Undo · <span class="kbd">Ctrl/⌘ Y</span> Redo<br><span class="kbd">Space</span> Play or pause<br><span class="kbd">Esc</span> Deselect</div></section>
     </aside>
   </div>

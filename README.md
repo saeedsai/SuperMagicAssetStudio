@@ -57,3 +57,10 @@ This is a UI and interaction refactor, **not** a change to the saved project sch
 ## Complete browser and CLI control coverage (v5.9)
 
 The [shared capability inventory](src/shared/ui-capabilities.json) records every stable HTML editor control, its property type, and its CLI support classification. The [browser API](docs/API.md) supports catalog, get/set/control invoke, paint settings, texture import, scripted mask/brush/fill/text/shape operations. The [CLI](docs/CLI_API.md) supports --list-controls, listCapabilities, getControlValue, setControlValue, invokeControl and headless paint. Values are interoperable through project.editor.uiOptions. Browser-only interactions (file pickers, native dialogs and playback) are labeled rather than misrepresented as headless editing. Unit and Chromium tests cover catalog completeness, persisted settings and raster workflows.
+
+
+### Where to edit an existing image (v5.9.1)
+
+Select an image layer on the canvas or in **Layers**, then use the prominent **Edit image** action beside the canvas toolbar, or open the **Edit image** tab on the right. The editor automatically returns to the image editing workspace when a new layer is selected. The right-hand controls are organized as **Image & layer** (replace), **Transform & mirror** (Flip X/Y, position, scale, rotation, opacity), **Color & tint** (brightness, contrast, saturation, hue, sepia, RGB channels, tint and presets), **Source crop** (original pixel crop), and **Auto-fit & defaults** (automatic fit, reset, saved placements). Crop and auto-fit modules are expandable. All original editing handlers and DOM IDs remain intact.
+
+The **Paint** menu and **Tool options** popover control painting new pixels, brush texture, fill, wand and eraser; they do not replace layer color and mirror settings in Edit image. To select an image while a painting tool is active, click **Edit image**; it returns to layer selection first.

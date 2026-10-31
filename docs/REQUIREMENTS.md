@@ -145,6 +145,11 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-124 | UI | Mirror and color edits persist and selection returns to image inspector | TC-124 | browser |
 | REQ-125 | UI | Responsive image editing controls stay accessible on narrow screens | TC-125 | browser |
 
+| REQ-126 | UI | Clicking a layer in the Layers workspace reopens previously collapsed Inspector properties | TC-126 | browser |
+| REQ-127 | UI | Selecting an image directly on canvas automatically displays its Inspector properties | TC-127 | browser |
+| REQ-128 | UI | Edit image action reopens previously collapsed Inspector without duplicating editing controls | TC-128 | browser |
+| REQ-129 | UI | Multi-layer selection reveals editable group properties in the Inspector | TC-129 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

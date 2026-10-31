@@ -1318,5 +1318,35 @@
       "path": "tests/browser/test_ui.py",
       "contains": "check_132"
     }
+  },
+  {
+    "id": "REQ-133",
+    "testId": "TC-133",
+    "requirement": "Top Import and Tools menus are merged into a fully functional Edit menu without deleting former actions",
+    "verification": "browser",
+    "evidence": {
+      "path": "index.html",
+      "contains": "data-menu=\"edit\""
+    }
+  },
+  {
+    "id": "REQ-134",
+    "testId": "TC-134",
+    "requirement": "File and Edit both visibly offer image import through the same existing PNG/JSON file picker",
+    "verification": "browser",
+    "evidence": {
+      "path": "index.html",
+      "contains": "menuFileImportImage"
+    }
+  },
+  {
+    "id": "REQ-135",
+    "testId": "TC-135",
+    "requirement": "Paint options are moved from the top navigation to a dedicated right workspace with a visible SVG icon and working tool selection for each action",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/paint-tool-icons.mjs",
+      "contains": "decoratePaintTools"
+    }
   }
 ]

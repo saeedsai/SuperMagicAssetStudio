@@ -29,18 +29,17 @@ function group(title,content,{open=true,id}={}){
  const summary=document.createElement('summary');
  summary.textContent=title;details.append(summary);
  const body=document.createElement('div');body.className='image-edit-group-body';
- for(const node of content){if(node.classList?.contains('separator'))continue;body.append(node);}
+ for(const node of content){if(node.classList?.contains('separator')||node.tagName==='H4')continue;body.append(node);}
  details.append(body);return details;
 }
 function partitionImageControls(){
  if(root.querySelector(':scope > .image-editor-modules'))return;
- const flip=root.querySelector('#flipX'),color=root.querySelector('h4'),crop=[...root.querySelectorAll('h4')].find(x=>/Source crop/.test(x.textContent)),fit=root.querySelector('#openAutoResize');
- if(!flip||!color||!crop||!fit)return;
- const children=[...root.children],indexes={
-  transform:children.indexOf(flip.closest('.toolrow')?.previousElementSibling),
-  color:children.indexOf(color),
-  crop:children.indexOf(crop),
-  fit:children.indexOf(fit)
+ const children=[...root.children];
+ const indexes={
+  transform:children.findIndex(node=>node.querySelector?.('[data-prop="x"]')),
+  color:children.findIndex(node=>node.tagName==='H4'&&/Color adjustments/.test(node.textContent)),
+  crop:children.findIndex(node=>node.tagName==='H4'&&/Source crop/.test(node.textContent)),
+  fit:children.findIndex(node=>node.id==='openAutoResize')
  };
  if(indexes.transform<1||indexes.color<=indexes.transform||indexes.crop<=indexes.color||indexes.fit<=indexes.crop)return;
  const modules=document.createElement('div');modules.className='image-editor-modules';
@@ -69,7 +68,7 @@ function synchronize(){
   if(ids.length){ui()?.activateWorkspace?.('inspector','right');entry.setAttribute('aria-expanded','true');}
   else entry.setAttribute('aria-expanded','false');
  }
- if(ids.length===1)partitionImageControls();
+ if(root.querySelector('#flipX'))partitionImageControls();
  else setHint();
 }
 const observer=new MutationObserver(synchronize);

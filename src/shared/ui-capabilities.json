@@ -1990,6 +1990,22 @@
       "section": "menu",
       "browser": true,
       "cli": "browserOnly"
+    },
+    {
+      "id": "paintCopySelection",
+      "name": "Copy selected pixels into editable layer",
+      "kind": "action",
+      "section": "paint",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "paintCutSelection",
+      "name": "Cut selected pixels into editable layer",
+      "kind": "action",
+      "section": "paint",
+      "browser": true,
+      "cli": "browserOnly"
     }
   ],
   "dynamicProperties": [

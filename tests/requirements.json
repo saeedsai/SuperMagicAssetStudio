@@ -1376,7 +1376,7 @@
     "verification": "integration",
     "evidence": {
       "path": "tests/unit/skeleton-engine.test.mjs",
-      "contains": "roundtrip"
+      "contains": "JSON save/load"
     }
   },
   {

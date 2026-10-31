@@ -2,6 +2,7 @@ import {
  SIDE_WORKSPACES, RIGHT_WORKSPACES, HIDDEN_ACTION_ALIASES,
  PAINT_PROPERTY_GROUPS, PAINT_TOOL_LABELS
 } from './workspace-config.mjs';
+import {decoratePaintTools} from './paint-tool-icons.mjs';
 
 const get=id=>document.getElementById(id);
 const make=(tag,className,text)=>{
@@ -64,6 +65,9 @@ function buildWorkspaces(root,definitions,initial,groupName){
 }
 const left=buildWorkspaces(sidebar,SIDE_WORKSPACES,'project','Studio');
 const right=buildWorkspaces(inspector,RIGHT_WORKSPACES,'inspector','Properties');
+const paintToolbox=get('paintToolboxCommands');
+if(!paintToolbox)throw Error('Right-sidebar Paint toolbox missing');
+decoratePaintTools(paintToolbox);
 // Layer properties must stay discoverable even if a user previously collapsed
 // the Inspector section or was looking at the Canvas/Shortcuts workspace.
 const layerInspectorSection=get('inspectorContent').closest('.section');
@@ -163,6 +167,10 @@ function context(){
 }
 function paintContextUpdate(){
  const active=context(),applicable=new Set(PAINT_PROPERTY_GROUPS[active]||[]);
+ for(const button of paintToolbox.querySelectorAll('[data-paint-menu]')){
+  button.setAttribute('aria-pressed',String(button.dataset.paintMenu===active));
+ }
+ get('paintClearMenu').disabled=!(window.SuperMagicPaintAPI?.getSelectionCount?.()>0);
  const mode=get('paintFillMode').value;
  if(active==='fill'&&mode!=='gradient')applicable.delete('paintGradientEnd');
  if(active==='fill'&&mode!=='texture')applicable.delete('paintTexture');

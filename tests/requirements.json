@@ -1348,5 +1348,75 @@
       "path": "src/editor/ui/paint-tool-icons.mjs",
       "contains": "decoratePaintTools"
     }
+  },
+  {
+    "id": "REQ-136",
+    "testId": "TC-136",
+    "requirement": "Rig graph supports unique hierarchical joints and rejects cycles",
+    "verification": "unit",
+    "evidence": {
+      "path": "src/shared/skeleton.mjs",
+      "contains": "validateRig"
+    }
+  },
+  {
+    "id": "REQ-137",
+    "testId": "TC-137",
+    "requirement": "Part-to-joint attachment with editable pivot offset preserves rest pose",
+    "verification": "unit",
+    "evidence": {
+      "path": "src/shared/skeleton.mjs",
+      "contains": "applyPoseToLayers"
+    }
+  },
+  {
+    "id": "REQ-138",
+    "testId": "TC-138",
+    "requirement": "Independent per-view skeleton and per-frame non-destructive pose JSON",
+    "verification": "integration",
+    "evidence": {
+      "path": "tests/unit/skeleton-engine.test.mjs",
+      "contains": "roundtrip"
+    }
+  },
+  {
+    "id": "REQ-139",
+    "testId": "TC-139",
+    "requirement": "Motion keyframes interpolate joint position and rotation",
+    "verification": "unit",
+    "evidence": {
+      "path": "src/shared/skeleton.mjs",
+      "contains": "sampleMotion"
+    }
+  },
+  {
+    "id": "REQ-140",
+    "testId": "TC-140",
+    "requirement": "Skeleton editor offers joint drag, attachment and pose controls",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/rig-panel.mjs",
+      "contains": "rigPreview"
+    }
+  },
+  {
+    "id": "REQ-141",
+    "testId": "TC-141",
+    "requirement": "Headless and game runtime export/playback apply skeletal poses",
+    "verification": "integration",
+    "evidence": {
+      "path": "src/cli/agent-raster.mjs",
+      "contains": "applyPoseToLayers"
+    }
+  },
+  {
+    "id": "REQ-142",
+    "testId": "TC-142",
+    "requirement": "Football running jumping celebration reusable pose presets",
+    "verification": "unit",
+    "evidence": {
+      "path": "src/shared/skeleton.mjs",
+      "contains": "FOOTBALL_POSES"
+    }
   }
 ]

@@ -880,4 +880,25 @@ for number,fn in {133:check_133,134:check_134,135:check_135}.items():
     def run_menu_reorganization(self,check=fn):check(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_menu_reorganization)
 
+
+def check_140(t):
+    t.page.wait_for_function('Boolean(window.SuperMagicSkeleton && document.querySelector("#openRigEditor"))')
+    t.page.evaluate('document.querySelector("#openRigEditor").click()')
+    t.assertTrue(t.page.locator('#rigEditorDialog').evaluate('(e)=>e.open'))
+    t.page.locator('#rigPreset').click()
+    t.page.wait_for_function('Boolean(SuperMagicAssetStudioAPI.getProject().rigs?.front?.joints?.length)')
+    t.assertGreater(t.page.locator('#rigPreview circle').count(),8)
+    t.page.locator('#rigPresetPose').select_option('jump')
+    t.page.locator('#rigApplyPreset').click()
+    t.page.wait_for_function('SuperMagicAssetStudioAPI.getProject().poses?.front?.stand?.stand_1?.root?.y === -45')
+    t.page.locator('#rigJoint').select_option('kneeLeft')
+    t.page.locator('#rigX').fill('340')
+    t.page.locator('#rigSaveJoint').click()
+    t.page.wait_for_function('SuperMagicAssetStudioAPI.getProject().rigs.front.joints.find(j=>j.id==="kneeLeft").position.x===340')
+    t.assertEqual(t.errors,[])
+    t.page.locator('#rigDone').click()
+
+def run_rig_editor(self):check_140(self)
+setattr(BrowserRegression,'test_TC_140',run_rig_editor)
+
 if __name__=='__main__':unittest.main()

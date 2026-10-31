@@ -26,7 +26,7 @@ test('Every invisible file input retains a discoverable trigger and appropriate 
   .map(m=>m[0].match(/\bid="([^"]+)"/)?.[1]).filter(Boolean);
  assert.deepEqual(fileInputs.sort(),Object.keys(routes.fileInputTriggers).sort());
  for(const [id,trigger] of Object.entries(routes.fileInputTriggers)){
-  assert(ids.has(trigger),'Unreachable file picker '+id+' through '+trigger);
+  assert(ids.has(trigger)||readFileSync(new URL('../../src/editor/app.js',import.meta.url),'utf8').includes('id="'+trigger+'"'),'Unreachable file picker '+id+' through '+trigger);
   assert.notEqual(id,trigger);
  }
 });

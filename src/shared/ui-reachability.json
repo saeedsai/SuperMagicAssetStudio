@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "description": "Audit contract: every legacy hidden alias must have a visible equivalent; file input triggers and state-dependent controls are exercised through their real UI states. Standalone background removal must remain distinct from integrated sprite cleanup.",
+  "hiddenAliases": {
+    "newProject": "menuNewProject",
+    "loadProject": "menuLoadProject",
+    "saveProject": "menuSaveProject",
+    "exportPNG": "menuExportPNG",
+    "menuImportImages": "dropzone",
+    "menuImportParts": "loadPartsSchema",
+    "menuDownloadParts": "downloadPartsSchema",
+    "menuResolveImages": "resolveImagesBtn",
+    "menuPrevView": "prevView",
+    "menuNextView": "nextView",
+    "menuSpinView": "spinView",
+    "menuZoomFit": "zoomFit",
+    "menuToggleGrid": "gridToggle",
+    "menuToggleRulers": "rulerToggle",
+    "menuToggleGuides": "toggleGrid",
+    "menuToggleCropHandles": "cropTool",
+    "menuAddAnimation": "addAnimation",
+    "menuDeleteAnimation": "deleteAnimation",
+    "menuAddFrame": "addFrame",
+    "menuDuplicateFrame": "duplicateFrame",
+    "menuDeleteFrame": "deleteFrame",
+    "menuPlayAnimation": "playBtn",
+    "menuAppendClip": "appendClip",
+    "menuUnlinkFrame": "unlinkFrame",
+    "menuUndo": "undoBtn",
+    "menuRedo": "redoBtn",
+    "menuImageTools": "menuManualSplit",
+    "paintClearMenu": "paintClearSelection",
+    "closeHelpFooter": "closeHelp",
+    "closeAIDialogFooter": "closeAIDialog",
+    "spriteToolsCloseFooter": "spriteToolsClose",
+    "bgStandaloneCloseFooter": "bgStandaloneClose"
+  },
+  "fileInputTriggers": {
+    "partsInput": "loadPartsSchema",
+    "imageInput": "dropzone",
+    "replaceImageInput": "replaceImage",
+    "jsonInput": "menuLoadProject",
+    "spriteToolsUpload": "spriteToolsChooseFile",
+    "bgStandaloneFile": "bgStandaloneChoose",
+    "paintTextureFile": "paintImportTexture"
+  },
+  "alternativeControls": {
+    "paintTool": "[data-paint-menu]"
+  },
+  "requiredDialogs": [
+    "helpDialog",
+    "aiDialog",
+    "spriteToolsDialog",
+    "bgStandaloneDialog",
+    "autoResizeDialog",
+    "cropDialog"
+  ],
+  "requiredContextGroups": [
+    "image",
+    "transform",
+    "color",
+    "crop",
+    "fit"
+  ]
+}

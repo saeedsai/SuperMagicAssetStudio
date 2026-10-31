@@ -13,7 +13,7 @@ function imageSelection(){return api()?.getSelectedLayerIds?.()||[];}
 function activateImageEditor({showLayersIfEmpty=false}={}){
  ui()?.closePaintProperties?.();
  if(window.SuperMagicPaintAPI?.getTool?.()!=='select')window.SuperMagicPaintAPI?.setTool('select');
- ui()?.activateWorkspace?.('inspector','right');
+ ui()?.showLayerInspector?.({focus:false})||ui()?.activateWorkspace?.('inspector','right');
  if(showLayersIfEmpty&&!imageSelection().length)ui()?.activateWorkspace?.('layers','left');
  const body=document.querySelector('.inspector .studio-workspace-body');
  if(body)body.scrollTop=0;
@@ -65,7 +65,7 @@ function synchronize(){
  const ids=imageSelection(),key=ids.join('\u0000');
  if(key!==previousSelection){
   previousSelection=key;
-  if(ids.length){ui()?.activateWorkspace?.('inspector','right');entry.setAttribute('aria-expanded','true');}
+  if(ids.length){ui()?.showLayerInspector?.()||ui()?.activateWorkspace?.('inspector','right');entry.setAttribute('aria-expanded','true');}
   else entry.setAttribute('aria-expanded','false');
  }
  if(root.querySelector('#flipX'))partitionImageControls();

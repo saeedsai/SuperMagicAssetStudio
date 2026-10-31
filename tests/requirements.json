@@ -1248,5 +1248,45 @@
       "path": "src/editor/styles.css",
       "contains": "image-edit-entry"
     }
+  },
+  {
+    "id": "REQ-126",
+    "testId": "TC-126",
+    "requirement": "Clicking a layer in the Layers workspace reopens previously collapsed Inspector properties",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "showLayerInspector"
+    }
+  },
+  {
+    "id": "REQ-127",
+    "testId": "TC-127",
+    "requirement": "Selecting an image directly on canvas automatically displays its Inspector properties",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "showLayerInspector"
+    }
+  },
+  {
+    "id": "REQ-128",
+    "testId": "TC-128",
+    "requirement": "Edit image action reopens previously collapsed Inspector without duplicating editing controls",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/image-edit-panel.js",
+      "contains": "showLayerInspector"
+    }
+  },
+  {
+    "id": "REQ-129",
+    "testId": "TC-129",
+    "requirement": "Multi-layer selection reveals editable group properties in the Inspector",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "selectedLayerIds.size>1"
+    }
   }
 ]

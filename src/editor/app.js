@@ -101,7 +101,7 @@ function scene(view=currentView,animation=currentAnimation,frameId=currentFrame)
 function asset(layer){return layer&&project.assets[layer.assetId];}
 function sel(){return scene().find(l=>l.id===selectedLayer)||null;}
 function selectedLayers(){return scene().filter(l=>selectedLayerIds.has(l.id));}
-function setSelected(id,options={}){if(options.toggle){if(selectedLayerIds.has(id))selectedLayerIds.delete(id);else selectedLayerIds.add(id);}else if(options.add){selectedLayerIds.add(id);}else{selectedLayerIds=new Set(id?[id]:[]);}selectedLayer=selectedLayerIds.has(id)?id:(selectedLayerIds.size?[...selectedLayerIds].at(-1):null);renderLayers();renderInspector();draw();}
+function setSelected(id,options={}){if(options.toggle){if(selectedLayerIds.has(id))selectedLayerIds.delete(id);else selectedLayerIds.add(id);}else if(options.add){selectedLayerIds.add(id);}else{selectedLayerIds=new Set(id?[id]:[]);}selectedLayer=selectedLayerIds.has(id)?id:(selectedLayerIds.size?[...selectedLayerIds].at(-1):null);renderLayers();renderInspector();if(selectedLayerIds.size)window.SuperMagicStudioUI?.showLayerInspector();draw();}
 function clearSelection(){selectedLayer=null;selectedLayerIds.clear();}
 function selectionBounds(layers=selectedLayers()){const pts=layers.flatMap(l=>layerCorners(l));if(!pts.length)return null;const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);const x=Math.min(...xs),y=Math.min(...ys),x2=Math.max(...xs),y2=Math.max(...ys);return {x,y,w:x2-x,h:y2-y,cx:(x+x2)/2,cy:(y+y2)/2};}
 function groupHandles(b){return [{x:b.x,y:b.y},{x:b.x+b.w,y:b.y},{x:b.x+b.w,y:b.y+b.h},{x:b.x,y:b.y+b.h}];}
@@ -673,7 +673,7 @@ window.SuperMagicAssetStudioAPI={
   setFrame:(id)=>{setFrame(id);return currentFrame;},
   autoResizeMatching:(options={})=>applyAutoResize(options),
   getSelectedLayerIds:()=>[...selectedLayerIds],
-  selectLayers:(ids)=>{const valid=ids.filter(id=>scene().some(l=>l.id===id));selectedLayerIds=new Set(valid);selectedLayer=valid.at(-1)||null;renderLayers();renderInspector();draw();return valid;},
+  selectLayers:(ids)=>{const valid=ids.filter(id=>scene().some(l=>l.id===id));selectedLayerIds=new Set(valid);selectedLayer=valid.at(-1)||null;renderLayers();renderInspector();if(valid.length)window.SuperMagicStudioUI?.showLayerInspector();draw();return valid;},
   runCommands: async (payload)=>await runStructuredCommands(payload),
   saveJSON:()=>saveJSON()
 };

@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "joints": [
+    {
+      "id": "root",
+      "parent": null,
+      "position": {
+        "x": 384,
+        "y": 470
+      }
+    },
+    {
+      "id": "spine",
+      "parent": "root",
+      "position": {
+        "x": 384,
+        "y": 335
+      }
+    },
+    {
+      "id": "neck",
+      "parent": "spine",
+      "position": {
+        "x": 384,
+        "y": 230
+      }
+    },
+    {
+      "id": "head",
+      "parent": "neck",
+      "position": {
+        "x": 384,
+        "y": 175
+      }
+    },
+    {
+      "id": "shoulderLeft",
+      "parent": "spine",
+      "position": {
+        "x": 325,
+        "y": 275
+      }
+    },
+    {
+      "id": "elbowLeft",
+      "parent": "shoulderLeft",
+      "position": {
+        "x": 290,
+        "y": 345
+      }
+    },
+    {
+      "id": "wristLeft",
+      "parent": "elbowLeft",
+      "position": {
+        "x": 270,
+        "y": 410
+      }
+    },
+    {
+      "id": "shoulderRight",
+      "parent": "spine",
+      "position": {
+        "x": 443,
+        "y": 275
+      }
+    },
+    {
+      "id": "elbowRight",
+      "parent": "shoulderRight",
+      "position": {
+        "x": 478,
+        "y": 345
+      }
+    },
+    {
+      "id": "wristRight",
+      "parent": "elbowRight",
+      "position": {
+        "x": 498,
+        "y": 410
+      }
+    },
+    {
+      "id": "hipLeft",
+      "parent": "root",
+      "position": {
+        "x": 352,
+        "y": 480
+      }
+    },
+    {
+      "id": "kneeLeft",
+      "parent": "hipLeft",
+      "position": {
+        "x": 342,
+        "y": 585
+      }
+    },
+    {
+      "id": "ankleLeft",
+      "parent": "kneeLeft",
+      "position": {
+        "x": 335,
+        "y": 692
+      }
+    },
+    {
+      "id": "hipRight",
+      "parent": "root",
+      "position": {
+        "x": 416,
+        "y": 480
+      }
+    },
+    {
+      "id": "kneeRight",
+      "parent": "hipRight",
+      "position": {
+        "x": 426,
+        "y": 585
+      }
+    },
+    {
+      "id": "ankleRight",
+      "parent": "kneeRight",
+      "position": {
+        "x": 433,
+        "y": 692
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "category": "torso",
+      "joint": "spine",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "shirt",
+      "joint": "spine",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "head",
+      "joint": "head",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "hairFront",
+      "joint": "head",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "hairBack",
+      "joint": "head",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "pelvis",
+      "joint": "root",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "shorts",
+      "joint": "root",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "upperArmLeft",
+      "joint": "shoulderLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "forearmLeft",
+      "joint": "elbowLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "handLeft",
+      "joint": "wristLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "upperArmRight",
+      "joint": "shoulderRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "forearmRight",
+      "joint": "elbowRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "handRight",
+      "joint": "wristRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "upperLegLeft",
+      "joint": "hipLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "lowerLegLeft",
+      "joint": "kneeLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "bootLeft",
+      "joint": "ankleLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "sockLeft",
+      "joint": "ankleLeft",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "upperLegRight",
+      "joint": "hipRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "lowerLegRight",
+      "joint": "kneeRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "bootRight",
+      "joint": "ankleRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "category": "sockRight",
+      "joint": "ankleRight",
+      "anchor": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}

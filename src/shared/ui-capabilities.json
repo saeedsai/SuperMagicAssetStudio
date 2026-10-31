@@ -1966,6 +1966,30 @@
       "section": "paint-and-image",
       "browser": true,
       "cli": "browserOnly"
+    },
+    {
+      "id": "menuSavePackage",
+      "name": "Save ZIP project package",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "menuMergeProject",
+      "name": "Import and merge project JSON or ZIP",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
+    },
+    {
+      "id": "mergeProjectInput",
+      "name": "Select project JSON or ZIP to import and merge",
+      "kind": "action",
+      "section": "menu",
+      "browser": true,
+      "cli": "browserOnly"
     }
   ],
   "dynamicProperties": [

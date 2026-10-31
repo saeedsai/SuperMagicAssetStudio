@@ -1208,5 +1208,45 @@
       "path": "src/shared/ui-capabilities.json",
       "contains": "dynamicProperties"
     }
+  },
+  {
+    "id": "REQ-122",
+    "testId": "TC-122",
+    "requirement": "An obvious Edit image button navigates to the Inspector and shows Layers when no image is selected",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/image-edit-panel.js",
+      "contains": "activateImageEditor"
+    }
+  },
+  {
+    "id": "REQ-123",
+    "testId": "TC-123",
+    "requirement": "Selected image Inspector organizes and preserves unique original mirror, color, crop and auto-fit controls",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/image-edit-panel.js",
+      "contains": "partitionImageControls"
+    }
+  },
+  {
+    "id": "REQ-124",
+    "testId": "TC-124",
+    "requirement": "Flip, brightness and automatic return to Inspector work with layer selection without hidden controls",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/ui/image-edit-panel.js",
+      "contains": "synchronize"
+    }
+  },
+  {
+    "id": "REQ-125",
+    "testId": "TC-125",
+    "requirement": "Image editing color and mirror options remain reachable on narrow screens",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/styles.css",
+      "contains": "image-edit-entry"
+    }
   }
 ]

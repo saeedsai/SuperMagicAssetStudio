@@ -1108,6 +1108,15 @@
       "operation": "cloneLayer"
     },
     {
+      "id": "imageEditorToggle",
+      "name": "Edit selected image",
+      "kind": "action",
+      "section": "layer",
+      "browser": true,
+      "cli": "browserOnly",
+      "description": "Opens the existing layer inspector and exposes mirror, color, crop and transform controls. No equivalent graphical panel in CLI; use setTransform/setColor/setCrop."
+    },
+    {
       "id": "zoomOut",
       "name": "zoom Out",
       "kind": "action",

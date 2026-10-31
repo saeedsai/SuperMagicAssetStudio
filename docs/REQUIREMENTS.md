@@ -140,6 +140,11 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 
 | REQ-121 | API | Dynamic Inspector, group, import, custom-part and sprite region properties cataloged | TC-121 | contract |
 
+| REQ-122 | UI | Direct Edit image entry with automatic Layers guidance | TC-122 | browser |
+| REQ-123 | UI | All image edit controls accessible in grouped inspector without duplication | TC-123 | browser |
+| REQ-124 | UI | Mirror and color edits persist and selection returns to image inspector | TC-124 | browser |
+| REQ-125 | UI | Responsive image editing controls stay accessible on narrow screens | TC-125 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

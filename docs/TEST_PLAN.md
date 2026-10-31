@@ -12,14 +12,14 @@ Browser setup: `python -m pip install playwright && python -m playwright install
 
 ## Case matrix and evidence
 
-`tests/requirements.json` assigns **one independent TC identifier to each of 121 requirements**. The Node traceability test reports those 121 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
+`tests/requirements.json` assigns **one independent TC identifier to each of 125 requirements**. The Node traceability test reports those 125 contracts separately and verifies each requirement has an implementation evidence file/token. Those tests establish **wiring/coverage**, not full functional correctness. Additional domain/CLI behavior tests exercise the high-risk workflows. Chromium tests exercise menus, mode-based parts, split dialogs, selection controls, AI command panel and startup without JS errors.
 
 | Suite | Tests | What it measures | Gate |
 |---|---|---|---|
 | Node domain/image | ~29 | Modes, views, parts, transforms, crop, color, animation, masks, PNG/GIF | Mandatory |
 | Node CLI integration | 2 | JSON round-trip, render, manifest, undo/redo, dry run | Mandatory |
-| Requirement traceability | 123 | 119 named acceptance contracts plus uniqueness checks | Mandatory |
-| Browser Chromium | 52 | UI startup, menu and control behaviors, scripted commands | Mandatory |
+| Requirement traceability | 127 | 119 named acceptance contracts plus uniqueness checks | Mandatory |
+| Browser Chromium | 56 | UI startup, menu and control behaviors, scripted commands | Mandatory |
 | Human visual QA | Checklist | Artistic quality, overlap, anti-aliasing, anatomical handedness, animations | Release review, reported separately |
 
 ## Manual QA checklist
@@ -58,3 +58,7 @@ The static control catalog is compared to every unique button/input/select/texta
 Structured browser runCommands uses the same command names for listCapabilities, getControlValue, setControlValue, invokeControl and paint as the CLI, with the documented difference that browser result formatting is human-readable text and CLI results are JSON.
 
 Dynamic property contract coverage checks the mutable Inspector/custom part/import queue fields and their corresponding headless command paths. This is schema evidence; visual and behavior tests remain separately reported.
+
+## Image editing discoverability (TC-122–125)
+
+The Edit image toolbar action is the unique navigation entry for editing a selected image. Selection automatically opens the right Edit image workspace; if none is selected, the left Layers workspace opens to guide selection. The existing Inspector control DOM nodes are reparented (not cloned) into Image & layer, Transform & mirror, Color & tint, Source crop and Auto-fit & defaults groups. Browser tests verify that the original mirror and color handlers still mutate the selected layer, crop/auto-fit are expandable, and access is retained at narrow viewport sizes.

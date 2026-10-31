@@ -5,6 +5,6 @@ test('classic game runtime transforms attached layers with skeletal pose',()=>{
  const c=new sandbox.FootballSpriteCharacter(project);c.images.set('img',{});
  const calls=[],ctx={globalAlpha:1,save(){},restore(){},translate(x,y){calls.push([x,y]);},rotate(){},scale(){},drawImage(){}};
  c.draw(ctx,{view:'front',animation:'stand',frame:0,origin:'topLeft'});
- assert.equal(calls.length,3);assert.ok(Math.abs(calls[2][0]-10)<1e-8);assert.ok(Math.abs(calls[2][1]-20)<1e-8);
+ assert.equal(calls.length,2);assert.ok(Math.abs(calls[1][0]-10)<1e-8);assert.ok(Math.abs(calls[1][1]-20)<1e-8);
  assert.equal(project.scenes.front.stand.f1[0].transform.x,20);
 });

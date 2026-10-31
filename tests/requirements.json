@@ -1012,7 +1012,7 @@
   {
     "id": "REQ-102",
     "testId": "TC-102",
-    "requirement": "Dedicated Paint menu exposes tools",
+    "requirement": "Right-side Paint workspace exposes paint tools",
     "verification": "browser",
     "evidence": {
       "path": "index.html",

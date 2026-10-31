@@ -25,8 +25,8 @@ export function applyPoseToLayers(layers,rig,pose={}){
  return layers.map(layer=>{const b=bindings.get(layer.category);if(!b||!layer.transform)return copy(layer);
  const j=world[b.joint],rest=rig.joints.find(q=>q.id===b.joint),angle=j.rotationDeg*Math.PI/180;
  // Preserve the layer's original placement relative to the joint's rest origin.
- const t=layer.transform,ox=t.x-rest.position.x,oy=t.y-rest.position.y;
- const x=j.x+ox*Math.cos(angle)-oy*Math.sin(angle),y=j.y+ox*Math.sin(angle)+oy*Math.cos(angle);
+ const t=layer.transform,ax=b.anchor.x,ay=b.anchor.y,ox=t.x-rest.position.x-ax,oy=t.y-rest.position.y-ay;
+ const x=j.x+ax+ox*Math.cos(angle)-oy*Math.sin(angle),y=j.y+ay+ox*Math.sin(angle)+oy*Math.cos(angle);
  return {...copy(layer),transform:{...t,x,y,rotationDeg:(t.rotationDeg||0)+j.rotationDeg}};});
 }
 export function interpolatePose(a={},b={},t=0){const u=Math.max(0,Math.min(1,finite(t,'time'))),out={};for(const id of new Set([...Object.keys(a),...Object.keys(b)])){const l=a[id]||{},r=b[id]||{};out[id]={};for(const prop of ['x','y','rotationDeg']){const v=l[prop]??0,w=r[prop]??0;finite(v,prop);finite(w,prop);out[id][prop]=v+(w-v)*u;}}return out;}

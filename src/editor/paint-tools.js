@@ -112,6 +112,29 @@ async function commit(label,erase=false){
   else{const layerId=api.createRasterPaintLayer(active.toDataURL('image/png'),label);message(label+' added as a movable editable layer. Undo is available.');return {layerId};}
  }catch(err){message('Paint error: '+err.message);}
 }
+async function extractSelection(cut=false){
+ syncSize();
+ if(!state.selection){message('Make a rectangle, freeform or magic-wand selection first.');return;}
+ const selection=state.selection;
+ const snapshot=makeCanvas(),g=snapshot.getContext('2d',{willReadFrequently:true});
+ g.drawImage(art,0,0);
+ const data=g.getImageData(0,0,canvas.width,canvas.height);
+ applyMaskAlpha(data.data,selection);
+ g.putImageData(data,0,0);
+ if(!data.data.some((v,i)=>i%4===3&&v>0)){message('Selection contains no visible pixels.');return;}
+ try{
+  if(cut){
+   const mask=makeCanvas(),mg=mask.getContext('2d'),image=mg.createImageData(mask.width,mask.height);
+   for(let i=0;i<selection.length;i++)image.data[i*4+3]=selection[i]?255:0;
+   mg.putImageData(image,0,0);
+   await api.eraseRasterWithMask(mask.toDataURL('image/png'),'original');
+  }
+  const id=api.createRasterPaintLayer(snapshot.toDataURL('image/png'),cut?'Cut selection':'Copied selection');
+  clearSelection();setTool('select');
+  message((cut?'Cut':'Copied')+' selection to editable layer. Move, resize, rotate or flip it using canvas handles and Inspector. Undo is available.');
+  return {layerId:id};
+ }catch(err){message('Selection transform error: '+err.message);throw err;}
+}
 function finishFreeform(){
  if(state.points.length<3){message('Freeform requires at least three boundary points.');return;}
  setSelection(polygonMask(canvas.width,canvas.height,state.points));
@@ -172,6 +195,8 @@ canvas.addEventListener('dblclick',e=>{if(state.tool==='select-freeform'){e.prev
 $('paintTool').addEventListener('change',e=>setTool(e.target.value));
 $('paintFinishFreeform').addEventListener('click',finishFreeform);
 $('paintClearSelection').addEventListener('click',clearSelection);
+$('paintCopySelection').addEventListener('click',()=>{extractSelection(false).catch(()=>{});});
+$('paintCutSelection').addEventListener('click',()=>{extractSelection(true).catch(()=>{});});
 $('paintClearMenu').addEventListener('click',()=>{clearSelection();document.querySelectorAll('.menu.open').forEach(el=>el.classList.remove('open'));});
 $('paintStop').addEventListener('click',()=>setTool('select'));
 for(const el of document.querySelectorAll('[data-paint-menu]'))el.addEventListener('click',()=>{
@@ -257,5 +282,5 @@ async function importPaintTexture(file){
  return {width:img.width,height:img.height};
 }
 
-window.SuperMagicPaintAPI={setTool,clearSelection,finishFreeform,getSelectionCount:()=>state.selection?.reduce((a,b)=>a+b,0)||0,getSelectionMask:()=>state.selection?.slice()||null,setSelectionMask:(mask)=>{if(!(mask instanceof Uint8Array)||mask.length!==canvas.width*canvas.height)throw Error('Selection mask size mismatch');setSelection(mask.slice());},getTool:()=>state.tool,getPaintSettings,setPaintSettings,performPaintOperation,importPaintTexture};
+window.SuperMagicPaintAPI={setTool,clearSelection,finishFreeform,getSelectionCount:()=>state.selection?.reduce((a,b)=>a+b,0)||0,getSelectionMask:()=>state.selection?.slice()||null,setSelectionMask:(mask)=>{if(!(mask instanceof Uint8Array)||mask.length!==canvas.width*canvas.height)throw Error('Selection mask size mismatch');setSelection(mask.slice());},extractSelection,getTool:()=>state.tool,getPaintSettings,setPaintSettings,performPaintOperation,importPaintTexture};
 setTool('select');

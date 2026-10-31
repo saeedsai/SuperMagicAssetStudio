@@ -77,8 +77,7 @@ function showLayerInspector({focus=false}={}){
  }
  return Boolean(get('inspectorContent').isConnected);
 }
-const editImageButton=get('imageEditorToggle');
-if(editImageButton)editImageButton.addEventListener('click',()=>showLayerInspector({focus:true}));
+// The Edit image button is wired by image-edit-panel.js, the sole owner of that action.
 
 
 // Render each command just once. The original relay nodes remain for existing

@@ -160,3 +160,7 @@ The image tools also export a separate manifest with `format:"FootballSpriteAsse
 ## Source sprite regions (v5.5)
 
 `cropSource` in an exported sprite manifest can record a rectangle (`type: rect`), polygon (`type: poly`, `points`), Bézier curve (`type: bezier`, `points`, `tension`), or wand selection (`type: wand`, `seed`, `mode`, `tolerance`, and the optional encoded pixel mask). Extracted PNG pixels are already alpha-masked; games use the output PNG directly.
+
+## Skeleton rigs and poses (optional, backwards-compatible)
+
+`rigs[view]` holds the per-view hierarchical skeleton; `poses[view][animation][frame]` stores sparse joint offsets; `motions[view][animation]` stores timestamped keyframes. All three keys are optional, and projects without them continue to render normally. See [Skeleton animation](SKELETON_ANIMATION.md) for schema, commands, and current limitations.

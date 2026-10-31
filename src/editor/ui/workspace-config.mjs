@@ -11,8 +11,8 @@ export const SIDE_WORKSPACES = Object.freeze([
 export const RIGHT_WORKSPACES = Object.freeze([
  {id:'inspector',label:'Edit image',sectionIndexes:[0,1]},
  {id:'canvas',label:'Canvas',sectionIndexes:[2,3,4]},
- {id:'shortcuts',label:'Shortcuts',sectionIndexes:[5]},
- {id:'paint',label:'Paint',icon:'✎',sectionIndexes:[6]}
+ {id:'shortcuts',label:'Shortcuts',sectionIndexes:[6]},
+ {id:'paint',label:'Paint',icon:'✎',sectionIndexes:[5]}
 ]);
 
 // Legacy command aliases intentionally remain in DOM for API/event-relay compatibility.

@@ -9,7 +9,7 @@ export const SIDE_WORKSPACES = Object.freeze([
  {id:'camera',label:'Camera',icon:'◉',sectionIndexes:[1]}
 ]);
 export const RIGHT_WORKSPACES = Object.freeze([
- {id:'inspector',label:'Inspector',sectionIndexes:[0,1]},
+ {id:'inspector',label:'Edit image',sectionIndexes:[0,1]},
  {id:'canvas',label:'Canvas',sectionIndexes:[2,3,4]},
  {id:'shortcuts',label:'Shortcuts',sectionIndexes:[5]}
 ]);

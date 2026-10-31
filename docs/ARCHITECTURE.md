@@ -67,3 +67,8 @@ The UI shell activates left/right tabpanels, moves *existing* controls to their 
 ## Shared UI/API/CLI contract (v5.9)
 
 The static [control catalog](../src/shared/ui-capabilities.json) is the authoritative inventory of HTML controls and CLI equivalents. src/editor/ui/control-api.js reads this inventory and exposes browser get/set/invoke, using original DOM handlers and persisting option values in project.editor.uiOptions. src/cli/agent-paint.mjs implements PNG-based headless painting without native modules; src/cli/agent-engine.mjs handles capability queries, typed option reads/writes and paint commands. src/cli/agent-cli.mjs supports --list-controls and mapped action routing. A catalog entry with browserOnly indicates a visual-only operation, not false headless feature parity. Tests check that each unique static HTML control is listed and that actual round-trip/painting operations succeed.
+
+
+## Contextual image editing (v5.9.1)
+
+src/editor/ui/image-edit-panel.js owns image edit discoverability only: one toolbar navigation action, automatic workspace activation on layer selection and five collapsible groups built by relocating the original Inspector form nodes. It does not duplicate mirror, color, crop, replace, auto-fit or geometry actions, and it does not replace app.js event handlers. src/editor/ui/workspace-config.mjs labels the right tab Edit image; src/shared/ui-capabilities.json catalogs the navigation action as browserOnly because the CLI already edits the same model via setTransform, setColor, setCrop, autoFit and replaceAsset.

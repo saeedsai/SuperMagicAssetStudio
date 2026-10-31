@@ -150,6 +150,11 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-128 | UI | Edit image action reopens previously collapsed Inspector without duplicating editing controls | TC-128 | browser |
 | REQ-129 | UI | Multi-layer selection reveals editable group properties in the Inspector | TC-129 | browser |
 
+| REQ-130 | UI | Full dynamic reachability audit of every static control, selectable option, hidden alias, file trigger, dialog and contextual editor state | TC-130 | browser |
+
+| REQ-131 | UI | Legacy layer type and Inspector properties remain usable after switching modular structure | TC-131 | browser |
+| REQ-132 | UI | Narrow-screen workspace, paint, standalone background and Inspector options remain reachable | TC-132 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

@@ -1288,5 +1288,35 @@
       "path": "src/editor/app.js",
       "contains": "selectedLayerIds.size>1"
     }
+  },
+  {
+    "id": "REQ-130",
+    "testId": "TC-130",
+    "requirement": "Every static editor control and its selectable options is visibly reachable through actual user workspaces, menus, tool contexts and dialogs; hidden aliases and file pickers have visible alternatives",
+    "verification": "browser",
+    "evidence": {
+      "path": "tests/browser/test_ui.py",
+      "contains": "check_130"
+    }
+  },
+  {
+    "id": "REQ-131",
+    "testId": "TC-131",
+    "requirement": "Existing layers with legacy categories remain editable after switching modular asset structures, without Inspector crashes",
+    "verification": "browser",
+    "evidence": {
+      "path": "src/editor/app.js",
+      "contains": "CATEGORIES[l.category]||l.category"
+    }
+  },
+  {
+    "id": "REQ-132",
+    "testId": "TC-132",
+    "requirement": "Narrow mobile layout exposes primary asset, paint, image edit and standalone background workflows",
+    "verification": "browser",
+    "evidence": {
+      "path": "tests/browser/test_ui.py",
+      "contains": "check_132"
+    }
   }
 ]

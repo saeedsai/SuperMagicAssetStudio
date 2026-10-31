@@ -551,4 +551,252 @@ for number,verify in INSPECTOR_CASES.items():
     def run_inspector(self,fn=verify):fn(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_inspector)
 
+
+# Exhaustive control reachability after contextual UI modularization.
+# Counts a control only when the real browser layout makes it visible; static
+# catalog membership alone is NOT sufficient evidence that users can reach it.
+def check_130(t):
+    import json
+    contract=json.loads((ROOT/'src/shared/ui-reachability.json').read_text())
+    t.page.wait_for_function('Boolean(window.SuperMagicStudioUI&&window.SuperMagicCapabilities&&window.SuperMagicImageEditor)')
+    catalog=t.page.evaluate('SuperMagicAssetStudioAPI.listCapabilities()')['controls']
+    expected={x['id'] for x in catalog}
+    visible=set()
+    stages={}
+    select_options={}
+    def capture(stage):
+        controls=t.page.evaluate("""()=>{
+          return [...document.querySelectorAll('button[id],input[id],select[id],textarea[id],#dropzone')]
+            .filter(el=>el.getClientRects().length>0 && getComputedStyle(el).visibility!=='hidden' &&
+              !el.closest('[inert],[aria-hidden="true"]'))
+            .map(el=>({id:el.id,options:el.tagName==='SELECT'?[...el.options].map(o=>o.value):null}))
+            .filter(el=>el.id);
+        }""")
+        ids=[x['id'] for x in controls]
+        visible.update(ids)
+        for item in controls:
+            if item['options'] is not None:
+                select_options.setdefault(item['id'],set()).update(item['options'])
+        stages[stage]=len(ids)
+    def tab(side,name):
+        t.page.locator('#'+('studio' if side=='left' else 'properties')+'-tab-'+name).click()
+        root='studio' if side=='left' else 'properties'
+        pane=t.page.locator('#'+root+'-pane-'+name)
+        for heading in pane.locator(':scope > .section.collapsed > h3').all():
+            heading.click()
+        capture(side+':'+name)
+    def menu(name):
+        t._menu(name)
+        capture('menu:'+name)
+    capture('initial')
+    # Entire left/right workspace tree, including old collapsible sections.
+    for name in ['project','assets','animate','layers','camera']:tab('left',name)
+    for name in ['inspector','canvas','shortcuts']:tab('right',name)
+    # Main menu action routes, including the separate standalone background tool.
+    for name in ['file','import','view','animation','tools','paint','help']:
+        if t.page.locator('.menu-btn[data-menu="'+name+'"]').is_visible():
+            menu(name)
+        else:
+            # Menus whose commands all have canonical workspace/toolbar actions
+            # are intentionally suppressed; the canonical routes are audited below.
+            stages['menu:'+name+':suppressed']=0
+    menu('tools')
+    t.assertTrue(t.page.locator('#menuStandaloneBackground').is_visible(),
+        'Standalone background cleanup was incorrectly hidden as a duplicate')
+    t.page.locator('#menuStandaloneBackground').click()
+    t.assertTrue(t.page.locator('#bgStandaloneDialog').evaluate('(el)=>el.open'))
+    capture('dialog:standalone-background')
+    t.page.locator('#bgStandaloneClose').click()
+    # Context-specific structural options and advanced import settings.
+    tab('left','project')
+    t._mode('custom')
+    capture('mode:custom')
+    tab('left','assets')
+    advanced=t.page.locator('#studio-pane-assets .studio-inline-advanced')
+    for details in advanced.all():
+        if not details.evaluate('(d)=>d.open'):details.locator('summary').click()
+    capture('import:advanced')
+    tab('left','animate')
+    for details in t.page.locator('#studio-pane-animate details.studio-inline-advanced').all():
+        if not details.evaluate('(d)=>d.open'):details.locator('summary').click()
+    capture('animation:linked-clip')
+    # Every paint menu tool and context-specific property, including selection
+    # clear and fill's distinct gradient / imported-pattern settings.
+    tool_names=t.page.locator('[data-paint-menu]').evaluate_all(
+        '(nodes)=>[...new Set(nodes.map(n=>n.dataset.paintMenu))]')
+    for tool in tool_names:
+        menu('paint')
+        t.page.locator('[data-paint-menu="'+tool+'"]').click()
+        capture('paint:'+tool)
+        if tool=='fill':
+            t.page.locator('#paintFillMode').select_option('gradient')
+            capture('paint:fill-gradient')
+            t.page.locator('#paintFillMode').select_option('texture')
+            capture('paint:fill-texture')
+        t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    t.page.evaluate("""()=>{
+      const p=SuperMagicAssetStudioAPI.getPaintContext();
+      const mask=new Uint8Array(p.width*p.height);mask[0]=1;
+      SuperMagicPaintAPI.setSelectionMask(mask);
+      SuperMagicPaintAPI.setTool('select-rect');
+      SuperMagicStudioUI.openPaintProperties();
+      SuperMagicStudioUI.updatePaintProperties();
+    }""")
+    capture('paint:clear-selection')
+    t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    # Bulk import queue actions appear only after an image is staged.
+    import base64
+    tab('left','assets')
+    image_data=t.page.evaluate("""()=>{
+      const c=document.createElement('canvas');c.width=8;c.height=8;
+      c.getContext('2d').fillRect(0,0,8,8);
+      return c.toDataURL('image/png').split(',')[1];
+    }""")
+    t.page.locator('#imageInput').set_input_files({'name':'reachability.png',
+      'mimeType':'image/png','buffer':base64.b64decode(image_data)})
+    t.page.wait_for_selector('#importQueue .queue-row')
+    capture('import:queue-items-staged')
+    t.assertTrue(t.page.locator('#applyQueue').is_visible())
+    t.assertTrue(t.page.locator('#clearQueue').is_visible())
+    for field in ['view','category','animation','frame','mirror']:
+        t.assertTrue(t.page.locator('#importQueue [data-q="'+field+'"]').is_visible(),field)
+    t.page.locator('#clearQueue').click()
+    # Camera's image-reference context actions are reached by right-clicking
+    # a view thumbnail; the direct Reference controls are available elsewhere.
+    tab('left','camera')
+    t.page.locator('#viewButtons [data-view]').first.click(button='right')
+    capture('camera:reference-context-menu')
+    t.assertTrue(t.page.locator('#useCameraAsReference').is_visible())
+    t.assertTrue(t.page.locator('#clearCameraReference').is_visible())
+    t.page.locator('#clearCameraReference').click()
+    # Real layer: each image editing property module, plus multi-selection.
+    image_edit_fixture(t)
+    t.page.wait_for_selector('.image-edit-group[data-image-group="color"]')
+    capture('image:selected')
+    for group in contract['requiredContextGroups']:
+        details=t.page.locator('.image-edit-group[data-image-group="'+group+'"]')
+        t.assertEqual(details.count(),1,group)
+        if not details.evaluate('(x)=>x.open'):details.locator('summary').click()
+        capture('image:group:'+group)
+    t.page.evaluate("""async()=>await SuperMagicAssetStudioAPI.runCommands({commands:[
+      {op:'addLayer',id:'reachability_second',assetId:'image_edit_fixture',category:'head',
+       transform:{x:500,y:270}}
+    ]})""")
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer','reachability_second'])")
+    capture('image:multi-selection')
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer'])")
+    capture('image:single-restored')
+    # Sprite tools auto/grid, manual polygon/bezier/wand and background modes.
+    menu('import');t.page.locator('#menuManualSplit').click()
+    capture('sprite:manual')
+    for d in t.page.locator('#splitControlPanel details.studio-dialog-group').all():
+        if not d.evaluate('(x)=>x.open'):d.locator('summary').click()
+    capture('sprite:expanded')
+    t.page.locator('#spriteDetectMethod').select_option('grid')
+    capture('sprite:regular-grid')
+    t.page.locator('#spriteDetectMethod').select_option('alpha')
+    capture('sprite:transparent-islands')
+    for shape in ['rect','poly','bezier','wand']:
+        t.page.locator('#spriteSelectionShape').select_option(shape)
+        capture('sprite:boundary-'+shape)
+    t.page.locator('#spriteToolsClose').click()
+    menu('import');t.page.locator('#menuAutoSplit').click()
+    capture('sprite:auto')
+    t.page.locator('#spriteToolsClose').click()
+    menu('import');t.page.locator('#menuRemoveBackground').click()
+    capture('sprite:background-removal')
+    t.page.locator('#spriteToolsClose').click()
+    # Editor tools and documentation dialogs.
+    menu('tools');t.page.locator('#menuAI').click()
+    capture('dialog:ai')
+    t.page.locator('#closeAIDialog').click()
+    menu('help');t.page.locator('#menuHelp').click()
+    capture('dialog:help')
+    t.page.locator('#closeHelp').click()
+    menu('tools');t.page.locator('#menuAutoResize').click()
+    capture('dialog:auto-resize')
+    t.page.locator('#closeAutoResize').click()
+    tab('right','inspector')
+    if not t.page.locator('#cropLayer').is_visible():
+        t.page.locator('.image-edit-group[data-image-group="image"] summary').click()
+    t.page.locator('#cropLayer').click()
+    capture('dialog:crop')
+    t.page.locator('#closeCrop').click()
+    # External image resolver must become reachable when a reference is absent.
+    t.page.evaluate("""()=>{
+      const p=SuperMagicAssetStudioAPI.getProject();
+      p.assets.reachability_missing={name:'missing.png',fileRef:'missing.png',
+        width:16,height:16,mime:'image/png'};
+      SuperMagicAssetStudioAPI.importProjectObject(p);
+    }""")
+    tab('left','project')
+    capture('project:resolve-missing-images')
+    t.assertTrue(t.page.locator('#resolveImagesBtn').is_visible())
+    # Every hidden relay must have an actually visible canonical route.
+    aliases=contract['hiddenAliases']
+    for old,new in aliases.items():
+        t.assertTrue(t.page.locator('#'+old).evaluate('(e)=>e.hidden'),old+' should be a hidden duplicate')
+        t.assertIn(new,visible,old+' has no visible replacement '+new)
+    for fileid,trigger in contract['fileInputTriggers'].items():
+        t.assertIn(trigger,visible,'File picker '+fileid+' has no reachable trigger '+trigger)
+    for old,new in contract['hiddenHostAliases'].items():
+        t.assertIn(new,visible,'Hidden export relay '+old+' has no discoverable '+new)
+        t.assertFalse(t.page.locator('#'+old).is_visible(),
+          'Redundant legacy export relay should not create a duplicate button')
+    exempt=set(aliases)|set(contract['hiddenHostAliases'])|set(contract['fileInputTriggers'])|set(contract['alternativeControls'])
+    not_reached=sorted(expected-exempt-visible)
+    t.assertFalse(not_reached,
+      'Static controls never visible in any of the '+str(len(stages))+
+      ' user-reachable states: '+repr(not_reached)+'; stages='+repr(stages))
+    t.assertEqual(len(expected),len(set(expected)))
+    for setting in (x for x in catalog if x['kind']=='select' and x.get('values') and x['id']!='paintTool'):
+        missing=set(setting['values'])-select_options.get(setting['id'],set())
+        t.assertFalse(missing,'Selectable choices never appeared for '+setting['id']+': '+repr(sorted(missing)))
+    print('UI AUDIT: '+str(len(expected))+' static controls; '+str(len(contract['hiddenAliases']))+
+      ' intentional aliases with replacements; '+str(len(contract['fileInputTriggers']))+
+      ' hidden file inputs with triggers; '+str(len(stages))+' interaction states; '+
+      str(len(visible))+' reachable element IDs; no inaccessible control')
+def test_all_ui_control_reachability(self):check_130(self)
+setattr(BrowserRegression,'test_TC_130',test_all_ui_control_reachability)
+
+
+# Existing layers must remain editable when the project changes modular structures.
+def check_131(t):
+    image_edit_fixture(t)
+    t.page.locator('#studio-tab-project').click()
+    t._mode('custom')
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer'])")
+    t.assertTrue(t.page.locator('#inspectorContent [data-prop="scaleX"]').is_visible())
+    category=t.page.locator('#inspectorContent [data-prop="category"]')
+    t.assertEqual(category.input_value(),'head')
+    t.assertTrue(category.locator('option[value="head"]').count()==1)
+    t.assertIn('head',t.page.locator('#inspectorContent').inner_text().lower())
+    t.page.locator('#inspectorContent [data-prop="scaleX"]').fill('1.75')
+    t.page.locator('#inspectorContent [data-prop="scaleX"]').press('Tab')
+    t.assertEqual(t._project()['scenes']['front']['stand']['stand_1'][0]['transform']['scaleX'],1.75)
+
+def check_132(t):
+    t.page.set_viewport_size({'width':390,'height':844})
+    t.page.wait_for_function('Boolean(window.SuperMagicStudioUI&&window.SuperMagicImageEditor)')
+    t.page.locator('#studio-tab-assets').click()
+    t.assertTrue(t.page.locator('#dropzone').is_visible())
+    t.page.locator('#studio-tab-project').click()
+    t.assertTrue(t.page.locator('#assetMode').is_visible())
+    t._menu('paint')
+    t.page.locator('[data-paint-menu="brush"]').click()
+    t.assertTrue(t.page.locator('#paintSize').is_visible())
+    t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    t._menu('tools')
+    t.assertTrue(t.page.locator('#menuStandaloneBackground').is_visible())
+    t.page.locator('#menuStandaloneBackground').click()
+    t.assertTrue(t.page.locator('#bgStandaloneColor').is_visible())
+    t.page.locator('#bgStandaloneClose').click()
+    image_edit_fixture(t)
+    t.page.locator('#imageEditorToggle').click()
+    t.assertTrue(t.page.locator('[data-prop="colorHue"]').is_visible())
+
+for number,fn in {131:check_131,132:check_132}.items():
+    def run_mobile_and_legacy(self,case=fn):case(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_mobile_and_legacy)
+
 if __name__=='__main__':unittest.main()

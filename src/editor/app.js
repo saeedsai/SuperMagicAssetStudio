@@ -216,7 +216,7 @@ function projectZipData(){
  const data=standaloneProject(),entries=[];
  data.assetStorage='external';
  for(const [id,a] of Object.entries(data.assets)){
-  const match=/^data:(image\\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(a.src);
+  const match=/^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(a.src);
   if(!match)throw new Error('Unsupported embedded image: '+id);
   const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[match[1]];
   const raw=atob(match[2]),content=Uint8Array.from(raw,ch=>ch.charCodeAt(0));
@@ -229,14 +229,14 @@ function projectZipData(){
 function saveZIP(){try{download(window.SuperMagicProjectArchive.pack(projectZipData()),slug(project.projectName)+'-sprite-project.zip');notify('ZIP saved with project.json and separate image files.');}catch(err){notify('Could not save ZIP: '+err.message);}}
 function validateProjectData(data){if(!data||data.format!=='FootballSpriteStudio'||!data.assets||!Array.isArray(data.animations)||!data.animations.length||!data.animations.every(a=>a.id&&Array.isArray(a.frames)&&a.frames.length)||!data.scenes||!data.canvas)throw new Error('Invalid FootballSpriteStudio project');return data;}
 async function readProjectPackage(file){
- if(!/\\.zip$/i.test(file.name))return validateProjectData(JSON.parse(await file.text()));
+ if(!/\.zip$/i.test(file.name))return validateProjectData(JSON.parse(await file.text()));
  const entries=await window.SuperMagicProjectArchive.unpack(file);
  if(!entries.has('project.json'))throw new Error('ZIP missing project.json');
  const data=validateProjectData(JSON.parse(new TextDecoder().decode(entries.get('project.json'))));
  for(const [id,a] of Object.entries(data.assets)){
   const name=a.fileRef;
   if(!name||!entries.has(name))throw new Error('ZIP missing image for '+id+': '+name);
-  const content=entries.get(name),mime=a.mime||(/\\.jpe?g$/i.test(name)?'image/jpeg':/\\.webp$/i.test(name)?'image/webp':'image/png');
+  const content=entries.get(name),mime=a.mime||(/\.jpe?g$/i.test(name)?'image/jpeg':/\.webp$/i.test(name)?'image/webp':'image/png');
   let binary='';for(let i=0;i<content.length;i+=16384)binary+=String.fromCharCode(...content.subarray(i,i+16384));
   a.src='data:'+mime+';base64,'+btoa(binary);
  }

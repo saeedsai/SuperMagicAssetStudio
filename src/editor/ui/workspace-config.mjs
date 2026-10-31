@@ -23,7 +23,7 @@ export const HIDDEN_ACTION_ALIASES = Object.freeze([
  'menuToggleGrid','menuToggleRulers','menuToggleGuides','menuToggleCropHandles',
  'menuAddAnimation','menuDeleteAnimation','menuAddFrame','menuDuplicateFrame',
  'menuDeleteFrame','menuPlayAnimation','menuAppendClip','menuUnlinkFrame',
- 'menuUndo','menuRedo','menuImageTools','menuStandaloneBackground',
+ 'menuUndo','menuRedo','menuImageTools',
  'paintClearMenu','closeHelpFooter','closeAIDialogFooter','spriteToolsCloseFooter',
  'bgStandaloneCloseFooter'
 ]);

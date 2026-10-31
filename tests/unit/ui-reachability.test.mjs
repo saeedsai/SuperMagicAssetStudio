@@ -21,6 +21,14 @@ test('Every hidden duplicate maps to an explicit existing, distinct canonical af
   'Standalone cleanup is distinct from sprite splitter background removal; must be visible');
 });
 
+test('Hidden export relay buttons are backed by visible File menu export commands',()=>{
+ for(const [id,canonical] of Object.entries(routes.hiddenHostAliases)){
+  assert(actionIds.has(id),'Missing hidden export relay '+id);
+  assert(actionIds.has(canonical),'Missing visible export command '+canonical);
+ }
+ assert.equal(Object.keys(routes.hiddenHostAliases).length,3);
+});
+
 test('Every invisible file input retains a discoverable trigger and appropriate MIME acceptance',()=>{
  const fileInputs=[...html.matchAll(/<input\b[^>]*\btype="file"[^>]*>/g)]
   .map(m=>m[0].match(/\bid="([^"]+)"/)?.[1]).filter(Boolean);

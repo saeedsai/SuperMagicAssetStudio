@@ -64,6 +64,22 @@ function buildWorkspaces(root,definitions,initial,groupName){
 }
 const left=buildWorkspaces(sidebar,SIDE_WORKSPACES,'project','Studio');
 const right=buildWorkspaces(inspector,RIGHT_WORKSPACES,'inspector','Properties');
+// Layer properties must stay discoverable even if a user previously collapsed
+// the Inspector section or was looking at the Canvas/Shortcuts workspace.
+const layerInspectorSection=get('inspectorContent').closest('.section');
+function showLayerInspector({focus=false}={}){
+ right.activate('inspector');
+ layerInspectorSection.classList.remove('collapsed');
+ layerInspectorSection.hidden=false;
+ if(focus){
+  right.panes.get('inspector')?.scrollIntoView({block:'nearest'});
+  get('properties-tab-inspector')?.focus({preventScroll:true});
+ }
+ return Boolean(get('inspectorContent').isConnected);
+}
+const editImageButton=get('imageEditorToggle');
+if(editImageButton)editImageButton.addEventListener('click',()=>showLayerInspector({focus:true}));
+
 
 // Render each command just once. The original relay nodes remain for existing
 // DOM listeners, keyboard shortcuts, browser APIs and backward-compatible tests.
@@ -267,6 +283,7 @@ if(clipSource){
 // this API only changes layout, not the project or drawing data model.
 window.SuperMagicStudioUI=Object.freeze({
  activateWorkspace:(name,side='left')=>(side==='right'?right:left).activate(name),
+ showLayerInspector,
  getWorkspace:side=>(side==='right'?inspector:sidebar).dataset.activeWorkspace,
  openPaintProperties, closePaintProperties, updatePaintProperties:paintContextUpdate,
  getVisibleActionAliases:()=>HIDDEN_ACTION_ALIASES.filter(id=>!get(id)?.hidden),

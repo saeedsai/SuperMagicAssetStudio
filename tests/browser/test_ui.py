@@ -489,4 +489,66 @@ for number,verify in IMAGE_EDIT_CASES.items():
     def run_image_edit(self,fn=verify):fn(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_image_edit)
 
+
+# Inspector visibility after editing a layer: keep properties open and editable.
+def check_126(t):
+    image_edit_fixture(t)
+    t.page.locator('#properties-tab-canvas').click()
+    t.page.evaluate("()=>document.querySelector('#inspectorContent').closest('.section').classList.add('collapsed')")
+    t.page.locator('#studio-tab-layers').click()
+    t.page.locator('#layersList [data-layer="image_fixture_layer"]').click()
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'inspector')
+    t.assertFalse(t.page.locator('#inspectorContent').evaluate('(e)=>e.closest(".section").classList.contains("collapsed")'))
+    t.assertTrue(t.page.locator('[data-prop="scaleX"]').is_visible())
+    t.assertTrue(t.page.locator('[data-prop="colorBrightness"]').is_visible())
+    t.page.locator('[data-prop="scaleX"]').fill('2.5')
+    t.page.locator('[data-prop="scaleX"]').press('Tab')
+    layer=t._project()['scenes']['front']['stand']['stand_1'][0]
+    t.assertEqual(layer['transform']['scaleX'],2.5)
+
+def check_127(t):
+    image_edit_fixture(t)
+    t.page.locator('#properties-tab-canvas').click()
+    t.page.evaluate("""()=>{SuperMagicAssetStudioAPI.selectLayers([]);
+       document.querySelector('#inspectorContent').closest('.section').classList.add('collapsed')}""")
+    p=t._project();layer=p['scenes']['front']['stand']['stand_1'][0]
+    t.page.wait_for_function("""() => {
+      const p=SuperMagicAssetStudioAPI.getProject(),layer=p.scenes.front.stand.stand_1[0];
+      const c=document.getElementById('artCanvas');
+      const x=Math.round(layer.transform.x),y=Math.round(layer.transform.y);
+      return c.getContext('2d').getImageData(x,y,1,1).data[3]>0;
+    }""")
+    bb=t.page.locator('#overlay').bounding_box()
+    x=bb['x']+layer['transform']['x']*bb['width']/p['canvas']['width']
+    y=bb['y']+layer['transform']['y']*bb['height']/p['canvas']['height']
+    t.page.mouse.click(x,y)
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'inspector')
+    t.assertTrue(t.page.locator('[data-prop="rotationDeg"]').is_visible())
+    t.assertIn('image_fixture_layer',t.page.evaluate('SuperMagicAssetStudioAPI.getSelectedLayerIds()'))
+
+def check_128(t):
+    image_edit_fixture(t)
+    t.page.evaluate("()=>document.querySelector('#inspectorContent').closest('.section').classList.add('collapsed')")
+    t.page.locator('#properties-tab-shortcuts').click()
+    t.page.locator('#imageEditorToggle').click()
+    t.assertTrue(t.page.locator('[data-prop="colorHue"]').is_visible())
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'inspector')
+    t.assertFalse(t.page.locator('#inspectorContent').evaluate('(e)=>e.closest(".section").classList.contains("collapsed")'))
+
+def check_129(t):
+    image_edit_fixture(t)
+    t.page.evaluate("""async()=>await SuperMagicAssetStudioAPI.runCommands({commands:[
+      {op:'addLayer',id:'image_fixture_second',assetId:'image_edit_fixture',category:'head',
+       transform:{x:460,y:200}}
+    ]})""")
+    t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer','image_fixture_second'])")
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'inspector')
+    t.assertTrue(t.page.locator('#inspectorContent [data-group-prop="dx"]').is_visible())
+    t.assertIn('2 parts selected',t.page.locator('#inspectorContent').inner_text())
+
+INSPECTOR_CASES={126:check_126,127:check_127,128:check_128,129:check_129}
+for number,verify in INSPECTOR_CASES.items():
+    def run_inspector(self,fn=verify):fn(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_inspector)
+
 if __name__=='__main__':unittest.main()

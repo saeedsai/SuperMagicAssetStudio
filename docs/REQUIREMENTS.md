@@ -155,6 +155,10 @@ Created by Saeed (saeedmsalehi1990@gmail.com) · Living specification for SuperM
 | REQ-131 | UI | Legacy layer type and Inspector properties remain usable after switching modular structure | TC-131 | browser |
 | REQ-132 | UI | Narrow-screen workspace, paint, standalone background and Inspector options remain reachable | TC-132 | browser |
 
+| REQ-133 | UI | Top Import and Tools menus are merged into a fully functional Edit menu without deleting former actions | TC-133 | browser |
+| REQ-134 | UI | File and Edit both visibly offer image import through the same existing PNG/JSON file picker | TC-134 | browser |
+| REQ-135 | UI | Paint options are moved from the top navigation to a dedicated right workspace with a visible SVG icon and working tool selection for each action | TC-135 | browser |
+
 ## Non-functional and future requirements
 
 Production artwork should use isolated 1024×1024 PNGs, fixed orthographic camera/elevation, standardized attachment points, original character lighting, no text/logos baked into reusable parts, mirrored views only when asymmetries allow it, and no copyrighted character likenesses. These are content-production guidelines, not programmatic guarantees.

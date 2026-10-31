@@ -42,7 +42,10 @@ class BrowserRegression(unittest.TestCase):
     def _present(self,*selectors):
         for s in selectors:self.assertGreater(self.page.locator(s).count(),0,s)
     def _menu(self,name):
-        self.page.locator(f'.menu-btn[data-menu="{name}"]').click()
+        if name=='paint':
+            self.page.locator('#properties-tab-paint').click()
+        else:
+            self.page.locator(f'.menu-btn[data-menu="{name}"]').click()
     def _project(self):
         return self.page.evaluate('window.SuperMagicAssetStudioAPI.getProject()')
     def _mode(self,name):
@@ -72,21 +75,21 @@ def check_035(t):t._present('#stage','#overlay','#autoResizeStats')
 def check_037(t):t._present('#cropTool','#cropDialog','#cropCanvas')
 def check_049(t):t._present('#imageInput','#importQueue','#applyQueue')
 def check_051(t):
-    t._menu('import');t.page.locator('#menuManualSplit').click()
+    t._menu('edit');t.page.locator('#menuManualSplit').click()
     t.assertTrue(t.page.locator('#spriteToolsDialog').evaluate('(e)=>e.open'))
     t._present('#spriteSelectionShape','#spriteToolsCanvas')
 def check_054(t):
-    t._menu('import');t.page.locator('#menuManualSplit').click();t._present('#spriteSelectionShape','#spriteFinishPolygon')
+    t._menu('edit');t.page.locator('#menuManualSplit').click();t._present('#spriteSelectionShape','#spriteFinishPolygon')
 def check_056(t):
-    t._menu('import');t.page.locator('#menuManualSplit').click();t._present('#spriteEditPoints','#spriteDeletePoint')
+    t._menu('edit');t.page.locator('#menuManualSplit').click();t._present('#spriteEditPoints','#spriteDeletePoint')
 def check_066(t):
-    for m in ['file','import','view','animation','tools','help']:t._present(f'[data-menu="{m}"]')
+    for m in ['file','edit','view','animation','help']:t._present(f'[data-menu="{m}"]')
 def check_067(t):t._present('.sidebar .section.collapsed','.inspector .section')
 def check_068(t):
     t._mode('fullBody');a=t.page.locator('#importCategory option').all_text_contents();t.assertFalse(any('forearm' in x.lower() for x in a))
     t._mode('standard');a=t.page.locator('#importCategory option').all_text_contents();t.assertTrue(any('forearm' in x.lower() for x in a))
 def check_069(t):
-    t._menu('tools');t.page.locator('#menuAI').click();t.assertTrue(t.page.locator('#aiDialog').evaluate('(e)=>e.open'))
+    t._menu('edit');t.page.locator('#menuAI').click();t.assertTrue(t.page.locator('#aiDialog').evaluate('(e)=>e.open'))
     t.page.locator('#aiCommandInput').fill('{"commands":[{"op":"setProjectName","name":"Browser AI"}]}')
     t.page.locator('#runAICommands').click();t.page.wait_for_function('window.SuperMagicAssetStudioAPI.getProject().projectName === "Browser AI"')
 def check_070(t):
@@ -299,7 +302,7 @@ def check_106(t):
 
 def check_107(t):
     ui_ready(t)
-    t._menu('import');t.page.locator('#menuAutoSplit').click()
+    t._menu('edit');t.page.locator('#menuAutoSplit').click()
     t.page.locator('#spriteDetectMethod').select_option('grid')
     t.assertTrue(t.page.locator('#spriteGridRows').is_visible())
     t.assertFalse(t.page.locator('#spriteMinArea').is_visible())
@@ -593,14 +596,14 @@ def check_130(t):
     for name in ['project','assets','animate','layers','camera']:tab('left',name)
     for name in ['inspector','canvas','shortcuts']:tab('right',name)
     # Main menu action routes, including the separate standalone background tool.
-    for name in ['file','import','view','animation','tools','paint','help']:
-        if t.page.locator('.menu-btn[data-menu="'+name+'"]').is_visible():
+    for name in ['file','edit','view','animation','paint','help']:
+        if name=='paint' or t.page.locator('.menu-btn[data-menu="'+name+'"]').is_visible():
             menu(name)
         else:
             # Menus whose commands all have canonical workspace/toolbar actions
             # are intentionally suppressed; the canonical routes are audited below.
             stages['menu:'+name+':suppressed']=0
-    menu('tools')
+    menu('edit')
     t.assertTrue(t.page.locator('#menuStandaloneBackground').is_visible(),
         'Standalone background cleanup was incorrectly hidden as a duplicate')
     t.page.locator('#menuStandaloneBackground').click()
@@ -687,7 +690,7 @@ def check_130(t):
     t.page.evaluate("()=>SuperMagicAssetStudioAPI.selectLayers(['image_fixture_layer'])")
     capture('image:single-restored')
     # Sprite tools auto/grid, manual polygon/bezier/wand and background modes.
-    menu('import');t.page.locator('#menuManualSplit').click()
+    menu('edit');t.page.locator('#menuManualSplit').click()
     capture('sprite:manual')
     for d in t.page.locator('#splitControlPanel details.studio-dialog-group').all():
         if not d.evaluate('(x)=>x.open'):d.locator('summary').click()
@@ -700,20 +703,20 @@ def check_130(t):
         t.page.locator('#spriteSelectionShape').select_option(shape)
         capture('sprite:boundary-'+shape)
     t.page.locator('#spriteToolsClose').click()
-    menu('import');t.page.locator('#menuAutoSplit').click()
+    menu('edit');t.page.locator('#menuAutoSplit').click()
     capture('sprite:auto')
     t.page.locator('#spriteToolsClose').click()
-    menu('import');t.page.locator('#menuRemoveBackground').click()
+    menu('edit');t.page.locator('#menuRemoveBackground').click()
     capture('sprite:background-removal')
     t.page.locator('#spriteToolsClose').click()
     # Editor tools and documentation dialogs.
-    menu('tools');t.page.locator('#menuAI').click()
+    menu('edit');t.page.locator('#menuAI').click()
     capture('dialog:ai')
     t.page.locator('#closeAIDialog').click()
     menu('help');t.page.locator('#menuHelp').click()
     capture('dialog:help')
     t.page.locator('#closeHelp').click()
-    menu('tools');t.page.locator('#menuAutoResize').click()
+    menu('edit');t.page.locator('#menuAutoResize').click()
     capture('dialog:auto-resize')
     t.page.locator('#closeAutoResize').click()
     tab('right','inspector')
@@ -786,7 +789,7 @@ def check_132(t):
     t.page.locator('[data-paint-menu="brush"]').click()
     t.assertTrue(t.page.locator('#paintSize').is_visible())
     t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
-    t._menu('tools')
+    t._menu('edit')
     t.assertTrue(t.page.locator('#menuStandaloneBackground').is_visible())
     t.page.locator('#menuStandaloneBackground').click()
     t.assertTrue(t.page.locator('#bgStandaloneColor').is_visible())
@@ -798,5 +801,83 @@ def check_132(t):
 for number,fn in {131:check_131,132:check_132}.items():
     def run_mobile_and_legacy(self,case=fn):case(self)
     setattr(BrowserRegression,'test_TC_%03d'%number,run_mobile_and_legacy)
+
+
+# v5.9.4 consolidated menus and icon-based right Paint toolbox.
+def check_133(t):
+    menus=t.page.locator('.menubar > .menu > .menu-btn').all_text_contents()
+    t.assertIn('Edit',menus)
+    t.assertIn('File',menus)
+    t.assertNotIn('Import',menus)
+    t.assertNotIn('Tools',menus)
+    t.assertNotIn('Paint',menus)
+    t._menu('edit')
+    for name in ['menuImportImages','menuImportParts','menuDownloadParts','menuResolveImages',
+                 'menuManualSplit','menuAutoSplit','menuRemoveBackground',
+                 'menuAutoFit','menuAutoResize','menuStandaloneBackground','menuAI']:
+        t.assertTrue(t.page.locator('#'+name).is_visible(),name)
+    t.page.locator('#menuManualSplit').click()
+    t.assertTrue(t.page.locator('#spriteToolsDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#spriteToolsClose').click()
+    t._menu('edit');t.page.locator('#menuStandaloneBackground').click()
+    t.assertTrue(t.page.locator('#bgStandaloneDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#bgStandaloneClose').click()
+    t._menu('edit');t.page.locator('#menuAI').click()
+    t.assertTrue(t.page.locator('#aiDialog').evaluate('(el)=>el.open'))
+    t.page.locator('#closeAIDialog').click()
+
+def check_134(t):
+    t._menu('file')
+    t.assertTrue(t.page.locator('#menuFileImportImage').is_visible())
+    with t.page.expect_file_chooser() as picker:
+        t.page.locator('#menuFileImportImage').click()
+    t.assertEqual(picker.value.element.get_attribute('id'),'imageInput')
+    t._menu('edit')
+    with t.page.expect_file_chooser() as picker2:
+        t.page.locator('#menuImportImages').click()
+    t.assertEqual(picker2.value.element.get_attribute('id'),'imageInput')
+    t.assertEqual(t.page.locator('#imageInput').count(),1)
+    t.assertTrue(t.page.locator('#studio-tab-assets').is_visible())
+
+def check_135(t):
+    t.assertEqual(t.page.locator('.menubar [data-menu="paint"]').count(),0)
+    t._menu('paint')
+    t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'paint')
+    options=t.page.locator('#paintToolboxCommands [data-paint-menu]')
+    t.assertEqual(options.count(),16)
+    all_actions=t.page.locator('#paintToolboxCommands [data-paint-menu],#paintToolboxCommands #paintClearMenu')
+    t.assertEqual(all_actions.count(),17)
+    for action in all_actions.all():
+        t.assertTrue(action.is_visible())
+        t.assertEqual(action.locator('svg.studio-paint-icon[aria-hidden="true"]').count(),1)
+        t.assertGreater(action.locator('svg.studio-paint-icon path,svg.studio-paint-icon rect,svg.studio-paint-icon ellipse,svg.studio-paint-icon circle').count(),0)
+    tools=options.evaluate_all('(els)=>els.map(e=>e.dataset.paintMenu)')
+    for tool in tools:
+        t._menu('paint')
+        element=t.page.locator('#paintToolboxCommands [data-paint-menu="'+tool+'"]')
+        element.click()
+        t.assertEqual(t.page.evaluate('SuperMagicPaintAPI.getTool()'),tool)
+        t.assertEqual(element.get_attribute('aria-pressed'),'true')
+        t.assertEqual(t.page.locator('.inspector').get_attribute('data-active-workspace'),'paint')
+        t.assertTrue(t.page.locator('#paintPropertiesPopover').is_visible())
+        t.page.evaluate('SuperMagicStudioUI.closePaintProperties()')
+    # Context action keeps the existing paint-mask behavior, not a dummy button.
+    t.page.evaluate("""()=>{
+      const p=SuperMagicAssetStudioAPI.getPaintContext();
+      const mask=new Uint8Array(p.width*p.height);
+      mask[42]=1;
+      SuperMagicPaintAPI.setSelectionMask(mask);
+      SuperMagicStudioUI.updatePaintProperties();
+    }""")
+    clear=t.page.locator('#paintClearMenu')
+    t.assertFalse(clear.is_disabled())
+    clear.click()
+    t.assertEqual(t.page.evaluate('SuperMagicPaintAPI.getSelectionCount()'),0)
+    t.assertTrue(t.page.locator('#properties-tab-inspector').is_visible())
+    t.assertTrue(t.page.locator('#properties-tab-canvas').is_visible())
+
+for number,fn in {133:check_133,134:check_134,135:check_135}.items():
+    def run_menu_reorganization(self,check=fn):check(self)
+    setattr(BrowserRegression,'test_TC_%03d'%number,run_menu_reorganization)
 
 if __name__=='__main__':unittest.main()

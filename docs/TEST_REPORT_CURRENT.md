@@ -1,3 +1,22 @@
+# Image editing discoverability — v5.9.1
+
+**Date:** 2026-10-31  
+**Verified code:** `f51599f05bc459ca53ce715b1355d640fe9d6003` (all functionality and tests), with subsequent robustness/test-only changes on `dev`.  
+**Verified run:** https://github.com/saeedsai/SuperMagicAssetStudio/actions/runs/41192003108
+
+| Automated suite | Result |
+|---|---|
+| Node unit/integration/contract | **PASS — 176/176** |
+| Requirement traceability | **PASS — 127/127** (125 requirements + two uniqueness assertions) |
+| Chromium UI | **PASS — 56/56** |
+| Required release regression gate | **PASS** |
+
+New usability regression scenarios TC-122 through TC-125 verify a visible Edit image entry, automatic navigation from image selection, accessible Transform & mirror and Color & tint controls, expandable crop/fit modules, functional flip and brightness controls, and narrow-screen editing. The original Inspector inputs and event listeners are reparented without cloning or loss; UI control catalog now contains 210 static entries plus 53 dynamic properties. All normal PNG/JSON/API/CLI operations are retained.
+
+**Limitations:** Production artwork visual review, actual touch device testing and native Windows PowerShell remain unverified. A GitHub branch merge is not proof of an updated Render live deployment. Check main and Render independently.
+
+---
+
 # SuperMagic Asset Studio — API/CLI capability audit (v5.9)
 
 **Date:** 2026-10-30  

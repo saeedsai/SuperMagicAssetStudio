@@ -37,7 +37,7 @@ function partitionImageControls(){
  const flip=root.querySelector('#flipX'),color=root.querySelector('h4'),crop=[...root.querySelectorAll('h4')].find(x=>/Source crop/.test(x.textContent)),fit=root.querySelector('#openAutoResize');
  if(!flip||!color||!crop||!fit)return;
  const children=[...root.children],indexes={
-  transform:children.indexOf(flip.previousElementSibling),
+  transform:children.indexOf(flip.closest('.toolrow')?.previousElementSibling),
   color:children.indexOf(color),
   crop:children.indexOf(crop),
   fit:children.indexOf(fit)

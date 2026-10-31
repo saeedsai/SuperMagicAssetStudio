@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Audit contract: every legacy hidden alias must have a visible equivalent; file input triggers and state-dependent controls are exercised through their real UI states. Standalone background removal must remain distinct from integrated sprite cleanup.",
+  "description": "Audit contract: every legacy hidden alias must have a visible equivalent; file input triggers and state-dependent controls are exercised through their real UI states. Standalone background removal must remain distinct from integrated sprite cleanup. The original render relay buttons are inside a hidden compatibility container and map to File > Export menu actions.",
   "hiddenAliases": {
     "newProject": "menuNewProject",
     "loadProject": "menuLoadProject",
@@ -61,5 +61,10 @@
     "color",
     "crop",
     "fit"
-  ]
+  ],
+  "hiddenHostAliases": {
+    "exportGIF": "menuExportGIF",
+    "exportTurntable": "menuExportTurntable",
+    "exportSheet": "menuExportSheet"
+  }
 }

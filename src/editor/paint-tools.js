@@ -129,7 +129,13 @@ async function extractSelection(cut=false){
    mg.putImageData(image,0,0);
    await api.eraseRasterWithMask(mask.toDataURL('image/png'),'original');
   }
-  const id=api.createRasterPaintLayer(snapshot.toDataURL('image/png'),cut?'Cut selection':'Copied selection');
+  let minX=canvas.width,minY=canvas.height,maxX=-1,maxY=-1;
+  for(let i=0;i<selection.length;i++)if(data.data[i*4+3]){
+   const x=i%canvas.width,y=Math.floor(i/canvas.width);
+   minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
+  }
+  const bounds={x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1};
+  const id=api.createRasterPaintLayer(snapshot.toDataURL('image/png'),cut?'Cut selection':'Copied selection',bounds);
   clearSelection();setTool('select');
   message((cut?'Cut':'Copied')+' selection to editable layer. Move, resize, rotate or flip it using canvas handles and Inspector. Undo is available.');
   return {layerId:id};

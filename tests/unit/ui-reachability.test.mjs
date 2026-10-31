@@ -52,11 +52,19 @@ test('Machine-readable capability list matches all static inputs and buttons and
 test('Every contextual painting property has an assigned tool and a real source control',()=>{
  const settings=new Set(Object.values(PAINT_PROPERTY_GROUPS).flat());
  for(const c of catalog.controls.filter(x=>x.id.startsWith('paint'))){
-  if(['paintTool','paintClearMenu','paintTextureFile','paintFinishFreeform','paintClearSelection','paintStop'].includes(c.id))continue;
+  if(['paintTool','paintClearMenu','paintTextureFile','paintFinishFreeform','paintClearSelection','paintCopySelection','paintCutSelection','paintStop'].includes(c.id))continue;
   if(c.kind==='action'&&['paintImportTexture','paintCopySelection','paintCutSelection'].includes(c.id))continue;
   assert(settings.has(c.id),'Paint property never shown by any tool: '+c.id);
  }
  for(const id of settings)assert(actionIds.has(id),'Missing contextual paint field '+id);
+});
+
+test('Selection copy and cut remain contextual Paint commands after workspace relocation',()=>{
+ for(const id of ['paintCopySelection','paintCutSelection']){
+  assert(actionIds.has(id),'Missing '+id);
+  assert(readFileSync(new URL('../../src/editor/ui/ui-shell.js',import.meta.url),'utf8').includes("get('"+id+"')"),
+    'Paint contextual UI does not account for '+id);
+ }
 });
 
 test('All image editor, sprite, and dialog controls are present and wired into the runtime',()=>{

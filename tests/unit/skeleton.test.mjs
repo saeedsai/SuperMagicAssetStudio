@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {createRig,evaluateRig,applyPoseToLayers,interpolatePose,sampleMotion,bindPart,setJoint} from '../../src/shared/skeleton.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {createRig,evaluateRig,applyPoseToLayers,interpolatePose,sampleMotion,bindPart,setJoint,footballPose} from '../../src/shared/skeleton.mjs';
 const rig=createRig([{id:'hip',parent:null,position:{x:10,y:10}},{id:'knee',parent:'hip',position:{x:10,y:20}},{id:'foot',parent:'knee',position:{x:10,y:30}}],[{category:'bootLeft',joint:'foot',anchor:{x:0,y:0}}]);
 test('joint hierarchy rotates all descendants',()=>{const r=evaluateRig(rig,{hip:{rotationDeg:90}});assert.ok(Math.abs(r.foot.x+10)<1e-8);assert.ok(Math.abs(r.foot.y-10)<1e-8);});
 test('pose changes cloned part transforms without changing source',()=>{const layers=[{category:'bootLeft',transform:{x:10,y:30,rotationDeg:5}}];const result=applyPoseToLayers(layers,rig,{knee:{rotationDeg:90}});assert.ok(Math.abs(result[0].transform.x)<1e-8);assert.equal(result[0].transform.rotationDeg,95);assert.equal(layers[0].transform.x,10);});
@@ -6,3 +6,5 @@ test('keyframes interpolate',()=>{const m={keyframes:[{timeMs:0,pose:{hip:{rotat
 test('validation rejects cycles and duplicate binding',()=>{assert.throws(()=>createRig([{id:'a',parent:'b',position:{x:0,y:0}},{id:'b',parent:'a',position:{x:1,y:1}}],[]),/cycle/);assert.throws(()=>bindPart(rig,'hand','missing'),/Unknown/);assert.throws(()=>setJoint(rig,'hip',{parent:'foot'}),/cycle/);});
 
 test('attachment anchor shifts the center of joint-driven rotation without shifting rest pose',()=>{const r=bindPart(rig,'handLeft','hip',{x:5,y:0});const layer={category:'handLeft',transform:{x:20,y:10,rotationDeg:0}};assert.equal(applyPoseToLayers([layer],r,{})[0].transform.x,20);const p=applyPoseToLayers([layer],r,{hip:{rotationDeg:90}})[0].transform;assert.ok(Math.abs(p.x-15)<1e-8);assert.ok(Math.abs(p.y-15)<1e-8);});
+
+test('football posture templates adapt to the available rig joints',()=>{const p=footballPose('jump',rig);assert.deepEqual(Object.keys(p),[]);assert.throws(()=>footballPose('unknown',rig),/Unknown/);});
